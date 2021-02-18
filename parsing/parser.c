@@ -3,14 +3,16 @@
 
 int main()
 {
-    int r;
     char *line;
+    int status;
+    int r;
 
-    r = 1;
-    while (1)
+    line = NULL;
+    status = 1;
+    while (status)
     {
         r = get_next_line(0, &line);
-        break ;
+        
     }
-    
+    return (0);    
 }
