@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbelaman <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/07 14:30:35 by mbelaman          #+#    #+#              #
-#    Updated: 2019/11/08 12:40:56 by mbelaman         ###   ########.fr        #
+#    Updated: 2021/02/18 18:31:16 by mbelaman         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,18 +23,18 @@ BONUS_OBJ = $(BONUS_SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ_SRC)
-	ar rcs $(NAME) $^
+	@ar rcs $(NAME) $^
 
 %.o: %.c
-	gcc -Wall -Wextra -Werror -c $< -o $@
+	@gcc -Wall -Wextra -Werror -c $< -o $@
 
 bonus: $(OBJ_SRC) $(BONUS_OBJ)
-	ar rcs $(NAME) $^
+	@ar rcs $(NAME) $^
 
 clean:
-	rm -rf $(OBJ_SRC) $(BONUS_OBJ)
+	@rm -rf $(OBJ_SRC) $(BONUS_OBJ)
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
 
 re: fclean all
