@@ -7,6 +7,9 @@
 # include <sys/uio.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include "../libft/libft.h"
+
+# define BUFFER_SIZE 1024
 
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);

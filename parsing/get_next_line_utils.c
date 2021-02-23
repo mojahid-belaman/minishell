@@ -2,15 +2,15 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mbelaman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   
+/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/13 09:58:26 by mbelaman          #+#    #+#             */
-/*   Updated: 2019/12/23 15:58:55 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/02/18 10:54:50 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "../headers/minishell.h"
 
 size_t	ft_strlen(const char *str)
 {
