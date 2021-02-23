@@ -3,6 +3,8 @@
 
 # include <fcntl.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/uio.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include "../libft/libft.h"
