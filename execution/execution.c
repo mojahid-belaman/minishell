@@ -1,16 +1,38 @@
 
 #include "../headers/minishell.h"
 
-int main()
+typedef	struct	s_struct
 {
-	int r = 1;
-	char *buff;
+	char				*cmd;
+	char				*option;
+	char				*argument;
+	struct	s_struct	*next;
+}				t_struct;
 
-	while (r > 0)
+t_struct	*init_struct(t_struct *gnrl)
+{
+	gnrl->cmd = "echo";
+	gnrl->option = "-n";
+	gnrl->argument = "hello world";
+	gnrl->next = NULL;
+}
+
+int main(void)
+{
+	char		*buff;
+	t_struct	gnrl;
+	int r = 0;
+
+	while (1)
 	{
-		ft_putstr_fd("minishell ~>  $",1);
-		// while()
-		r = read(0, buff, 10);
-		printf("%s", buff);
+		&gnrl = init_struct(&gnrl);
+		/* ft_putstr_fd("minishell ~>  $",fd);*/
+		if ((r = ft_strncmp(gnrl->cmd, "echo", 4)) == 0)
+		{
+			ft_putstr_fd(gnrl->argument, 1);
+			if (gnrl->option)
+				ft_putchar_fd('\n', 1);
+		}
 	}
+	return (0);
 }
