@@ -11,10 +11,11 @@ void    check_allflgs()
 {
     t_var *var = getStruct(NULL);
 
-    if (var->semi_colomn || var->redir_left || var->redir_right || var->redir_double || var->pipe || var->double_q || var->single_q)
-        ft_putstr_fd("\nERROR FLAG NOT CLOSE", 2);
+    if (var->semi_colomn || var->redir_left || var->redir_right
+        || var->redir_double || var->pipe || var->double_q || var->single_q)
+        ft_putstr_fd("minishell: syntax error", 2);
     else
-        ft_putstr_fd("\nline is done!", 1);
+        ft_putstr_fd("line is clean!", 1);
     
 }
 
@@ -22,7 +23,8 @@ void    check_carac(char c)
 {
     t_var *var = getStruct(NULL);
 
-    if ((var->semi_colomn || var->redir_left || var->redir_right || var->redir_double || var->pipe) && isprint_car(c))
+    if ((var->semi_colomn || var->redir_left || var->redir_right
+        || var->redir_double || var->pipe) && isprint_car(c))
     {
         var->semi_colomn = 0;
         var->redir_left = 0;

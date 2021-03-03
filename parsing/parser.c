@@ -26,7 +26,6 @@ t_var *getStruct(t_var *ptr){
 int main()
 {
     int r;
-    // char *line;
     t_var var;
 
     r = 1;
@@ -34,7 +33,7 @@ int main()
     while (r)
     {
         init_symbol();
-        ft_putstr_fd("\nMinishell~> ", 1);
+		ft_putstr_fd("\n\033[1;31m$minishell$~> \033[0m", 1);
         get_next_line(0, &var.line);
         syntax_error();
     }
