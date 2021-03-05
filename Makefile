@@ -4,7 +4,10 @@ CC = gcc
 LIB = libft/libft.a
 SRC = ./parsing/get_next_line.c\
 	  ./parsing/get_next_line_utils.c\
-	  ./parsing/parser.c
+	  ./parsing/parser.c\
+	  ./parsing/parse_utils.c\
+	  ./parsing/check_flags.c\
+	  ./parsing/ft_error.c
 
 OBJ = $(SRC:.c=.o)
 
