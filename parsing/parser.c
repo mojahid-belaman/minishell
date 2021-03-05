@@ -13,6 +13,7 @@ void    init_symbol()
     var->pipe = 0;
     var->back_sl = 0;
     var->line = NULL;
+    var->prs->split_sc = NULL;
 }
 
 t_var *getStruct(t_var *ptr){
@@ -23,19 +24,42 @@ t_var *getStruct(t_var *ptr){
     return (tmp);
 }
 
-int main()
+
+int main(int argc, char **argv, char **envp)
 {
     int r;
     t_var var;
+    int i;
+    int j;
 
+
+    i = -1;
+    j = -1;
     r = 1;
     getStruct(&var);
     while (r)
     {
         init_symbol();
-		ft_putstr_fd("\n\033[1;31m$minishell$~> \033[0m", 1);
+		ft_putstr_fd("\033[1;31m$minishell$~> \033[0m", 1);
         get_next_line(0, &var.line);
         syntax_error();
+        var.prs = (t_parser *)malloc(sizeof(t_parser));
+        var.prs->split_sc = ft_split(var.line, ';');
+        i = -1;
+        while (var.prs->split_sc[++i])
+        {
+            var.prs->split_sc[i] = ft_strtrim(var.prs->split_sc[i], " ");
+            printf("--%s--\n", var.prs->split_sc[i]);
+            var.prs->split_pip = ft_split(var.prs->split_sc[i], '|');
+            j = -1;
+            while (var.prs->split_pip[++j])
+            {
+                var.prs->split_pip[j] = ft_strtrim(var.prs->split_pip[j], " ");
+                printf("%s\n", var.prs->split_pip[j]);
+            }
+            
+        }
+        
     }
 
 }

@@ -13,10 +13,7 @@ void    check_allflgs()
 
     if (var->semi_colomn || var->redir_left || var->redir_right
         || var->redir_double || var->pipe || var->double_q || var->single_q)
-        ft_putstr_fd("minishell: syntax error", 2);
-    else
-        ft_putstr_fd("line is clean!", 1);
-    
+        hundel_error(new_line);
 }
 
 void    check_carac(char c)
@@ -37,7 +34,8 @@ void    check_carac(char c)
 int hund_last_sc(int i)
 {
     t_var *var = getStruct(NULL);
-    if (var->redir_right || var->redir_left || var->redir_double || var->semi_colomn || var->pipe)
+    if (var->redir_right || var->redir_left || var->redir_double
+        || var->semi_colomn || var->pipe || !var->ch)
         hundel_error(token_sc);
     while (var->line[++i])
         if (isprint_car(var->line[i]))
@@ -53,6 +51,8 @@ void    syntax_error()
     i = -1;
     while (var->line[++i])
     {
+        if (var->line[i] != ';')
+            var->ch = var->line[i];
         if (var->line[i] == '\'')
             check_single_q();
         else if (var->line[i] == '"')

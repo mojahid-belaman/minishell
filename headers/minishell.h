@@ -13,6 +13,14 @@
 # define token_dr 3
 # define token_sc 4
 # define token_pip 5
+# define new_line 6
+typedef struct s_parser
+{
+    char **split_sc;
+    char **split_pip;
+    
+}               t_parser;
+
 typedef struct s_var
 {
     int single_q;
@@ -24,7 +32,9 @@ typedef struct s_var
     int redir_double;
     int back_sl;
     int error;
+    char ch;
     char *line;
+    t_parser *prs;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);

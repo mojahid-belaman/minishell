@@ -6,7 +6,7 @@ void    check_single_q()
 
     if (var->single_q)
         var->single_q = 0;
-    if (!var->double_q && !var->single_q)
+    else if (!var->double_q && !var->single_q)
         var->single_q = 1;
 }
 
