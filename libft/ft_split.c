@@ -3,102 +3,108 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbelaman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/25 09:19:56 by mbelaman          #+#    #+#             */
-/*   Updated: 2019/11/11 13:15:10 by mbelaman         ###   ########.fr       */
+/*   Created: 2020/11/21 13:25:51 by mbelaman          #+#    #+#             */
+/*   Updated: 2021/03/04 17:37:29 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../headers/minishell.h"
 
-static char		**free_tab(char ***t, int k)
+static int	ft_nbr_words(char *str, char c)
 {
-	int	i;
+	int nbr;
+	int i;
 
+	nbr = 0;
 	i = 0;
-	while (i < k)
+	while (str[i] != '\0')
 	{
-		free((*t)[i]);
+		while (str[i] == c)
+			i++;
+		if (str[i] != c && str[i] != '\0' &&
+				(str[i + 1] == c || str[i + 1] == '\0'))
+		{
+			i++;
+			nbr++;
+		}
+		if (str[i] == '\0')
+			return (nbr);
 		i++;
 	}
-	free(*t);
+	return (nbr);
+}
+
+static int	ft_next_word_size(char *str, int k, char c)
+{
+	int word_size;
+
+	word_size = 0;
+	while (str[k] != c && str[k] != '\0')
+	{
+		word_size++;
+		k++;
+	}
+	return (word_size);
+}
+
+static char	*my_str(char *str, int *k, char c)
+{
+	int		j;
+	int		z;
+	char	*new_str;
+
+	j = 0;
+	z = *k;
+	new_str = (char*)malloc(sizeof(char) * (ft_next_word_size(str, z, c) + 1));
+	if (!new_str)
+		return (NULL);
+	while (str[z] != c && str[z])
+		new_str[j++] = str[z++];
+	new_str[j] = '\0';
+	*k = z;
+	return (new_str);
+}
+
+static char	**free_tab(char **tab, int n)
+{
+	int i;
+
+	i = 0;
+	if (tab)
+	{
+		while (i < n)
+			free(tab[i++]);
+		free(tab);
+	}
 	return (NULL);
 }
 
-static int		word_count(char const *str, char c)
+char		**ft_split(char const *s, char c)
 {
 	int		i;
-	int		words;
+	int		k;
+	char	**new_str;
+	char	*str;
 
 	i = 0;
-	words = 0;
-	while (str[i])
-	{
-		if ((str[i] != c && str[i + 1] == c) ||
-				(str[i] != c && str[i + 1] == '\0'))
-			words++;
-		i++;
-	}
-	return (words);
-}
-
-static int		wd_l(char const *str, char c)
-{
-	int		counter;
-	int		i;
-
-	counter = 0;
-	i = 0;
-	while (str[i])
-	{
-		while (str[i] == c && str[i])
-			i++;
-		while (str[i] != c && str[i])
-		{
-			counter++;
-			i++;
-		}
-		break ;
-	}
-	return (counter);
-}
-
-static char		**ft_split_continue(char *tmp, char c, char **tab)
-{
-	int		co;
-	int		i;
-	int		li;
-
-	i = 0;
-	li = 0;
-	while (tmp[i])
-	{
-		while (tmp[i] == c && tmp[i])
-			i++;
-		if (!(tab[li] = (char *)malloc(sizeof(char) * (wd_l(tmp + i, c) + 1))))
-			return (free_tab(&tab, li));
-		co = 0;
-		while (tmp[i] != c && tmp[i])
-			tab[li][co++] = tmp[i++];
-		tab[li++][co] = '\0';
-	}
-	tab[li] = NULL;
-	return (tab);
-}
-
-char			**ft_split(char const *str, char c)
-{
-	char	**tab;
-	char	*tmp;
-
-	if (str == NULL)
+	k = 0;
+	str = (char*)s;
+	if (!str)
 		return (NULL);
-	if (!(tmp = ft_strtrim(str, &c)))
+	new_str = (char**)malloc((ft_nbr_words(str, c) + 1) * sizeof(char*));
+	if (!new_str)
 		return (NULL);
-	if (!(tab = (char **)malloc(sizeof(char *) * (word_count(tmp, c) + 1))))
-		return (NULL);
-	tab = ft_split_continue(tmp, c, tab);
-	free(tmp);
-	return (tab);
+	while (str[k])
+	{
+		while (str[k] == c && str[k])
+			k++;
+		if (str[k] && (new_str[i] = my_str(str, &k, c)) != NULL)
+			i++;
+		else if (str[k] && new_str[i] == NULL)
+			return (free_tab(new_str, i));
+	}
+	new_str[i] = 0;
+	return (new_str);
 }
