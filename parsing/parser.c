@@ -20,23 +20,41 @@ void    init_symbol()
     var->split_pip = NULL;
 }
 
-t_var *getStruct(t_var *ptr){
-    static t_var *tmp;
+void    search_file(char **str)
+{
+    t_files *fls = get_struct_file(NULL);
+    int i;
 
-    if (ptr)
-        tmp = ptr;
-    return (tmp);
+    i = -1;
+    fls = (t_files *)malloc(sizeof(t_files));
+    fls->next = NULL;
+    while ((*str)[++i])
+    {
+        
+    }
+    
+
 }
 
 void    fill_command()
 {
     t_var *var = getStruct(NULL);
     int i;
+    int j;
+
 
     i = -1;
+    var->prs = (t_parser *)malloc(sizeof(t_parser));
+    var->prs->next = NULL;
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
+        j = -1;
+        var->split_pip = ft_split(var->split_sc[i], '|');
+        while (var->split_pip[++j])
+        {   
+            search_file(&var->split_pip[j]);
+        }
         
     }
     
