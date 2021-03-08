@@ -14,11 +14,20 @@
 # define token_sc 4
 # define token_pip 5
 # define new_line 6
+typedef struct s_files
+{
+    char type;
+    char *file_name;
+    struct s_files *next;
+}               t_files;
+
+
 typedef struct s_parser
 {
-    char **split_sc;
-    char **split_pip;
-    
+    char *cmd;
+    char **args;
+    t_files *file;
+    struct s_parser *next;
 }               t_parser;
 
 typedef struct s_var
@@ -34,6 +43,8 @@ typedef struct s_var
     int error;
     char ch;
     char *line;
+    char **split_sc;
+    char **split_pip;
     t_parser *prs;
 }              t_var;
 
