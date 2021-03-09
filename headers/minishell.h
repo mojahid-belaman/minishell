@@ -16,13 +16,20 @@
 # define token_sc 4
 # define token_pip 5
 # define new_line 6
+
+typedef	struct	s_env
+{
+	char	*key;
+	char	*value;
+	struct	s_env *next;
+}				t_env;
+
 typedef struct s_files
 {
     char type;
     char *file_name;
     struct s_files *next;
 }               t_files;
-
 
 typedef struct s_parser
 {
@@ -47,7 +54,6 @@ typedef struct s_var
     char *line;
     char **split_sc;
     char **split_pip;
-    t_parser *prs;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -67,4 +73,7 @@ void    check_redir_d();
 void    check_semicolomn(int i);
 void    check_pipe();
 void    hundel_error(int err);
+t_var   *get_struct_var(t_var *ptr);
+t_parser    *get_struct_prs(t_parser *ptr);
+t_files *get_struct_file(t_files *ptr);
 #endif

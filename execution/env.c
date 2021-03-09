@@ -77,4 +77,5 @@ int		main(int argc, char **argv, char **envp)
 		printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
+  return (0);
 }
