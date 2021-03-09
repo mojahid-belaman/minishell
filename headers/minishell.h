@@ -16,13 +16,20 @@
 # define token_sc 4
 # define token_pip 5
 # define new_line 6
+
+typedef	struct	s_env
+{
+	char	*key;
+	char	*value;
+	struct	s_env *next;
+}				t_env;
+
 typedef struct s_files
 {
     char type;
     char *file_name;
     struct s_files *next;
 }               t_files;
-
 
 typedef struct s_parser
 {

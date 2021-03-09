@@ -1,19 +1,10 @@
 #include "../headers/minishell.h"
 
-typedef	struct	s_env
-{
-	char	*key;
-	char	*value;
-	struct	s_env *next;
-}				t_env;
-
 char	**split_env(char *line)
 {
 	char **key_value;
 
 	key_value = ft_split(line, '=');
-
-		ft_putstr_fd("test\n", 1);
 	return(key_value);
 }
 
@@ -66,4 +57,5 @@ int	main(int argc, char **argv, char **envp)
 		printf("%s\n", env->value);
 		env = env->next;
 	}
+	return()
 }
