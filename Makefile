@@ -7,7 +7,8 @@ SRC = ./parsing/get_next_line.c\
 	  ./parsing/parser.c\
 	  ./parsing/parse_utils.c\
 	  ./parsing/check_flags.c\
-	  ./parsing/ft_error.c
+	  ./parsing/ft_error.c\
+	  ./parsing/get_structs.c
 
 OBJ = $(SRC:.c=.o)
 

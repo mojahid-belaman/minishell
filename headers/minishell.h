@@ -14,6 +14,10 @@
 # define token_sc 4
 # define token_pip 5
 # define new_line 6
+# define append 'a'
+# define right_r '>'
+# define left_r '<'
+
 typedef struct s_files
 {
     char type;
@@ -45,7 +49,7 @@ typedef struct s_var
     char *line;
     char **split_sc;
     char **split_pip;
-    t_parser *prs;
+    int step;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -56,7 +60,6 @@ size_t	ft_strlen(const char *str);
 int		get_next_line(int fd, char **line);
 void    syntax_error();
 int     hund_last_sc(int i);
-t_var   *getStruct(t_var *ptr);
 void    check_single_q();
 void    check_double_q();
 void    check_redir_r();
@@ -65,4 +68,7 @@ void    check_redir_d();
 void    check_semicolomn(int i);
 void    check_pipe();
 void    hundel_error(int err);
+t_var   *get_struc_var(t_var *ptr);
+t_parser    *get_struc_prs(t_parser *ptr);
+t_files *get_struc_fils(t_files *ptr);
 #endif

@@ -2,7 +2,7 @@
 
 void    hundel_error(int err)
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
     
     var->error =  err;
     if (err == token_rl)

@@ -2,7 +2,7 @@
 
 void    check_single_q()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if (var->single_q)
         var->single_q = 0;
@@ -12,7 +12,7 @@ void    check_single_q()
 
 void    check_double_q()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
    if (var->double_q)
         var->double_q = 0;
@@ -22,7 +22,7 @@ void    check_double_q()
 
 void    check_redir_r()
 {
-     t_var *var = getStruct(NULL);
+     t_var *var = get_struc_var(NULL);
 
     if (var->redir_right || var->redir_left || var->redir_double)
         hundel_error(token_rr);
@@ -33,7 +33,7 @@ void    check_redir_r()
 
 void    check_redir_l()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if (var->redir_right || var->redir_left || var->redir_double)
         hundel_error(token_rl);
@@ -42,7 +42,7 @@ void    check_redir_l()
 }
 void    check_redir_d()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if (var->redir_right || var->redir_left || var->redir_double)
         hundel_error(token_dr);
@@ -51,7 +51,7 @@ void    check_redir_d()
 }
 void    check_semicolomn(int i)
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if (var->redir_right || var->redir_left || var->redir_double || var->semi_colomn || var->pipe)
         hundel_error(token_sc);
@@ -63,7 +63,7 @@ void    check_semicolomn(int i)
 
 void    check_pipe()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if (var->redir_right || var->redir_left || var->redir_double || var->pipe || var->semi_colomn)
         hundel_error(token_pip);

@@ -9,7 +9,7 @@ int	isprint_car(int p)
 
 void    check_allflgs()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if (var->semi_colomn || var->redir_left || var->redir_right
         || var->redir_double || var->pipe || var->double_q || var->single_q)
@@ -18,7 +18,7 @@ void    check_allflgs()
 
 void    check_carac(char c)
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
 
     if ((var->semi_colomn || var->redir_left || var->redir_right
         || var->redir_double || var->pipe) && isprint_car(c))
@@ -33,7 +33,7 @@ void    check_carac(char c)
 
 int hund_last_sc(int i)
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
     if (var->redir_right || var->redir_left || var->redir_double
         || var->semi_colomn || var->pipe || !var->ch)
         hundel_error(token_sc);
@@ -45,7 +45,7 @@ int hund_last_sc(int i)
 
 void    syntax_error()
 {
-    t_var *var = getStruct(NULL);
+    t_var *var = get_struc_var(NULL);
     int i;
 
     i = -1;
