@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:16:50 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/09 08:17:53 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/03/10 15:12:08 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_env	*create_node(t_env *node, char **key_value)
 	return (list);
 }
 
-void	ft_lstadd_back_m(t_env **alst, t_env *new)
+void	ft_lstadd_back(t_env **alst, t_env *new)
 {
 	t_env	*lst;
 
@@ -49,7 +49,7 @@ void	ft_lstadd_back_m(t_env **alst, t_env *new)
 	}
 }
 
-t_env	*get_env(char **envp)
+t_env *get_env(char **envp)
 {
 	t_env	*head;
 	t_env	*current;
@@ -60,22 +60,28 @@ t_env	*get_env(char **envp)
 	{
 		key_value = split_env(*envp);
 		current = create_node(current, key_value);
-		ft_lstadd_back_m(&head, current);
+		ft_lstadd_back(&head, current);
 		envp++;
 	}
 	return (head);
 }
 
-int		main(int argc, char **argv, char **envp)
+t_envar	*get_envar(t_env *head)
 {
-	t_env	*head;
-	t_env	*env;
+	t_envar	*env;
+	t_env	*current;
 
-	env = get_env(envp);
-	while (env != NULL)
+	current = head;
+	while(current->next)
 	{
-		printf("%s=%s\n", env->key, env->value);
-		env = env->next;
+		if (!(ft_strncmp("HOME", current->key, 4)))
+			env->home = ft_strdup(current->value);
+		else if (!(ft_strncmp("PWD", current->key, 3)))
+			env->pwd = ft_strdup(current->value);
+		else if (!(ft_strncmp("OLDPWD", current->key, 6)))
+			env->oldpwd = ft_strdup(current->value);
+		current = current->next;
 	}
-  return (0);
+	current = head;
+	return (env);
 }
