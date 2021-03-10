@@ -61,22 +61,22 @@ void    fill_command()
 
 }
 
-int main()
-{
-    int r;
-    t_var var;
+// int main()
+// {
+//     int r;
+//     t_var var;
 
-    r = 1;
-    getStruct(&var);
-    while (r)
-    {
-        init_symbol();
-		ft_putstr_fd("\033[1;43m$minishell$~> \033[0m", 1);
-        get_next_line(0, &var.line);
-        syntax_error();
-        if (var.error != 0 && !(var.error = 0))
-            continue ;
-        fill_command();
-    }
+//     r = 1;
+//     getStruct(&var);
+//     while (r)
+//     {
+//         init_symbol();
+// 		ft_putstr_fd("\033[1;43m$minishell$~> \033[0m", 1);
+//         get_next_line(0, &var.line);
+//         syntax_error();
+//         if (var.error != 0 && !(var.error = 0))
+//             continue ;
+//         fill_command();
+//     }
 
-}
+// }

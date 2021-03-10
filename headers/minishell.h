@@ -7,6 +7,8 @@
 # include <sys/uio.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <limits.h>
+# include <sys/stat.h>
 # include "../libft/libft.h"
 
 # define BUFFER_SIZE 1024
@@ -24,38 +26,46 @@ typedef	struct	s_env
 	struct	s_env *next;
 }				t_env;
 
+typedef	struct	s_envar
+{
+	char	*home;
+	char	*pwd;
+	char	*oldpwd;
+}				t_envar;
+
 typedef struct s_files
 {
-    char type;
-    char *file_name;
-    struct s_files *next;
+	char type;
+	char *file_name;
+	struct s_files *next;
 }               t_files;
 
 typedef struct s_parser
 {
-    char *cmd;
-    char **args;
-    t_files *file;
-    struct s_parser *next;
+	char *cmd;
+	char **args;
+	t_files *file;
+	struct s_parser *next;
 }               t_parser;
 
 typedef struct s_var
 {
-    int single_q;
-    int double_q;
-    int semi_colomn;
-    int pipe;
-    int redir_left;
-    int redir_right;
-    int redir_double;
-    int back_sl;
-    int error;
-    char ch;
-    char *line;
-    char **split_sc;
-    char **split_pip;
+	int single_q;
+	int double_q;
+	int semi_colomn;
+	int pipe;
+	int redir_left;
+	int redir_right;
+	int redir_double;
+	int back_sl;
+	int error;
+	char ch;
+	char *line;
+	char **split_sc;
+	char **split_pip;
 }              t_var;
 
+//parsing
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);
@@ -76,4 +86,16 @@ void    hundel_error(int err);
 t_var   *get_struct_var(t_var *ptr);
 t_parser    *get_struct_prs(t_parser *ptr);
 t_files *get_struct_file(t_files *ptr);
+//execution
+char	**split_env(char *line);
+t_env	*create_node(t_env *node, char **key_value);
+void	ft_lstadd_back(t_env **alst, t_env *new);
+t_env	*get_env(char **envp);
+t_envar	*get_envar(t_env *head);
+void	builtin_cd(char **command, t_env *current);
+void	builtin_pwd(char **command, t_env *current);
+int		builtin_exit(char **command);
+int		verify_echo_n(char *str);
+void	builtin_echo(char **command);
+void    builtin_env(char **command, t_env *head);
 #endif
