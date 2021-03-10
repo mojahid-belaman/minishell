@@ -25,12 +25,18 @@ int	main(int argc, char **argv, char **envp)
 	// 	// 	break;
 	// 	*/
 	// }
-	printf("%s\n", en_var->home);
-	printf("%s\n", en_var->pwd);
-	printf("%s\n", en_var->oldpwd);
-	while(head->next)
+	// printf("%s\n", en_var->home);
+	// printf("%s\n", en_var->pwd);
+	// printf("%s\n", en_var->oldpwd);
+	// while(head)
+	// {
+	// 	printf("%s=",head->key);
+	// 	printf("%s\n",head->value);
+	// 	head = head->next;
+	// }
+	while (head)
 	{
-		printf("%s\n",head->key);
+		printf("%s\n", head->key);
 		head = head->next;
 	}
 	return (0);

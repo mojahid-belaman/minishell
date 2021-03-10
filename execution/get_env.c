@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:16:50 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/10 15:12:08 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/03/10 15:34:10 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,18 @@ t_env *get_env(char **envp)
 t_envar	*get_envar(t_env *head)
 {
 	t_envar	*env;
-	t_env	*current;
+	t_env	*tmp;
 
-	current = head;
-	while(current->next)
+	tmp = head;
+	while(tmp)
 	{
-		if (!(ft_strncmp("HOME", current->key, 4)))
-			env->home = ft_strdup(current->value);
-		else if (!(ft_strncmp("PWD", current->key, 3)))
-			env->pwd = ft_strdup(current->value);
-		else if (!(ft_strncmp("OLDPWD", current->key, 6)))
-			env->oldpwd = ft_strdup(current->value);
-		current = current->next;
+		if (!(ft_strncmp("HOME", tmp->key, 4)))
+			env->home = ft_strdup(tmp->value);
+		else if (!(ft_strncmp("PWD", tmp->key, 3)))
+			env->pwd = ft_strdup(tmp->value);
+		else if (!(ft_strncmp("OLDPWD", tmp->key, 6)))
+			env->oldpwd = ft_strdup(tmp->value);
+		tmp = tmp->next;
 	}
-	current = head;
 	return (env);
 }
