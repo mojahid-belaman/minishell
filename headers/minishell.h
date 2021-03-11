@@ -92,10 +92,21 @@ t_env	*create_node(t_env *node, char **key_value);
 void	ft_lstadd_back(t_env **alst, t_env *new);
 t_env	*get_env(char **envp);
 t_envar	*get_envar(t_env *head);
-void	builtin_cd(char **command, t_env *current);
+//builtin func
+void    builtin(char **command, t_env **current, t_envar *en_var);
 void	builtin_pwd(char **command, t_env *current);
-int		builtin_exit(char **command);
-int		verify_echo_n(char *str);
-void	builtin_echo(char **command);
-void    builtin_env(char **command, t_env *head);
+void    builtin_cd(char **command, t_env *current, t_envar *en_var);
+void	chpwd_env(char	**command, t_env *pwd, t_envar *en_var);
+int		get_oldpwd(char **command, t_env *current);
+char	*get_home(char **command, t_env *current, t_envar *en_var);
+
+// char	*get_dir(char **command, t_env *current, t_envar *en_var);
+// char	*get_home(char **command, t_env *current, t_envar *en_var);
+// int		get_oldpwd(char **command, t_env *current);
+// void	ch_pwd_env(char **command, t_env *current, t_envar *en_var);
+// void	builtin_cd(char **command, t_env *current);
+// int		builtin_exit(char **command);
+// int		verify_echo_n(char *str);
+// void	builtin_echo(char **command);
+// void    builtin_env(char **command, t_env *head);
 #endif
