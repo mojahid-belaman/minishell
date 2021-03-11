@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:16:50 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/10 15:34:10 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/03/10 16:06:17 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_env *get_env(char **envp)
 	t_env	*current;
 	char	**key_value;
 
+	head = (t_env *)malloc(sizeof(t_env));
 	head = NULL;
 	while (*envp)
 	{
@@ -69,18 +70,17 @@ t_env *get_env(char **envp)
 t_envar	*get_envar(t_env *head)
 {
 	t_envar	*env;
-	t_env	*tmp;
 
-	tmp = head;
-	while(tmp)
+	env = (t_envar *)malloc(sizeof(t_envar));
+	while(head)
 	{
-		if (!(ft_strncmp("HOME", tmp->key, 4)))
-			env->home = ft_strdup(tmp->value);
-		else if (!(ft_strncmp("PWD", tmp->key, 3)))
-			env->pwd = ft_strdup(tmp->value);
-		else if (!(ft_strncmp("OLDPWD", tmp->key, 6)))
-			env->oldpwd = ft_strdup(tmp->value);
-		tmp = tmp->next;
+		if (!(ft_strncmp("HOME", head->key, 4)))
+			env->home = ft_strdup(head->value);
+		else if (!(ft_strncmp("PWD", head->key, 3)))
+			env->pwd = ft_strdup(head->value);
+		else if (!(ft_strncmp("OLDPWD", head->key, 6)))
+			env->oldpwd = ft_strdup(head->value);
+		head = head->next;
 	}
 	return (env);
 }
