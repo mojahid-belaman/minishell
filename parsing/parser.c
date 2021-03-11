@@ -17,6 +17,21 @@ void    init_symbol()
     var->split_pip = NULL;
 }
 
+void    remove_file(int *i, int org)
+{
+    t_var *var = get_struc_var(NULL);
+    char *str1;
+    char *str2;
+    int len;
+
+    len = ft_strlen(*var->split_pip);
+    str1 = ft_substr(*var->split_pip, *i, len);
+    (*var->split_pip)[org] = '\0';
+    str2 = *var->split_pip;
+    *var->split_pip = ft_strjoin(str2, str1);
+    *i = org - 1;
+}
+
 char    *get_filename(int *i)
 {
     int org;
@@ -35,69 +50,102 @@ char    *get_filename(int *i)
         (*i)++;
         start++;
     }
-    while ((*var->split_pip)[*i] != ' ' && (*var->split_pip)[*i] != '>'
-            && (*var->split_pip)[*i] != '<' && (*var->split_pip)[*i])
+    while ((*var->split_pip)[*i] != ' ' && (*var->split_pip)[*i] &&
+            (*var->split_pip)[*i] != '>' && (*var->split_pip)[*i] != '<')
     {
-        (*i)++;
+        (*i)++;   
         end++;
     }
     tmp = ft_substr(*var->split_pip, org + var->step + start, end);
+    remove_file(i, org);
+    (*i)--;
     return (tmp);
 }
 
 void    add_files_tonode(t_parser *prs, t_files *fil)
 {
+    printf("\nfilename=%s|typeRedir=%c|addressNodefile=%p|addressWholeCmd=%p\n", fil->file_name, fil->type ,fil, prs);
     t_files *curr;
     
-    curr = prs->file;
+    curr = prs->head;
     if (curr == NULL)
-        prs->file = fil;
+        prs->head = fil;
     else
     {
         while (curr->next)
             curr = curr->next;
         curr->next = fil;
-    }
-    
+    }  
 }
 
 void    search_file()
 {
    t_var *var = get_struc_var(NULL);
    t_parser *prs = get_struc_prs(NULL);
-   t_files *fls =  get_struc_fils(NULL);
+   t_files *fil;
    int i;
 
    i = -1;
-   fls = (t_files *)malloc(sizeof(t_files));
-   fls->next = NULL;
+   fil = (t_files *)malloc(sizeof(t_files));
+   fil->next = NULL;
    while ((*var->split_pip)[++i])
    {
-       fls->type = '1';
-       if ((*var->split_pip)[i] == '>')
+       fil->type = '1';
+       if ((*var->split_pip)[i] == '>' && (*var->split_pip)[i + 1] == '>')
        {
-           fls->type = right_r;
+           fil->type = append;
+           var->step = 2;
+           fil->file_name = get_filename(&i);
+       }
+       else if ((*var->split_pip)[i] == '>')
+       {
+           fil->type = right_r;
            var->step = 1;
-           fls->file_name = get_filename(&i);
+           fil->file_name = get_filename(&i);
        }
        else if ((*var->split_pip)[i] == '<')
        {
-           fls->type = left_r;
+           fil->type = left_r;
            var->step = 1;
-           fls->file_name = get_filename(&i);
+           fil->file_name = get_filename(&i);
 
        }
-       else if ((*var->split_pip)[i] == '>' && (*var->split_pip)[i + 1] == '>')
+       if (fil->type != '1')
        {
-           fls->type = append;
-           var->step = 2;
-           fls->file_name = get_filename(&i);
-       }
-       if (fls->type != '1')
-       {
-           add_files_tonode(prs, fls);
+           add_files_tonode(prs, fil);
+           fil = (t_files *)malloc(sizeof(t_files));
+           fil->next = NULL;
        }
    }
+}
+
+void    print_list(t_parser *prs)
+{
+    t_files *curr = prs->head;
+    t_parser *curr_prs = prs;
+    int i = -1;
+    while (curr_prs)
+    {
+        printf("\ncommand = |%s|\n", prs->cmd);
+        while (prs->args[++i])
+            printf("\narg[%d] = |%s|\n",i, prs->args[i]);
+        while (curr)
+        {
+            printf("\ntype_redirection = |%c|\n", prs->head->type);
+            printf("\nfile_name = |%s|\n", prs->head->file_name);
+            curr = curr->next;
+        }
+        curr_prs = curr_prs->next;
+        
+    }
+}
+
+void    search_cmd_args(int j, t_parser *prs, t_var *var)
+{
+    var->split_pip[j] = ft_strtrim(var->split_pip[j], " ");
+    prs->args = ft_split(var->split_pip[j], ' ');
+    prs->cmd = prs->args[0];
+    print_list(prs);
 }
 
 void    fill_command()
@@ -108,20 +156,21 @@ void    fill_command()
     int j;
 
     i = -1;
-    prs = (t_parser *)malloc(sizeof(t_parser));
-    prs->next = NULL;
     var->split_sc = ft_split(var->line, ';');
+
     while (var->split_sc[++i])
     {
         j = -1;
-
+        prs = (t_parser *)malloc(sizeof(t_parser));
+        prs->head = NULL;
+        prs->next = NULL;
         var->split_pip = ft_split(var->split_sc[i], '|');
         while (var->split_pip[++j])
         {
             search_file();
+            search_cmd_args(j, prs, var);
         }
     }
-
 }
 
 int main()
@@ -129,12 +178,10 @@ int main()
     int r;
     t_var var;
     t_parser prs;
-    t_files fls;
 
     r = 1;
     get_struc_var(&var);
     get_struc_prs(&prs);
-    get_struc_fils(&fls);
     while (r)
     {
         init_symbol();
@@ -143,7 +190,7 @@ int main()
         syntax_error();
         if (var.error != 0 && !(var.error = 0))
             continue ;
-        fill_command();
+        // fill_command();
     }
 
 }

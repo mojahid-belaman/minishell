@@ -16,5 +16,7 @@ void    hundel_error(int err)
     else if (err == token_pip)
         ft_putstr_fd("syntax error near unexpected token `|'\n", 2);
     else if (err == new_line)
-        ft_putstr_fd("minishell: syntax error\n", 2);
+        ft_putstr_fd("minishell: syntax error new line\n", 2);
+    else if (err == token_dsc)
+        ft_putstr_fd("syntax error near unexpected token `;;'\n", 2);
 }

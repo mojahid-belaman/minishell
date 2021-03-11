@@ -13,9 +13,10 @@ void    check_single_q()
 void    check_double_q()
 {
     t_var *var = get_struc_var(NULL);
-
    if (var->double_q)
         var->double_q = 0;
+    else if (var->semi_colomn)
+        var->semi_colomn = 0;
     else if (!var->double_q && !var->single_q)
         var->double_q = 1;
 }

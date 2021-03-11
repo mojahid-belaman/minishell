@@ -12,6 +12,7 @@
 # define token_rl 2
 # define token_dr 3
 # define token_sc 4
+# define token_dsc 7
 # define token_pip 5
 # define new_line 6
 # define append 'a'
@@ -30,7 +31,7 @@ typedef struct s_parser
 {
     char *cmd;
     char **args;
-    t_files *file;
+    t_files *head;
     struct s_parser *next;
 }               t_parser;
 
