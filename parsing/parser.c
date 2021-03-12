@@ -17,22 +17,22 @@ void    init_symbol()
     var->split_pip = NULL;
 }
 
-void    remove_file(int *i, int org)
+void    remove_file(int *i, int org, int *j)
 {
     t_var *var = get_struc_var(NULL);
     char *str1;
     char *str2;
     int len;
 
-    len = ft_strlen(*var->split_pip);
-    str1 = ft_substr(*var->split_pip, *i, len);
-    (*var->split_pip)[org] = '\0';
-    str2 = *var->split_pip;
-    *var->split_pip = ft_strjoin(str2, str1);
+    len = ft_strlen(var->split_pip[*j]);
+    str1 = ft_substr(var->split_pip[*j], *i, len);
+    var->split_pip[*j][org] = '\0';
+    str2 = var->split_pip[*j];
+    var->split_pip[*j] = ft_strjoin(str2, str1);
     *i = org - 1;
 }
 
-char    *get_filename(int *i)
+char    *get_filename(int *i, int *j)
 {
     int org;
     int start;
@@ -45,19 +45,19 @@ char    *get_filename(int *i)
     start = 0;
     end = 0;
     *i += var->step;
-    while ((*var->split_pip)[*i] == ' ')
+    while (var->split_pip[*j][*i] == ' ')
     {
         (*i)++;
         start++;
     }
-    while ((*var->split_pip)[*i] != ' ' && (*var->split_pip)[*i] &&
-            (*var->split_pip)[*i] != '>' && (*var->split_pip)[*i] != '<')
+    while (var->split_pip[*j][*i] != ' ' && var->split_pip[*j][*i] &&
+            var->split_pip[*j][*i] != '>' && var->split_pip[*j][*i] != '<')
     {
         (*i)++;   
         end++;
     }
-    tmp = ft_substr(*var->split_pip, org + var->step + start, end);
-    remove_file(i, org);
+    tmp = ft_substr(var->split_pip[*j], org + var->step + start, end);
+    remove_file(i, org, j);
     (*i)--;
     return (tmp);
 }
@@ -78,7 +78,7 @@ void    add_files_tonode(t_parser *prs, t_files *fil)
     }  
 }
 
-void    search_file()
+void    search_file(int *j)
 {
    t_var *var = get_struc_var(NULL);
    t_parser *prs = get_struc_prs(NULL);
@@ -88,26 +88,26 @@ void    search_file()
    i = -1;
    fil = (t_files *)malloc(sizeof(t_files));
    fil->next = NULL;
-   while ((*var->split_pip)[++i])
+   while (var->split_pip[*j][++i])
    {
        fil->type = '1';
-       if ((*var->split_pip)[i] == '>' && (*var->split_pip)[i + 1] == '>')
+       if (var->split_pip[*j][i] == '>' && var->split_pip[*j][i + 1] == '>')
        {
            fil->type = append;
            var->step = 2;
-           fil->file_name = get_filename(&i);
+           fil->file_name = get_filename(&i, j);
        }
-       else if ((*var->split_pip)[i] == '>')
+       else if (var->split_pip[*j][i] == '>')
        {
            fil->type = right_r;
            var->step = 1;
-           fil->file_name = get_filename(&i);
+           fil->file_name = get_filename(&i, j);
        }
-       else if ((*var->split_pip)[i] == '<')
+       else if (var->split_pip[*j][i] == '<')
        {
            fil->type = left_r;
            var->step = 1;
-           fil->file_name = get_filename(&i);
+           fil->file_name = get_filename(&i, j);
 
        }
        if (fil->type != '1')
@@ -140,12 +140,28 @@ void    print_list(t_parser *prs)
     }
 }
 
-void    search_cmd_args(int j, t_parser *prs, t_var *var)
+void    search_cmd_args(int *j, t_parser *prs, t_var *var)
 {
-    var->split_pip[j] = ft_strtrim(var->split_pip[j], " ");
-    prs->args = ft_split(var->split_pip[j], ' ');
+    var->split_pip[*j] = ft_strtrim(var->split_pip[*j], " ");
+    prs->args = ft_split(var->split_pip[*j], ' ');
     prs->cmd = prs->args[0];
     print_list(prs);
+}
+
+void    add_cmd_node(t_parser *prs, t_var *var)
+{
+    t_parser *curr;
+
+    curr = var->head;
+    curr->next = NULL;
+    if (curr == NULL)
+        var->head = prs;
+    else 
+    {
+        while (curr->next)
+            curr = curr->next;
+        curr->next = prs;
+    }
 }
 
 void    fill_command()
@@ -160,6 +176,7 @@ void    fill_command()
 
     while (var->split_sc[++i])
     {
+
         j = -1;
         prs = (t_parser *)malloc(sizeof(t_parser));
         prs->head = NULL;
@@ -167,8 +184,11 @@ void    fill_command()
         var->split_pip = ft_split(var->split_sc[i], '|');
         while (var->split_pip[++j])
         {
-            search_file();
-            search_cmd_args(j, prs, var);
+            search_file(&j);
+            search_cmd_args(&j, prs, var);
+            add_cmd_node(prs, var);
+            prs = (t_parser *)malloc(sizeof(t_parser));
+            prs->next = NULL;           
         }
     }
 }
@@ -190,7 +210,7 @@ int main()
         syntax_error();
         if (var.error != 0 && !(var.error = 0))
             continue ;
-        // fill_command();
+        fill_command();
     }
 
 }

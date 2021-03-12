@@ -51,6 +51,7 @@ typedef struct s_var
     char **split_sc;
     char **split_pip;
     int step;
+    t_parser *head;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);
