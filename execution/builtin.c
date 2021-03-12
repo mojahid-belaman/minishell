@@ -48,6 +48,7 @@ void	chpwd_env(char	**command, t_env *head, t_envar *en_var)
 		pwd->value = ft_strdup(*(command + 1));
 		oldpwd->value = ft_strdup(tmp);
 	}
+	// else
 }
 char	*check_home(char **command, t_env *current)
 {
@@ -113,7 +114,7 @@ void	builtin_unset(char	**command, t_env **head)
 	current = *head;
 	if (!(*(command + 1)))
 		return ;
-	while (current && ft_strncmp(*(command + 1), current->key, ft_strlen(*(command + 1))))
+	while (current && ft_strncmp(*(command + 1), current->key, ft_strlen(current->key)))
 	{
 		previous = current;
 		current = current->next;
@@ -121,6 +122,9 @@ void	builtin_unset(char	**command, t_env **head)
 	if (current)
 	{
 		previous->next = current->next;
+		free(current->key);
+		free(current->value);
+		free(current->next);
 		free(current);
 	}
 }
@@ -134,5 +138,7 @@ void    builtin(char **command, t_env **current, t_envar *en_var)
 	else if (!(ft_strncmp("env", *command, 3)))
 		builtin_env(command, *current);
 	else if (!(ft_strncmp("unset", *command, 5)))
-		builtin_unset(command, current); 
+		builtin_unset(command, current);
+	// else if (!(ft_strncmp("export", *command, 6)))
+	// 	builtin_export(command, current);
 }
