@@ -24,6 +24,7 @@ int		get_oldpwd(char **command, t_env *current)
 			return (0);
 		}
 		*(command + 1) = current->value;
+		printf("%s\n", *(command + 1));
 		return (1);
 }
 
@@ -50,19 +51,15 @@ void	chpwd_env(char	**command, t_env *head, t_envar *en_var)
 }
 char	*check_home(char **command, t_env *current)
 {
-	while(current)
-	{
-		if (!(ft_strncmp("HOME", current->key, 4)))
-			break;
+	while(current && ft_strncmp("HOME", current->key, 4))
 		current = current->next;
-	}
-	if (current)
-		return(ft_strdup(current->value));
-	else
+	if (!current)
 	{
-		printf("minishell: cd: HOME not set");
+		printf("minishell: cd: HOME not set\n");
 		return(NULL);
 	}
+	else
+		return(ft_strdup(current->value));
 }
 
 void	builtin_cd(char **command, t_env *current, t_envar *en_var)
@@ -71,7 +68,8 @@ void	builtin_cd(char **command, t_env *current, t_envar *en_var)
 
 	if (!(*(command + 1)))
 	{
-		if (!(*(command + 1) = check_home(command, current)))
+		*(command + 1) = check_home(command, current);
+		if (!(*(command + 1)))
 			return ;
 	}
 	else if (!(ft_strncmp("~", *(command + 1), 1)))
@@ -90,7 +88,7 @@ void	builtin_pwd(char **command, t_env *current)
 {
 	char	pwd[PATH_MAX];
 
-	while(ft_strncmp("PWD", current->key, 3) && current)
+	while(current && ft_strncmp("PWD", current->key, 3))
 		current = current->next;
 	if (current)
 		printf("%s\n", current->value);
@@ -107,12 +105,34 @@ void    builtin_env(char **command, t_env *head)
 	}
 }
 
+void	builtin_unset(char	**command, t_env **head)
+{
+	t_env	*current;
+	t_env	*previous;
+
+	current = *head;
+	if (!(*(command + 1)))
+		return ;
+	while (current && ft_strncmp(*(command + 1), current->key, ft_strlen(*(command + 1))))
+	{
+		previous = current;
+		current = current->next;
+	}
+	if (current)
+	{
+		previous->next = current->next;
+		free(current);
+	}
+}
+
 void    builtin(char **command, t_env **current, t_envar *en_var)
 {
 	if (!(ft_strncmp("cd", *command, 2)))
 		builtin_cd(command, *current, en_var);
-	if (!(ft_strncmp("pwd", *command, 3)))
+	else if (!(ft_strncmp("pwd", *command, 3)))
 		builtin_pwd(command, *current);
-	if (!(ft_strncmp("env", *command, 3)))
+	else if (!(ft_strncmp("env", *command, 3)))
 		builtin_env(command, *current);
+	else if (!(ft_strncmp("unset", *command, 5)))
+		builtin_unset(command, current); 
 }

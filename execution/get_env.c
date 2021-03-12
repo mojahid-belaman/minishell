@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:16:50 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/10 16:06:17 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:43:16 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,6 @@ t_env	*create_node(t_env *node, char **key_value)
 	list->value = ft_strdup(key_value[1]);
 	list->next = NULL;
 	return (list);
-}
-
-void	ft_lstadd_back(t_env **alst, t_env *new)
-{
-	t_env	*lst;
-
-	lst = *alst;
-	if (*alst == NULL)
-	{
-		*alst = new;
-		return ;
-	}
-	else
-	{
-		while (lst->next)
-			lst = lst->next;
-		lst->next = new;
-	}
 }
 
 t_env *get_env(char **envp)
