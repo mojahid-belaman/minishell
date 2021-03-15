@@ -57,7 +57,7 @@ void    check_semicolomn(int i)
     if (var->redir_right || var->redir_left || var->redir_double || var->semi_colomn || var->pipe)
         hundel_error(token_sc);
     else if (var->double_q || var->single_q)
-        var->line[i] *= -1;
+        var->line[i] = -var->line[i];
     else if (!var->double_q && !var->single_q)
         var->semi_colomn = 1;
 }

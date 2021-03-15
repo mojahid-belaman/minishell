@@ -38,11 +38,9 @@ int hund_last_sc(int i)
     t_var *var = get_struc_var(NULL);
     if (var->redir_right || var->redir_left || var->redir_double
         || var->semi_colomn || var->pipe)
-        {
         hundel_error(token_sc);
-        }
     while (var->line[++i])
-        if (isprint_car(var->line[i]) && var->line[i] != '"')
+        if (isprint_car(var->line[i]) || var->line[i] != '"')
             return (1);
     return (0);
 }
@@ -81,9 +79,9 @@ void    syntax_error()
         else if (var->line[i] == '|')
             check_pipe();
         else
-        {
+            //function check is they flags active and after is caractere if true shut down flags
             check_carac(var->line[i]);
-        }
+        //function check if before function open error set this var and close from func
         if (var->error != 0)
             return ;
     }

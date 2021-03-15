@@ -140,10 +140,44 @@ void    print_list(t_parser *prs)
     }
 }
 
+void    correct_flag_neg(t_parser *prs)
+{
+    t_files *fil;
+    int i;
+    int j;
+    int k;
+
+    fil = prs->head;
+    if (fil)
+        puts("fil exist");
+    i = -1;
+    while (fil)
+    {
+        j = -1;
+        // printf("\n%c\n", fil->file_name[j]);
+        while (fil->file_name[++j])
+        {
+            if (fil->file_name[j] < 0)
+                fil->file_name[j] = -fil->file_name[j];
+        }
+        fil = fil->next;
+    }
+    while (prs->args[++i])
+    {
+        k = -1;
+        while (prs->args[i][++k])
+        {
+            if (prs->args[i][k] < 0)
+               prs->args[i][k] = -prs->args[i][k]; 
+        }
+    }
+}
+
 void    search_cmd_args(int *j, t_parser *prs, t_var *var)
 {
     var->split_pip[*j] = ft_strtrim(var->split_pip[*j], " ");
     prs->args = ft_split(var->split_pip[*j], ' ');
+    correct_flag_neg(prs);
     prs->cmd = prs->args[0];
     print_list(prs);
 }
@@ -178,17 +212,15 @@ void    fill_command()
     {
 
         j = -1;
-        prs = (t_parser *)malloc(sizeof(t_parser));
-        prs->head = NULL;
-        prs->next = NULL;
         var->split_pip = ft_split(var->split_sc[i], '|');
         while (var->split_pip[++j])
         {
-            search_file(&j);
-            search_cmd_args(&j, prs, var);
-            add_cmd_node(prs, var);
             prs = (t_parser *)malloc(sizeof(t_parser));
-            prs->next = NULL;           
+            prs->head = NULL;
+            prs->next = NULL;
+            search_file(&j, prs);
+            search_cmd_args(&j, prs, var);
+            // add_cmd_  = NULL;           
         }
     }
 }
