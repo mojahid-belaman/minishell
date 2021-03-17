@@ -78,10 +78,9 @@ void    add_files_tonode(t_parser *prs, t_files *fil)
     }  
 }
 
-void    search_file(int *j)
+void    search_file(int *j, t_parser *prs)
 {
    t_var *var = get_struc_var(NULL);
-   t_parser *prs = get_struc_prs(NULL);
    t_files *fil;
    int i;
 
@@ -123,7 +122,7 @@ void    print_list(t_parser *prs)
 {
     t_files *curr = prs->head;
     t_parser *curr_prs = prs;
-    int i = -1;
+    int i = 0;
     while (curr_prs)
     {
         printf("\ncommand = |%s|\n", prs->cmd);
@@ -148,13 +147,10 @@ void    correct_flag_neg(t_parser *prs)
     int k;
 
     fil = prs->head;
-    if (fil)
-        puts("fil exist");
     i = -1;
     while (fil)
     {
         j = -1;
-        // printf("\n%c\n", fil->file_name[j]);
         while (fil->file_name[++j])
         {
             if (fil->file_name[j] < 0)
@@ -207,10 +203,8 @@ void    fill_command()
 
     i = -1;
     var->split_sc = ft_split(var->line, ';');
-
     while (var->split_sc[++i])
     {
-
         j = -1;
         var->split_pip = ft_split(var->split_sc[i], '|');
         while (var->split_pip[++j])
@@ -219,8 +213,7 @@ void    fill_command()
             prs->head = NULL;
             prs->next = NULL;
             search_file(&j, prs);
-            search_cmd_args(&j, prs, var);
-            // add_cmd_  = NULL;           
+            search_cmd_args(&j, prs, var);  
         }
     }
 }
