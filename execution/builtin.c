@@ -129,6 +129,19 @@ void	builtin_unset(char	**command, t_env **head)
 	}
 }
 
+void     builtin_exit(char **command)
+{
+	if (!(ft_strncmp("exit", *command, 4)))
+	{
+		printf("%s\n",*command);	
+		if (*(command + 1)&& *(command + 2))
+			printf("minishell: exit: too many arguments\n");
+		if (*(command + 1))
+			if (!(ft_isdigit(**(command + 1))))
+				printf("minishell: exit: %s: numeric argument required\n", *(command + 1));
+	}
+}
+
 void    builtin(char **command, t_env **current, t_envar *en_var)
 {
 	if (!(ft_strncmp("cd", *command, 2)))
@@ -139,6 +152,8 @@ void    builtin(char **command, t_env **current, t_envar *en_var)
 		builtin_env(command, *current);
 	else if (!(ft_strncmp("unset", *command, 5)))
 		builtin_unset(command, current);
+	else if (!(ft_strncmp("exit", *command, 4)))
+		builtin_exit(command);
 	// else if (!(ft_strncmp("export", *command, 6)))
 	// 	builtin_export(command, current);
 }
