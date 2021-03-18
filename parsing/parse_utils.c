@@ -59,7 +59,7 @@ void    syntax_error()
     {
         if (var->line[i] == '\\' && !var->single_q)
         {
-            var->line[i] *= -1;
+            // var->line[i] *= -1;
             i++;
         }
         else if (var->line[i] == '\'')

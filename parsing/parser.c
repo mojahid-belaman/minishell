@@ -12,9 +12,13 @@ void    init_symbol()
     var->redir_double = 0;
     var->pipe = 0;
     var->back_sl = 0;
+    var->error = 0;
+    var->step = 0;
     var->line = NULL;
     var->split_sc = NULL;
     var->split_pip = NULL;
+    var->prs = NULL;
+    var->prsTail = NULL;
 }
 
 void    remove_file(int *i, int org, int *j)
@@ -62,14 +66,15 @@ char    *get_filename(int *i, int *j)
     return (tmp);
 }
 
-void    add_files_tonode(t_parser *prs, t_files *fil)
+void    add_files_tonode(t_files *fil)
 {
-    printf("\nfilename=%s|typeRedir=%c|addressNodefile=%p|addressWholeCmd=%p\n", fil->file_name, fil->type ,fil, prs);
+    t_var *var = get_struc_var(NULL);
+    printf("\nfilename=%s|typeRedir=%c|addressNodefile=%p|addressWholeCmd=%p\n", fil->file_name, fil->type ,fil, var->prsTail);
     t_files *curr;
     
-    curr = prs->head;
-    if (curr == NULL)
-        prs->head = fil;
+    curr = var->prsTail->head;
+    if (!curr)
+        var->prsTail->head = fil;
     else
     {
         while (curr->next)
@@ -78,7 +83,7 @@ void    add_files_tonode(t_parser *prs, t_files *fil)
     }  
 }
 
-void    search_file(int *j, t_parser *prs)
+void    search_file(int *j)
 {
    t_var *var = get_struc_var(NULL);
    t_files *fil;
@@ -111,7 +116,7 @@ void    search_file(int *j, t_parser *prs)
        }
        if (fil->type != '1')
        {
-           add_files_tonode(prs, fil);
+           add_files_tonode(fil);
            fil = (t_files *)malloc(sizeof(t_files));
            fil->next = NULL;
        }
@@ -120,7 +125,7 @@ void    search_file(int *j, t_parser *prs)
 
 void    print_list(t_parser *prs)
 {
-    t_files *curr = prs->head;
+    t_files *curr_fils = prs->head;
     t_parser *curr_prs = prs;
     int i = 0;
     while (curr_prs)
@@ -128,25 +133,27 @@ void    print_list(t_parser *prs)
         printf("\ncommand = |%s|\n", prs->cmd);
         while (prs->args[++i])
             printf("\narg[%d] = |%s|\n",i, prs->args[i]);
-        while (curr)
+        while (curr_fils)
         {
             printf("\ntype_redirection = |%c|\n", prs->head->type);
             printf("\nfile_name = |%s|\n", prs->head->file_name);
-            curr = curr->next;
+            curr_fils = curr_fils->next;
         }
         curr_prs = curr_prs->next;
         
     }
 }
 
-void    correct_flag_neg(t_parser *prs)
+void    correct_flag_neg()
 {
+    t_var *var = get_struc_var(NULL);
+
     t_files *fil;
     int i;
     int j;
     int k;
 
-    fil = prs->head;
+    fil = var->prsTail->head;
     i = -1;
     while (fil)
     {
@@ -158,46 +165,128 @@ void    correct_flag_neg(t_parser *prs)
         }
         fil = fil->next;
     }
-    while (prs->args[++i])
+    while (var->prsTail->args[++i])
     {
         k = -1;
-        while (prs->args[i][++k])
+        while (var->prsTail->args[i][++k])
         {
-            if (prs->args[i][k] < 0)
-               prs->args[i][k] = -prs->args[i][k]; 
+            if (var->prsTail->args[i][k] < 0)
+               var->prsTail->args[i][k] = -var->prsTail->args[i][k]; 
         }
     }
 }
 
-void    search_cmd_args(int *j, t_parser *prs, t_var *var)
+void    search_cmd_args(int *j)
 {
+    t_var *var = get_struc_var(NULL);
+    t_parser *node; 
+
+    node = var->prsTail;
     var->split_pip[*j] = ft_strtrim(var->split_pip[*j], " ");
-    prs->args = ft_split(var->split_pip[*j], ' ');
-    correct_flag_neg(prs);
-    prs->cmd = prs->args[0];
-    print_list(prs);
+    node->args = ft_split(var->split_pip[*j], ' ');
+    correct_flag_neg();
+    node->cmd = node->args[0];
+    print_list(node);
 }
 
-void    add_cmd_node(t_parser *prs, t_var *var)
-{
-    t_parser *curr;
+// void    add_cmd_node(t_parser *prs, t_var *var)
+// {
+//     t_parser *curr;
 
-    curr = var->head;
-    curr->next = NULL;
-    if (curr == NULL)
-        var->head = prs;
-    else 
-    {
-        while (curr->next)
-            curr = curr->next;
-        curr->next = prs;
+//     curr = var->prs;
+//     curr->next = NULL;
+//     if (curr == NULL)
+//         var->prs = prs;
+//     else 
+//     {
+//         while (curr->next)
+//             curr = curr->next;
+//         curr->next = prs;
+//     }
+// }
+void	count_node_file()
+{
+    t_var *var = get_struc_var(NULL);
+
+
+    t_files *curr;
+	int cpt;
+
+	cpt = 0;
+    curr = var->prsTail->head;
+	if (!curr)
+		printf("\n%d\n", cpt);
+	while (curr)
+	{
+		cpt++;
+		curr = curr->next;
+	}
+	printf("\n%d\n", cpt);
+}
+
+void	count_node_cmd()
+{
+    t_var *var = get_struc_var(NULL);
+
+    t_parser *curr;
+	int cpt;
+
+	cpt = 0;
+    curr = var->prs;
+	if (!curr)
+		printf("\n%d\n", cpt);
+	while (curr)
+	{
+		cpt++;
+		curr = curr->next;
+	}
+	printf("\n%d\n", cpt);
+}
+
+// void    clear_line(char **line)
+// {
+//     int i;
+
+//     i = -1;
+//     while ((*line)[++i] != '\0')
+//     {
+        
+//     }
+    
+// }
+
+void createCmdsList(t_parser *node){
+     t_var *var = get_struc_var(NULL);
+
+     if (!var->prs){
+        var->prs = node;
+        var->prsTail = node; 
+     }  
+    else {
+         var->prsTail->next = node;
+         var->prsTail =  node;
+    }
+}
+
+void    clear_line(char **line)
+{
+    int i;
+    int sq;
+    int dq;
+
+    i = -1;
+    dq = 0;
+    sq = 0;
+    while ((*line)[++i] != '\0')
+    {  
+
     }
 }
 
 void    fill_command()
 {
     t_var *var = get_struc_var(NULL);
-    t_parser *prs = get_struc_prs(NULL);
+    t_parser *prs = NULL;
     int i;
     int j;
 
@@ -205,6 +294,7 @@ void    fill_command()
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
+        clear_line(&(var->split_sc[i]));
         j = -1;
         var->split_pip = ft_split(var->split_sc[i], '|');
         while (var->split_pip[++j])
@@ -212,9 +302,14 @@ void    fill_command()
             prs = (t_parser *)malloc(sizeof(t_parser));
             prs->head = NULL;
             prs->next = NULL;
-            search_file(&j, prs);
-            search_cmd_args(&j, prs, var);  
+            createCmdsList(prs);
+            search_file(&j);
+            search_cmd_args(&j);
+            // add_cmd_node(var->prs, var);
+            // print_list(var->prs);
+            // count_node_file();
         }
+        // count_node_cmd();
     }
 }
 

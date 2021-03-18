@@ -46,12 +46,12 @@ typedef struct s_var
     int redir_double;
     int back_sl;
     int error;
-    char ch;
     char *line;
     char **split_sc;
     char **split_pip;
     int step;
-    t_parser *head;
+    t_parser *prs;
+    t_parser *prsTail;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);
