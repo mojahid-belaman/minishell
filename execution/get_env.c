@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:16:50 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/11 17:43:16 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/03/17 16:30:26 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**split_env(char *line)
 	return (key_value);
 }
 
-t_env	*create_node(t_env *node, char **key_value)
+t_env	*create_node(char **key_value)
 {
 	t_env	*list;
 
@@ -42,7 +42,7 @@ t_env *get_env(char **envp)
 	while (*envp)
 	{
 		key_value = split_env(*envp);
-		current = create_node(current, key_value);
+		current = create_node(key_value);
 		ft_lstadd_back(&head, current);
 		envp++;
 	}

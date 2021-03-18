@@ -88,8 +88,9 @@ t_parser    *get_struct_prs(t_parser *ptr);
 t_files *get_struct_file(t_files *ptr);
 //execution
 char	**split_env(char *line);
-t_env	*create_node(t_env *node, char **key_value);
+t_env	*create_node(char **key_value);
 void	ft_lstadd_back(t_env **alst, t_env *new);
+int		ft_lstsize(t_env *lst);
 t_env	*get_env(char **envp);
 t_envar	*get_envar(t_env *head);
 //builtin func
@@ -99,14 +100,6 @@ void    builtin_cd(char **command, t_env *current, t_envar *en_var);
 void	chpwd_env(char	**command, t_env *pwd, t_envar *en_var);
 int		get_oldpwd(char **command, t_env *current);
 char	*get_home(char **command, t_env *current, t_envar *en_var);
-
-// char	*get_dir(char **command, t_env *current, t_envar *en_var);
-// char	*get_home(char **command, t_env *current, t_envar *en_var);
-// int		get_oldpwd(char **command, t_env *current);
-// void	ch_pwd_env(char **command, t_env *current, t_envar *en_var);
-// void	builtin_cd(char **command, t_env *current);
-// int		builtin_exit(char **command);
-// int		verify_echo_n(char *str);
-// void	builtin_echo(char **command);
-// void    builtin_env(char **command, t_env *head);
+void    builtin_export(char **command, t_env **current);
+int     builtin_exit(char **command);
 #endif
