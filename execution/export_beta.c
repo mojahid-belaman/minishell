@@ -59,6 +59,7 @@ void	export_var(char **command, t_env **head)
 	int i = 0;
 	char    **key_value;
 	t_env	*current;
+	char	*tmp;
 
 	key_value = (char **)malloc(3);
 	if (!ft_isalpha(**(command + 1)))
@@ -90,8 +91,18 @@ void	export_var(char **command, t_env **head)
 	}
 	else if (!ft_isalpha((*(command + 1))[i]))
 	{
-		printf("minishell: export: %s:not a valid identifier\n", *(command + 1));
-		return ;
+		if ((*(command + 1))[i] == '+' && (*(command + 1))[i + 1] == '=')
+		{
+			tmp = *(command + 1);
+			*(command + 1) = ft_strjoin(ft_substr(*(command + 1), 0, i), ft_substr(*(command + 1), i + 1, ft_strlen(*(command + 1)) - i - 1));
+			export_var(command, head);
+			free(tmp);
+		}
+		else
+		{
+			printf("minishell: export: %s:not a valid identifier\n", *(command + 1));
+			return ;
+		}
 	}
 }
 
@@ -108,10 +119,8 @@ void    builtin_export(char **command, t_env **head)
 		while(current)
 		{
 			if (!(ft_strncmp(current->key, *(command + 1), ft_strlen(current->key))))
-			{
-				if ((*(command + 1))[ft_strlen(current->key)] == '=' || !((*(command + 1))[ft_strlen(current->key)]))
+				if ((*(command + 1))[ft_strlen(current->key)] == '=' || !((*(command + 1))[ft_strlen(current->key)]) || ((*(command + 1))[ft_strlen(current->key)] == '+' && (*(command + 1))[ft_strlen(current->key) + 1] == '='))
 					break;
-			}
 			current = current->next;
 		}
 		if (!current)
@@ -120,6 +129,12 @@ void    builtin_export(char **command, t_env **head)
 		{
 			if (!((*(command + 1))[ft_strlen(current->key)]))
 				return;
+			else if ((*(command + 1))[ft_strlen(current->key)] == '+' && (*(command + 1))[ft_strlen(current->key) + 1] == '=')
+			{
+				tmp = current->value;
+				current->value = ft_strjoin(current->value, (*(command + 1)) + ft_strlen(current->key) + 2);
+				free(tmp);
+			}
 			tmp = current->value;
 			current->value = ft_substr(*(command + 1), ft_strlen(current->key) + 1, ft_strlen(*(command + 1)) - ft_strlen(current->key));
 			current->print = 1;

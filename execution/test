@@ -1,11 +1,1 @@
-//segfaut
-need to fix the *export: `5': not a valid identifier* done
-export 5 done
-export hello= done 
-need to replace varibales if existing!!
-export hello
-/segfaut
-unset doesn't marji!!!!
-
-
-
+ export TEST+=LOL
