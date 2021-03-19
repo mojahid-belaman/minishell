@@ -98,7 +98,8 @@ void    builtin_env(char **command, t_env *head)
 {
 	while(head)
 	{
-		printf("%s=%s\n", head->key, head->value);
+		if (head->print)
+			printf("%s=%s\n", head->key, head->value);
 		head = head->next;
 	}
 }
@@ -145,16 +146,18 @@ int     builtin_exit(char **command)
 
 void    builtin(char **command, t_env **current, t_envar *en_var)
 {
-	if (!(ft_strncmp("cd", *command, 2)))
+	if (!(ft_strncmp("cd", *command, 3)))
 		builtin_cd(command, *current, en_var);
-	else if (!(ft_strncmp("pwd", *command, 3)))
+	else if (!(ft_strncmp("pwd", *command, 4)))
 		builtin_pwd(command, *current);
-	else if (!(ft_strncmp("env", *command, 3)))
+	else if (!(ft_strncmp("env", *command, 4)))
 		builtin_env(command, *current);
-	else if (!(ft_strncmp("unset", *command, 5)))
+	else if (!(ft_strncmp("unset", *command, 6)))
 		builtin_unset(command, current);
-	else if (!(ft_strncmp("exit", *command, 4)))
+	else if (!(ft_strncmp("exit", *command, 5)))
 		builtin_exit(command);
-	else if (!(ft_strncmp("export", *command, 6)))
+	else if (!(ft_strncmp("export", *command, 7)))
 		builtin_export(command, current);
+	else
+		printf("minishell: %s: command not found\n", *command);
 }
