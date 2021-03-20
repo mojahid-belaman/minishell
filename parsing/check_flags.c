@@ -18,6 +18,8 @@ void    check_single_q()
         var->single_q = 0;
     else if (!var->double_q && !var->single_q)
         var->single_q = 1;
+    if (var->semi_colomn)
+        var->semi_colomn = 0;
 }
 
 void    check_double_q()

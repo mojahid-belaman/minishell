@@ -1,7 +1,8 @@
 #include <stdio.h>
+#include "../libft/libft.h"
 
 
-void override_str(char **str, int index)
+void new_str(char **str, int index)
 {
     while ((*str)[index] != '\0')
     {
@@ -10,43 +11,37 @@ void override_str(char **str, int index)
     }
 }
 
-int check_for_simple_double(char **line, int *i, int *s, int *d)
+void    del_sq_dq(char **line, int *i, int *sq, int *dq)
 {
-    int x = 0;
-
-    if ((*line)[*i] == '\"' && *s == 0)
+    if ((*line)[*i] == '\"' && *sq == 0)
     {
-        override_str(line, *i);
-        *d = !(*d);
-        x = 1;
+        new_str(line, *i);
+        *dq = !(*dq);
+        del_sq_dq(line, i, sq, dq);
     }
-    // if ((*line)[*i] == '\'' && *d == 0)
-    // {
-    //     override_str(line, *i);
-    //     (*s) = !(*s);
-    //     if (*s == 0)
-    //         (*i)--;
-    //     x = 1;
-    // }
-    return (x);
+    if ((*line)[*i] == '\'' && *dq == 0)
+    {
+        new_str(line, *i);
+        *sq = !(*sq);
+        del_sq_dq(line, i, sq, dq);
+    }
 }
 
 void clear_line(char **line)
 {
     int i = -1;
-    int d = 0;
-    int s = 0;
+    int dq = 0;
+    int sq = 0;
 
     while ((*line)[++i] != '\0')
-    {
-        while (check_for_simple_double(line, &i, &s, &d))
-            ;
-    }
+       del_sq_dq(line, &i, &sq, &dq);
+    
 
 }
 int main() {
 
-  char *str = "echo \"hello\" > \"f1\"";
+  char *str;
+  str = ft_strdup("echo \"'\"");
   clear_line(&str);
   printf("%s", str);
   return 0;

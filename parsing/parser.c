@@ -123,20 +123,24 @@ void    search_file(int *j)
    }
 }
 
-void    print_list(t_parser *prs)
+void    print_list()
 {
-    t_files *curr_fils = prs->head;
-    t_parser *curr_prs = prs;
+    t_var *var = get_struc_var(NULL);
+    t_parser *curr_prs;
+    t_files *curr_fils;
+
+    curr_prs = var->prs;
+    curr_fils = var->prs->head;
     int i = 0;
     while (curr_prs)
     {
-        printf("\ncommand = |%s|\n", prs->cmd);
-        while (prs->args[++i])
-            printf("\narg[%d] = |%s|\n",i, prs->args[i]);
+        printf("\ncommand = |%s|\n", curr_prs->cmd);
+        while (curr_prs->args[++i])
+            printf("\narg[%d] = |%s|\n",i, curr_prs->args[i]);
         while (curr_fils)
         {
-            printf("\ntype_redirection = |%c|\n", prs->head->type);
-            printf("\nfile_name = |%s|\n", prs->head->file_name);
+            printf("\ntype_redirection = |%c|\n", curr_fils->type);
+            printf("\nfile_name = |%s|\n", curr_fils->file_name);
             curr_fils = curr_fils->next;
         }
         curr_prs = curr_prs->next;
@@ -186,7 +190,7 @@ void    search_cmd_args(int *j)
     node->args = ft_split(var->split_pip[*j], ' ');
     correct_flag_neg();
     node->cmd = node->args[0];
-    print_list(node);
+    print_list();
 }
 
 // void    add_cmd_node(t_parser *prs, t_var *var)
@@ -207,8 +211,6 @@ void    search_cmd_args(int *j)
 void	count_node_file()
 {
     t_var *var = get_struc_var(NULL);
-
-
     t_files *curr;
 	int cpt;
 
@@ -243,18 +245,6 @@ void	count_node_cmd()
 	printf("\n%d\n", cpt);
 }
 
-// void    clear_line(char **line)
-// {
-//     int i;
-
-//     i = -1;
-//     while ((*line)[++i] != '\0')
-//     {
-        
-//     }
-    
-// }
-
 void createCmdsList(t_parser *node){
      t_var *var = get_struc_var(NULL);
 
@@ -268,19 +258,41 @@ void createCmdsList(t_parser *node){
     }
 }
 
-void    clear_line(char **line)
+void new_str(char **str, int index)
 {
-    int i;
-    int sq;
-    int dq;
-
-    i = -1;
-    dq = 0;
-    sq = 0;
-    while ((*line)[++i] != '\0')
-    {  
-
+    while ((*str)[index] != '\0')
+    {
+        (*str)[index] = (*str)[index + 1];
+        index++;
     }
+}
+
+void    del_sq_dq(char **line, int *i, int *sq, int *dq)
+{
+    if ((*line)[*i] == '\"' && *sq == 0)
+    {
+        new_str(line, *i);
+        *dq = !(*dq);
+        del_sq_dq(line, i, sq, dq);
+    }
+    if ((*line)[*i] == '\'' && *dq == 0)
+    {
+        new_str(line, *i);
+        *sq = !(*sq);
+        del_sq_dq(line, i, sq, dq);
+    }
+}
+
+void clear_line(char **line)
+{
+    int i = -1;
+    int dq = 0;
+    int sq = 0;
+
+    while ((*line)[++i] != '\0')
+       del_sq_dq(line, &i, &sq, &dq);
+       
+
 }
 
 void    fill_command()

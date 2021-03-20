@@ -2,3 +2,15 @@ la -la ;la;";";
 ls ; ls ";";"
 jdvbjb;dfbfdb;
 >><|;
+echo towdh";';'";cat ls;';'
+------------- check backslash in dq -------
+echo "hello\""
+echo "hello\$"
+echo "hello\\"
+backslask work
+-----------------------------------------
+------------- check backslash in sq -------
+backslask not work
+-----------------------------------------
+not fixed
+echo <<<
