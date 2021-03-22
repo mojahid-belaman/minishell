@@ -19,6 +19,15 @@
 # define right_r '>'
 # define left_r '<'
 
+
+typedef struct s_env
+{
+    char *key;
+    char *value;
+    int print;
+    struct s_env *next;
+}               t_env;
+
 typedef struct s_files
 {
     char type;
@@ -31,8 +40,8 @@ typedef struct s_parser
 {
     char *cmd;
     char **args;
-    t_files *head;
-    struct s_parser *next;
+    t_files *file_head;
+    struct s_parser *next_prs;
 }               t_parser;
 
 typedef struct s_var
@@ -52,6 +61,7 @@ typedef struct s_var
     int step;
     t_parser *prs;
     t_parser *prsTail;
+    t_env *head_env;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -71,6 +81,10 @@ void    check_semicolomn(int i);
 void    check_pipe(int i);
 void    conv_neg_space(int i);
 void    hundel_error(int err);
+void    get_env(char **envp);
+void    ft_lstadd_back(t_env **alst, t_env *news);
+t_env   *create_node(char **key_value);
+char    **split_env(char *line);
 t_var   *get_struc_var(t_var *ptr);
 t_parser    *get_struc_prs(t_parser *ptr);
 t_files *get_struc_fils(t_files *ptr);

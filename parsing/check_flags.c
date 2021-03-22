@@ -51,7 +51,9 @@ void    check_redir_l(int i)
 {
     t_var *var = get_struc_var(NULL);
 
-    if (var->redir_right || var->redir_left || var->redir_double)
+    if (var->redir_left)
+        hundel_error(new_line);
+    else if (var->redir_right || var->redir_left || var->redir_double)
         hundel_error(token_rl);
     else if (var->double_q || var->single_q)
         var->line[i] = -var->line[i];
@@ -76,6 +78,7 @@ void    check_redir_d(int i)
     else if (!var->double_q && !var->single_q)
         var->redir_double = 1;
 }
+
 void    check_semicolomn(int i)
 {
     t_var *var = get_struc_var(NULL);
