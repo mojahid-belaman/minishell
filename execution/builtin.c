@@ -18,7 +18,7 @@ int		get_oldpwd(char **command, t_env *current)
 {
 		while (ft_strncmp("OLDPWD", current->key, 6) && current)
 			current = current->next;
-		if (!current)
+		if (!current || !current->print)
 		{
 			printf("minishell : cd: OLDPWD not set\n");
 			return (0);
@@ -42,10 +42,23 @@ void	chpwd_env(char	**command, t_env *head, t_envar *en_var)
 	while (oldpwd && ft_strncmp("OLDPWD", oldpwd->key, 6))
 		oldpwd = oldpwd->next;
 	*(command + 1) = getcwd(cwd, sizeof(cwd));
-	if (oldpwd)
+	if (oldpwd->print && pwd->print)
+	{
 		oldpwd->value = ft_strdup(pwd->value);
-	if (pwd)
 		pwd->value = ft_strdup(*(command + 1));
+	}
+	else if (pwd->print && !oldpwd->print)
+	{
+		pwd->value = ft_strdup(*(command + 1));
+		oldpwd->value = ft_strdup(pwd->value);
+		oldpwd->print = 0;
+	}
+	else if (!oldpwd->print || !pwd->print)
+	{
+		oldpwd->value = ft_strdup("");
+		pwd->value = ft_strdup(*(command + 1));
+		oldpwd->print = 0;
+	}
 }
 char	*check_home(char **command, t_env *current)
 {
@@ -104,26 +117,28 @@ void    builtin_env(char **command, t_env *head)
 	}
 }
 
-void	builtin_unset(char	**command, t_env **head)
+void    builtin_unset(char	**command, t_env **head)
 {
-	t_env	*current;
-	t_env	*previous;
+    t_env	*current;
+    char    *tmp;
+    int i = 1;
 
-	current = *head;
-	if (!(*(command + 1)))
-		return ;
-	while (current && ft_strncmp(*(command + 1), current->key, ft_strlen(current->key)))
-	{
-		previous = current;
-		current = current->next;
-	}
-	if (current)
-	{
-		previous->next = current->next;
-		free(current->key);
-		free(current->value);
-		free(current);
-	}
+    while (*(command + i))
+    {
+        current = *head;
+        while (current && ft_strncmp(*(command + i), current->key, ft_strlen(current->key)))
+		{
+            current = current->next;
+        }
+        if (current)
+        {
+            tmp = current->value;
+            current->value = ft_strdup("");
+            current->print = 0;
+            free(tmp);
+        }
+        i++;
+    }
 }
 
 int     builtin_exit(char **command)

@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/09 08:16:50 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/19 09:10:22 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/03/22 10:13:49 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ t_env *get_env(char **envp)
 	t_env	*current;
 	char	**key_value;
 
-	head = (t_env *)malloc(sizeof(t_env));
-	head = NULL;
+	// head = (t_env *)malloc(sizeof(t_env));
+	// head = NULL;
 	while (*envp)
 	{
 		key_value = split_env(*envp);
