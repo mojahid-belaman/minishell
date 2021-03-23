@@ -7,6 +7,8 @@
 # include <sys/uio.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <limits.h>
+# include <sys/stat.h>
 # include "../libft/libft.h"
 
 # define BUFFER_SIZE 1024
@@ -32,11 +34,10 @@ typedef struct s_env
 
 typedef struct s_files
 {
-    char type;
-    char *file_name;
-    struct s_files *next;
+	char type;
+	char *file_name;
+	struct s_files *next;
 }               t_files;
-
 
 typedef struct s_parser
 {
@@ -66,6 +67,7 @@ typedef struct s_var
     t_env *head_env;
 }              t_var;
 
+//parsing
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+         #
+#    By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/07 14:30:35 by mbelaman          #+#    #+#              #
-#    Updated: 2021/02/18 18:31:16 by mbelaman         ###   ########.fr        #
+#    Updated: 2021/03/09 08:43:49 by knabouss         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ SRC = ft_memset.c ft_bzero.c ft_memcpy.c ft_memccpy.c ft_memmove.c ft_memchr.c f
 
 OBJ_SRC = $(SRC:.c=.o)
 
-BONUS_SRC = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstadd_back_bonus.c ft_lstdelone_bonus.c ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstsize_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c
+# BONUS_SRC = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstadd_back_bonus.c ft_lstdelone_bonus.c ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstsize_bonus.c ft_lstlast_bonus.c ft_lstmap_bonus.c
 
-BONUS_OBJ = $(BONUS_SRC:.c=.o)
+# BONUS_OBJ = $(BONUS_SRC:.c=.o)
 
 all: $(NAME)
 
@@ -28,11 +28,11 @@ $(NAME): $(OBJ_SRC)
 %.o: %.c
 	@gcc -Wall -Wextra -Werror -c $< -o $@
 
-bonus: $(OBJ_SRC) $(BONUS_OBJ)
-	@ar rcs $(NAME) $^
+# bonus: $(OBJ_SRC) $(BONUS_OBJ)
+# 	@ar rcs $(NAME) $^
 
 clean:
-	@rm -rf $(OBJ_SRC) $(BONUS_OBJ)
+	@rm -rf $(OBJ_SRC)
 
 fclean: clean
 	@rm -rf $(NAME)
