@@ -1,6 +1,6 @@
 #include "../headers/minishell.h"
 
-void	export_env(char **command, t_env **head)
+void	export_env(t_env **head)
 {
 	char    **key_value;
 	char	*tmp;
@@ -8,7 +8,7 @@ void	export_env(char **command, t_env **head)
 	t_env   *current;
 	int i = 0;
 	int j = 0;
-	key_value = (char **)malloc((ft_lstsize(*head) + 1) * sizeof(char *));
+	key_value = (char **)malloc((ft_listsize(*head) + 1) * sizeof(char *));
 	current = *head;
 	while(current)
 	{
@@ -33,7 +33,7 @@ void	export_env(char **command, t_env **head)
 	{
 		tmp = key_value[i];
 		j = i + 1;
-		while(j < ft_lstsize(*head))
+		while(j < ft_listsize(*head))
 		{
 			if ((ft_strncmp(tmp, key_value[j], ft_strlen(tmp))) > 0)
 			{
@@ -114,7 +114,7 @@ void    builtin_export(char **command, t_env **head)
 
 	i = 1;
 	if (!(*(command + 1)))
-		export_env(command, head);
+		export_env(head);
 	else
 	{
 		while (*(command + i))

@@ -49,19 +49,19 @@ typedef struct s_parser
 
 typedef struct s_var
 {
-    int single_q;
-    int double_q;
-    int semi_colomn;
-    int pipe;
-    int redir_left;
-    int redir_right;
-    int redir_double;
-    int back_sl;
-    int error;
-    char *line;
-    char **split_sc;
-    char **split_pip;
-    int step;
+    int 	single_q;
+    int 	double_q;
+    int 	semi_colomn;
+    int 	pipe;
+    int 	redir_left;
+    int 	redir_right;
+    int 	redir_double;
+    int 	back_sl;
+    int 	error;
+    char	 *line;
+    char	 **split_sc;
+    char	 **split_pip;
+    int 	step;
     t_parser *prs;
     t_parser *prsTail;
     t_env *head_env;
@@ -90,4 +90,23 @@ void    ft_lstadd_back(t_env **alst, t_env *news);
 t_env   *create_node(char **key_value);
 char    **split_env(char *line);
 t_var   *get_struc_var(t_var *ptr);
+//execution
+char	*get_home(t_env *current);
+int		get_oldpwd(char **command, t_env *current);
+void	chpwd_env(char	**command, t_env *head);
+char	*check_home(t_env *current);
+void	builtin_cd(char **command, t_env *current);
+void	builtin_pwd(t_env *current);
+void    builtin_env(t_env *head);
+void    builtin_unset(char	**command, t_env **head);
+int     builtin_exit(char **command);
+void    builtin(char **command, t_env **current);
+void    builtin_export(char **command, t_env **head);
+void	export_env(t_env **head);
+void	export_var(char **command, t_env **head, int *j);
+void    builtin_export(char **command, t_env **head);
+int		ft_listsize(t_env *lst);
+void	execute();
+// need to be removed
+void    print_list_env(t_env *head);
 #endif
