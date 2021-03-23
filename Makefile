@@ -9,7 +9,11 @@ SRC = ./parsing/get_next_line.c\
 	  ./parsing/check_flags.c\
 	  ./parsing/ft_error.c\
 	  ./parsing/get_structs.c\
-	  ./parsing/get_env.c
+	  ./parsing/get_env.c\
+	  ./execution/builtin.c\
+	  ./execution/execution.c\
+	  ./execution/export_beta.c\
+	  ./execution/linked_list.c
 
 
 OBJ = $(SRC:.c=.o)

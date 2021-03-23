@@ -18,7 +18,7 @@ void	ft_lstadd_back(t_env **alst, t_env *new)
 	}
 }
 
-int	ft_lstsize(t_env *lst)
+int	ft_listsize(t_env *lst)
 {
 	int cpt;
 

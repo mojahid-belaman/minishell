@@ -1,6 +1,6 @@
 #include "../headers/minishell.h"
 
-char	*get_home(char **command, t_env *current, t_envar *en_var)
+char	*get_home(t_env *current)
 {
 	while(current)
 	{
@@ -8,10 +8,9 @@ char	*get_home(char **command, t_env *current, t_envar *en_var)
 			break;
 		current = current->next;
 	}
-	if (!current)
-		return(ft_strdup(en_var->home));
-	else
+	if (current)
 		return(ft_strdup(current->value));
+	return (NULL);
 }
 
 int		get_oldpwd(char **command, t_env *current)
@@ -28,10 +27,9 @@ int		get_oldpwd(char **command, t_env *current)
 		return (1);
 }
 
-void	chpwd_env(char	**command, t_env *head, t_envar *en_var)
+void	chpwd_env(char	**command, t_env *head)
 {
 	char	cwd[PATH_MAX];
-	char	*tmp;
 	t_env	*pwd;
 	t_env	*oldpwd;
 
@@ -60,7 +58,8 @@ void	chpwd_env(char	**command, t_env *head, t_envar *en_var)
 		oldpwd->print = 0;
 	}
 }
-char	*check_home(char **command, t_env *current)
+
+char	*check_home(t_env *current)
 {
 	while(current && ft_strncmp("HOME", current->key, 4))
 		current = current->next;
@@ -73,18 +72,18 @@ char	*check_home(char **command, t_env *current)
 		return(ft_strdup(current->value));
 }
 
-void	builtin_cd(char **command, t_env *current, t_envar *en_var)
+void	builtin_cd(char **command, t_env *current)
 {
 	int cd;
 
 	if (!(*(command + 1)))
 	{
-		*(command + 1) = check_home(command, current);
+		*(command + 1) = check_home(current);
 		if (!(*(command + 1)))
 			return ;
 	}
 	else if (!(ft_strncmp("~", *(command + 1), 1)))
-		*(command + 1) = ft_strjoin(get_home(command, current, en_var), *(command + 1) + 1);
+		*(command + 1) = ft_strjoin(get_home(current), *(command + 1) + 1);
 	else if (!(ft_strncmp("-", *(command + 1), 1)))
 		if(!(get_oldpwd(command, current)))
 			return ;
@@ -92,10 +91,10 @@ void	builtin_cd(char **command, t_env *current, t_envar *en_var)
 	if (cd < 0)
 		printf("minishell: cd %s: No such file or directory\n", *(command + 1));
 	else
-		chpwd_env(command, current, en_var);
+		chpwd_env(command, current);
 }
 
-void	builtin_pwd(char **command, t_env *current)
+void	builtin_pwd(t_env *current)
 {
 	char	pwd[PATH_MAX];
 
@@ -107,7 +106,7 @@ void	builtin_pwd(char **command, t_env *current)
    		printf("%s\n", getcwd(pwd, sizeof(pwd)));
 }
 
-void    builtin_env(char **command, t_env *head)
+void    builtin_env(t_env *head)
 {
 	while(head)
 	{
@@ -159,14 +158,14 @@ int     builtin_exit(char **command)
 	exit (0);
 }
 
-void    builtin(char **command, t_env **current, t_envar *en_var)
+void    builtin(char **command, t_env **current)
 {
 	if (!(ft_strncmp("cd", *command, 3)))
-		builtin_cd(command, *current, en_var);
+		builtin_cd(command, *current);
 	else if (!(ft_strncmp("pwd", *command, 4)))
-		builtin_pwd(command, *current);
+		builtin_pwd(*current);
 	else if (!(ft_strncmp("env", *command, 4)))
-		builtin_env(command, *current);
+		builtin_env(*current);
 	else if (!(ft_strncmp("unset", *command, 6)))
 		builtin_unset(command, current);
 	else if (!(ft_strncmp("exit", *command, 5)))

@@ -1,6 +1,6 @@
 #include "../headers/minishell.h"
 
-t_var *get_struct_var(t_var *ptr)
+t_var *get_struc_var(t_var *ptr)
 {
     static t_var *tmp;
 
