@@ -14,8 +14,22 @@
 # define token_rl 2
 # define token_dr 3
 # define token_sc 4
+# define token_dsc 7
 # define token_pip 5
 # define new_line 6
+# define append 'a'
+# define right_r '>'
+# define left_r '<'
+
+
+typedef struct s_env
+{
+    char *key;
+    char *value;
+    int print;
+    struct s_env *next;
+}               t_env;
+
 typedef struct s_files
 {
     char type;
@@ -28,8 +42,8 @@ typedef struct s_parser
 {
     char *cmd;
     char **args;
-    t_files *file;
-    struct s_parser *next;
+    t_files *file_head;
+    struct s_parser *next_prs;
 }               t_parser;
 
 typedef struct s_var
@@ -43,10 +57,13 @@ typedef struct s_var
     int redir_double;
     int back_sl;
     int error;
-    char ch;
     char *line;
     char **split_sc;
     char **split_pip;
+    int step;
+    t_parser *prs;
+    t_parser *prsTail;
+    t_env *head_env;
 }              t_var;
 
 char	*ft_strjoin(char const *s1, char const *s2);
@@ -57,16 +74,18 @@ size_t	ft_strlen(const char *str);
 int		get_next_line(int fd, char **line);
 void    syntax_error();
 int     hund_last_sc(int i);
-t_var   *getStruct(t_var *ptr);
 void    check_single_q();
 void    check_double_q();
 void    check_redir_r();
 void    check_redir_l();
-void    check_redir_d();
+void    check_redir_d(int i);
 void    check_semicolomn(int i);
-void    check_pipe();
+void    check_pipe(int i);
+void    conv_neg_space(int i);
 void    hundel_error(int err);
-t_var   *get_struct_var(t_var *ptr);
-t_parser    *get_struct_prs(t_parser *ptr);
-t_files *get_struct_file(t_files *ptr);
+void    get_env(char **envp);
+void    ft_lstadd_back(t_env **alst, t_env *news);
+t_env   *create_node(char **key_value);
+char    **split_env(char *line);
+t_var   *get_struc_var(t_var *ptr);
 #endif
