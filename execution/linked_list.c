@@ -1,34 +1,34 @@
-
 #include "../headers/minishell.h"
 
-typedef struct	s_struct {
-	char		*var;
-	struct		s_struct *next;
-}               t_struct;
-
-int main (int argc, char **argv, char **envp)
+void	ft_lstadd_back(t_env **alst, t_env *new)
 {
-	t_struct	*head;
-	int i = -1;
-	int j = -1;
+	t_env	*lst;
 
-	head = (t_struct *)malloc(sizeof(t_struct));
-	while(envp[++i])
+	lst = *alst;
+	if (*alst == NULL)
 	{
-		head->var = (char *)malloc(sizeof(envp[0]));
-		head->next = NULL;
-	while (envp[i][++j])
-		head->var[i] = envp[0][i];
+		*alst = new;
+		return ;
 	}
-	printf("%s", head->var);
+	else
+	{
+		while (lst->next)
+			lst = lst->next;
+		lst->next = new;
+	}
 }
 
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	t_struct	*head;
-// 	int i = -1;
-// 	while(envp[++i])
-// 	{
-// 		head->next = 
-// 	}
-// }
+int	ft_lstsize(t_env *lst)
+{
+	int cpt;
+
+	cpt = 0;
+	if (!lst)
+		return (0);
+	while (lst)
+	{
+		cpt++;
+		lst = lst->next;
+	}
+	return (cpt);
+}
