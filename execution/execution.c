@@ -1,29 +1,22 @@
 
 #include "../headers/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void    print_list_env(t_env *head)
 {
-	char	*line;
-	char	**command;
-	t_env	*head;
-	t_envar	*en_var;
+    t_env *curr;
 
-	head = get_env(envp);
-	en_var = get_envar(head);
-	while(1)
-	{
-		ft_putstr_fd("\033[1;31m$minishell$~> \033[0m", 1);
-		get_next_line(0, &line);
-		command = ft_split(line, ' ');
-		builtin(command, &head, en_var);
-		/* need a beta version!! complete mess!!!!!
-		builtin_cd(command, head);
-		builtin_pwd(command, head);
-		builtin_env(command, head);
-		builtin_echo(command);
-		if (!(builtin_exit(command)))
-			break;
-		*/
-	}
-	return (0);
+    curr = head;
+	if (!curr)
+		puts("failed");
+    while (curr)
+    {
+        printf("|%s||%s|\n", curr->key, curr->value);
+        curr = curr->next;
+    }
+    
+}
+void	execute()
+{
+	t_var *var = get_struc_var(NULL);
+	builtin(var->prs->args,&var->head_env);
 }

@@ -21,24 +21,6 @@ t_env   *create_node(char **key_value)
     return (list);
 }
 
-void    ft_lstadd_back(t_env **alst, t_env *new)
-{
-    t_env   *lst;
-    lst = *alst;
-    if (*alst == NULL)
-    {
-        *alst = new;
-        return ;
-    }
-    else
-    {
-        while (lst->next)
-            lst = lst->next;
-        lst->next = new;
-    }
-}
-
-
 void     get_env(char **envp)
 {
     t_var *var = get_struc_var(NULL);

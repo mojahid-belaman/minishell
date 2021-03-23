@@ -22,7 +22,6 @@ void    init_symbol()
     var->split_pip = NULL;
     var->prs = NULL;
     var->prsTail = NULL;
-    var->head_env = NULL;
 }
 
 void    remove_file(int *i, int org, int *j)
@@ -194,7 +193,7 @@ void    search_cmd_args(int *j)
     node->args = ft_split(var->split_pip[*j], ' ');
     correct_flag_neg();
     node->cmd = node->args[0];
-    print_list();
+    // print_list();
 }
 
 // void    add_cmd_node(t_parser *prs, t_var *var)
@@ -369,24 +368,25 @@ void    fill_command()
             // print_list(var->prs);
             // count_node_file();
         }
+        execute();
         // count_node_cmd();
     }
 }
 
-void    print_list_env(t_env *head)
-{
-    t_env *curr;
+// void    print_list_env(t_env *head)
+// {
+//     t_env *curr;
 
-    curr = head;
-    while (curr)
-    {
-        printf("|%s||%s|\n", curr->key, curr->value);
-        curr = curr->next;
-    }
+//     curr = head;
+//     while (curr)
+//     {
+//         printf("|%s||%s|\n", curr->key, curr->value);
+//         curr = curr->next;
+//     }
     
-}
+// }
 
-int main(int ac, char **av)
+int main(int ac, char **av, char **env)
 {
     int r;
     t_var *var;
@@ -396,13 +396,14 @@ int main(int ac, char **av)
     av = NULL;
     var = (t_var *)malloc(sizeof(t_var));
     get_struc_var(var);
-    // get_env(env);
+    get_env(env);
     // print_list_env(var->head_env);
     while (r)
     {
         init_symbol();
         ft_putstr_fd("\033[1;43m$minishell$~> \033[0m", 1);
         get_next_line(0, &var->line);
+        puts("test");
         syntax_error();
         if (var->error != 0 && !(var->error = 0))
             continue ;
