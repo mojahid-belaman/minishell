@@ -11,6 +11,7 @@ SRC = ./parsing/get_next_line.c\
 	  ./parsing/get_structs.c\
 	  ./parsing/get_env.c
 
+
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
