@@ -103,4 +103,5 @@ int		get_oldpwd(char **command, t_env *current);
 char	*get_home(char **command, t_env *current, t_envar *en_var);
 void    builtin_export(char **command, t_env **current);
 int     builtin_exit(char **command);
+void    builtin_unset(char	**command, t_env **head);
 #endif
