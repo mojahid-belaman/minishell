@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "../headers/minishell.h"
 
 void    init_symbol()
@@ -344,6 +347,8 @@ void    fill_command()
     int j;
 
     i = -1;
+    var->prs = (t_parser *)malloc(sizeof(t_parser));
+    var->prs->next_prs = NULL;
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
