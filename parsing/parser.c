@@ -395,11 +395,12 @@ int main(int ac, char **av, char **env)
     var = (t_var *)malloc(sizeof(t_var));
     get_struc_var(var);
     get_env(env);
+    var->home = find_value("HOME");
     // print_list_env(var->head_env);
     while (r)
     {
         init_symbol();
-        ft_putstr_fd("\033[1;43m$minishell$~> \033[0m", 1);
+        ft_putstr_fd("\033[1;45m$minishell$~> \033[0m", 1);
         get_next_line(0, &var->line);
         syntax_error();
         // recycle_line();

@@ -1,69 +1,82 @@
 #include "../headers/minishell.h"
 
-char	*get_home(t_env *current)
+char	*get_home()
 {
+	t_var *var = get_struc_var(NULL);
+	t_env	*current;
+
+	current = var->head_env;
 	while(current)
 	{
 		if (!(ft_strncmp("HOME", current->key, 4)))
 			break;
 		current = current->next;
 	}
-	if (current)
+	if (current && current->print)
 		return(ft_strdup(current->value));
-	return (NULL);
+	return (ft_strdup(var->home));
 }
 
-int		get_oldpwd(char **command, t_env *current)
+int		get_oldpwd()
 {
-		while (ft_strncmp("OLDPWD", current->key, 6) && current)
-			current = current->next;
-		if (!current || !current->print)
-		{
-			printf("minishell : cd: OLDPWD not set\n");
-			return (0);
-		}
-		*(command + 1) = current->value;
-		printf("%s\n", *(command + 1));
-		return (1);
+	t_var *var = get_struc_var(NULL);
+	t_env *current;
+
+	current = var->head_env;
+	while (ft_strncmp("OLDPWD", current->key, 6) && current)
+		current = current->next;
+	if (!current || !current->print)
+	{
+		printf("minishell : cd: OLDPWD not set\n");
+		return (0);
+	}
+	*(var->prs->args + 1) = current->value;
+	printf("%s\n", *(var->prs->args + 1));
+	return (1);
 }
 
-void	chpwd_env(char	**command, t_env *head)
+void	chpwd_env()
 {
+	t_var *var = get_struc_var(NULL);
 	char	cwd[PATH_MAX];
 	t_env	*pwd;
 	t_env	*oldpwd;
 
-	oldpwd = head;
-	pwd = head;
+	oldpwd = var->head_env;
+	pwd = var->head_env;
 	while(pwd && ft_strncmp("PWD", pwd->key, 3))
 		pwd = pwd->next;
 	while (oldpwd && ft_strncmp("OLDPWD", oldpwd->key, 6))
 		oldpwd = oldpwd->next;
-	*(command + 1) = getcwd(cwd, sizeof(cwd));
+	*(var->prs->args + 1) = getcwd(cwd, sizeof(cwd));
 	if (oldpwd->print && pwd->print)
 	{
 		oldpwd->value = ft_strdup(pwd->value);
-		pwd->value = ft_strdup(*(command + 1));
+		pwd->value = ft_strdup(*(var->prs->args + 1));
 	}
 	else if (pwd->print && !oldpwd->print)
 	{
-		pwd->value = ft_strdup(*(command + 1));
+		pwd->value = ft_strdup(*(var->prs->args + 1));
 		oldpwd->value = ft_strdup(pwd->value);
 		oldpwd->print = 0;
 	}
 	else if (!oldpwd->print || !pwd->print)
 	{
 		oldpwd->value = ft_strdup("");
-		pwd->value = ft_strdup(*(command + 1));
+		pwd->value = ft_strdup(*(var->prs->args + 1));
 		oldpwd->print = 0;
 	}
 }
 
-char	*check_home(t_env *current)
+char	*check_home()
 {
+	t_var *var = get_struc_var(NULL);
+	t_env *current;
+
+	current = var->head_env;
 	while(current && ft_strncmp("HOME", current->key, 4))
 		current = current->next;
-	if (!current)
+	if (!current || !current->print)
 	{
 		printf("minishell: cd: HOME not set\n");
 		return(NULL);
@@ -72,32 +85,36 @@ char	*check_home(t_env *current)
 		return(ft_strdup(current->value));
 }
 
-void	builtin_cd(char **command, t_env *current)
+void	builtin_cd()
 {
 	int cd;
+	t_var *var = get_struc_var(NULL);
 
-	if (!(*(command + 1)))
+	if (!(*(var->prs->args + 1)))
 	{
-		*(command + 1) = check_home(current);
-		if (!(*(command + 1)))
+		*(var->prs->args + 1) = check_home();
+		if (!(*(var->prs->args + 1)))
 			return ;
 	}
-	else if (!(ft_strncmp("~", *(command + 1), 1)))
-		*(command + 1) = ft_strjoin(get_home(current), *(command + 1) + 1);
-	else if (!(ft_strncmp("-", *(command + 1), 1)))
-		if(!(get_oldpwd(command, current)))
+	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
+		*(var->prs->args + 1) = ft_strjoin(get_home(), *(var->prs->args + 1) + 1);
+	else if (!(ft_strncmp("-", *(var->prs->args + 1), 1)))
+		if(!(get_oldpwd()))
 			return ;
-	cd = chdir(*(command + 1));
+	cd = chdir(*(var->prs->args + 1));
 	if (cd < 0)
-		printf("minishell: cd %s: No such file or directory\n", *(command + 1));
+		printf("minishell: cd %s: No such file or directory\n", *(var->prs->args + 1));
 	else
-		chpwd_env(command, current);
+		chpwd_env();
 }
 
-void	builtin_pwd(t_env *current)
+void	builtin_pwd()
 {
 	char	pwd[PATH_MAX];
+	t_var *var = get_struc_var(NULL);
+	t_env	*current;
 
+	current = var->head_env;
 	while(current && ft_strncmp("PWD", current->key, 3))
 		current = current->next;
 	if (current)
@@ -106,26 +123,31 @@ void	builtin_pwd(t_env *current)
    		printf("%s\n", getcwd(pwd, sizeof(pwd)));
 }
 
-void    builtin_env(t_env *head)
+void    builtin_env()
 {
-	while(head)
+	t_var *var = get_struc_var(NULL);
+	t_env	*current;
+
+	current = var->head_env;
+	while(current)
 	{
-		if (head->print)
-			printf("%s=%s\n", head->key, head->value);
-		head = head->next;
+		if (current->print)
+			printf("%s=%s\n", current->key, current->value);
+		current = current->next;
 	}
 }
 
-void    builtin_unset(char	**command, t_env **head)
+void    builtin_unset()
 {
+	t_var *var = get_struc_var(NULL);
     t_env	*current;
     char    *tmp;
     int i = 1;
 
-    while (*(command + i))
+    while (*(var->prs->args + i))
     {
-        current = *head;
-        while (current && ft_strncmp(*(command + i), current->key, ft_strlen(current->key)))
+        current = var->head_env;
+        while (current && ft_strncmp(*(var->prs->args + i), current->key, ft_strlen(current->key)))
 		{
             current = current->next;
         }
@@ -140,38 +162,40 @@ void    builtin_unset(char	**command, t_env **head)
     }
 }
 
-int     builtin_exit(char **command)
+int     builtin_exit()
 {
-	printf("%s\n",*command);	
-	if (*(command + 1)&& *(command + 2))
+	t_var *var = get_struc_var(NULL);
+	printf("%s\n",*var->prs->args);	
+	if (*(var->prs->args + 1)&& *(var->prs->args + 2))
 		printf("minishell: exit: too many arguments\n");
-	if (*(command + 1))
+	if (*(var->prs->args + 1))
 	{
-		if (!(ft_isdigit(**(command + 1))))
+		if (!(ft_isdigit(**(var->prs->args + 1))))
 		{
-			printf("minishell: exit: %s: numeric argument required\n", *(command + 1));
+			printf("minishell: exit: %s: numeric argument required\n", *(var->prs->args + 1));
 			exit (-1);
 		}
 		else
-			exit(ft_atoi(*(command + 1))) ; 
+			exit(ft_atoi(*(var->prs->args + 1))) ; 
 	}
 	exit (0);
 }
 
-void    builtin(char **command, t_env **current)
+void    builtin()
 {
-	if (!(ft_strncmp("cd", *command, 3)))
-		builtin_cd(command, *current);
-	else if (!(ft_strncmp("pwd", *command, 4)))
-		builtin_pwd(*current);
-	else if (!(ft_strncmp("env", *command, 4)))
-		builtin_env(*current);
-	else if (!(ft_strncmp("unset", *command, 6)))
-		builtin_unset(command, current);
-	else if (!(ft_strncmp("exit", *command, 5)))
-		builtin_exit(command);
-	else if (!(ft_strncmp("export", *command, 7)))
-		builtin_export(command, current);
+	t_var *var = get_struc_var(NULL);
+	if (!(ft_strncmp("cd", *(var->prs->args), 3)))
+		builtin_cd();
+	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)))
+		builtin_pwd();
+	else if (!(ft_strncmp("env", *(var->prs->args), 4)))
+		builtin_env();
+	else if (!(ft_strncmp("unset", *(var->prs->args), 6)))
+		builtin_unset();
+	else if (!(ft_strncmp("exit", *(var->prs->args), 5)))
+		builtin_exit();
+	else if (!(ft_strncmp("export", *(var->prs->args), 7)))
+		builtin_export();
 	else
-		printf("minishell: %s: command not found\n", *command);
+		printf("minishell: %s: (var->prs->args) not found\n", *(var->prs->args));
 }
