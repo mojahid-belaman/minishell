@@ -146,8 +146,7 @@ void    print_list()
             printf("\nfile_name = |%s|\n", curr_fils->file_name);
             curr_fils = curr_fils->next;
         }
-        curr_prs = curr_prs->next_prs;
-        
+        curr_prs = curr_prs->next_prs;  
     }
 }
 
@@ -193,24 +192,8 @@ void    search_cmd_args(int *j)
     node->args = ft_split(var->split_pip[*j], ' ');
     correct_flag_neg();
     node->cmd = node->args[0];
-    // print_list();
 }
 
-// void    add_cmd_node(t_parser *prs, t_var *var)
-// {
-//     t_parser *curr;
-
-//     curr = var->prs;
-//     curr->next = NULL;
-//     if (curr == NULL)
-//         var->prs = prs;
-//     else 
-//     {
-//         while (curr->next)
-//             curr = curr->next;
-//         curr->next = prs;
-//     }
-// }
 void	count_node_file()
 {
     t_var *var = get_struc_var(NULL);
@@ -226,7 +209,7 @@ void	count_node_file()
 		cpt++;
 		curr = curr->next;
 	}
-	printf("\n%d\n", cpt);
+	printf("\ncount files in one node=%d\n", cpt);
 }
 
 void	count_node_cmd()
@@ -245,7 +228,7 @@ void	count_node_cmd()
 		cpt++;
 		curr = curr->next_prs;
 	}
-	printf("\n%d\n", cpt);
+	printf("\ncount big prs node=%d\n", cpt);
 }
 
 void createCmdsList(t_parser *node){
@@ -296,13 +279,15 @@ void clear_line(char **line)
     int i = -1;
     int dq = 0;
     int sq = 0;
-
+    
     while ((*line)[++i] != '\0')
     {
        del_sq_dq(line, &i, &sq, &dq);
     //    replace_dollar(line, &i);
-       if (dq && (*line)[i] == '\\' && ((*line)[i] == '$' || (*line)[i] == '\"' || (*line)[i] == '\\'))
+       if (dq && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\'))
             new_str(line, i);
+        if ((dq || sq) && (*line)[i] > 0)
+            (*line)[i] = -(*line)[i];
     }
 }
 
@@ -346,8 +331,8 @@ void    fill_command()
     int j;
 
     i = -1;
-    var->prs = (t_parser *)malloc(sizeof(t_parser));
-    var->prs->next_prs = NULL;
+    // var->prs = (t_parser *)malloc(sizeof(t_parser));
+    // var->prs->next_prs = NULL;
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
@@ -363,13 +348,11 @@ void    fill_command()
             createCmdsList(prs);
             search_file(&j);
             search_cmd_args(&j);
-            
-            // add_cmd_node(var->prs, var);
-            // print_list(var->prs);
-            // count_node_file();
+            print_list();
         }
         execute();
         // count_node_cmd();
+        // count_node_file();
     }
 }
 
@@ -385,6 +368,21 @@ void    fill_command()
 //     }
     
 // }
+
+void    recycle_line()
+{
+    t_var *var = get_struc_var(NULL);
+
+    int i;
+
+    i = -1;
+    while (var->line[++i])
+    {
+        if (var->line[i] == '>' || var->line[i] == '<')
+            var->line[i] = -var->line[i];
+    }
+    
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -403,8 +401,8 @@ int main(int ac, char **av, char **env)
         init_symbol();
         ft_putstr_fd("\033[1;43m$minishell$~> \033[0m", 1);
         get_next_line(0, &var->line);
-        puts("test");
         syntax_error();
+        // recycle_line();
         if (var->error != 0 && !(var->error = 0))
             continue ;
         fill_command();

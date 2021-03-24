@@ -65,7 +65,10 @@ void    syntax_error()
         else if (var->line[i] == '\'')
             check_single_q();
         else if (var->line[i] == '"')
+        {
             check_double_q();
+
+        }
         else if (var->line[i] == ';')
         {
             if (var->line[0] == ';' && var->line[i + 1] != ';')
@@ -81,7 +84,9 @@ void    syntax_error()
             i += 1;
         }
         else if (var->line[i] == '>')
+        {
             check_redir_r(i);
+        }
         else if (var->line[i] == '<')
             check_redir_l(i);
         else if (var->line[i] == '|')
