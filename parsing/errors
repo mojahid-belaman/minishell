@@ -3,6 +3,7 @@ ls ; ls ";";"
 jdvbjb;dfbfdb;
 >><|;
 echo towdh";';'";cat ls;';'
+echo "\>>\<<<\""
 ------------- check backslash in dq -------
 echo "hello\""
 echo "hello\$"
@@ -14,3 +15,7 @@ backslask not work
 -----------------------------------------
 not fixed
 echo <<<
+
+--------------
+ls ; ls ";";"
+--------------
