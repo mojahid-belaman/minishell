@@ -269,24 +269,32 @@ void    del_sq_dq(char **line, int *i, int *sq, int *dq)
     }
 }
 
-// void    replace_dollar(char **line, int *i)
-// {
+void    replace_dollar(char **line, int *i, int *sq)
+{
+    int  s_index_dollar;
 
-// }
+    s_index_dollar = 0;
+    if ((*line)[*i] == '$' && *sq == 0)
+    {
+        
+    }
+}
 
 void clear_line(char **line)
 {
     int i = -1;
     int dq = 0;
     int sq = 0;
-    
+
     while ((*line)[++i] != '\0')
     {
        del_sq_dq(line, &i, &sq, &dq);
-    //    replace_dollar(line, &i);
-       if (dq && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\'))
+       replace_dollar(line, &i, &sq);
+       if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\'))
             new_str(line, i);
-        if ((dq || sq) && (*line)[i] > 0)
+        if (dq == 0 && sq == 0 && (*line)[i] == '\\')
+            new_str(line, i);
+        if ((*line)[i] > 0 && ((*line)[i] == ';' || (*line)[i] == '|'))
             (*line)[i] = -(*line)[i];
     }
 }
@@ -336,7 +344,7 @@ void    fill_command()
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
-        clear_line(&(var->split_sc[i]));
+        // clear_line(&(var->split_sc[i]));
         free_list_cmd(var->prs);
         j = -1;
         var->split_pip = ft_split(var->split_sc[i], '|');
@@ -350,7 +358,7 @@ void    fill_command()
             search_cmd_args(&j);
             print_list();
         }
-        execute();
+        // execute();
         // count_node_cmd();
         // count_node_file();
     }
@@ -368,21 +376,6 @@ void    fill_command()
 //     }
     
 // }
-
-void    recycle_line()
-{
-    t_var *var = get_struc_var(NULL);
-
-    int i;
-
-    i = -1;
-    while (var->line[++i])
-    {
-        if (var->line[i] == '>' || var->line[i] == '<')
-            var->line[i] = -var->line[i];
-    }
-    
-}
 
 int main(int ac, char **av, char **env)
 {
@@ -403,9 +396,9 @@ int main(int ac, char **av, char **env)
         ft_putstr_fd("\033[1;45m$minishell$~> \033[0m", 1);
         get_next_line(0, &var->line);
         syntax_error();
-        // recycle_line();
         if (var->error != 0 && !(var->error = 0))
             continue ;
+        clear_line(&(var->line));
         fill_command();
         // exit(0);
     }

@@ -197,5 +197,5 @@ void    builtin()
 	else if (!(ft_strncmp("export", *(var->prs->args), 7)))
 		builtin_export();
 	else
-		printf("minishell: %s: (var->prs->args) not found\n", *(var->prs->args));
+		printf("minishell: %s: command not found\n", *(var->prs->args));
 }
