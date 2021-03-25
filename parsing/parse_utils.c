@@ -54,14 +54,19 @@ void    syntax_error()
     int i;
 
     i = -1;
-    var->line = ft_strtrim(var->line, " ");
+    // var->line = ft_strtrim(var->line, " ");
     while (var->line[++i])
     {
-        if (var->line[i] == '\\' && !var->single_q)
+        if (var->line[i] == '\\' && !var->line[i + 1])
+            hundel_error(new_line);
+        else if (!var->double_q && var->line[i] == '\\' &&
+            (var->line[i + 1] == ';' || var->line[i + 1] == '|' || var->line[i + 1] == ' '))
         {
-            // var->line[i] *= -1;
+            var->line[i + 1] = -var->line[i + 1];
             i++;
         }
+        else if (var->line[i] == '\\' && !var->single_q)
+            i++;
         else if (var->line[i] == '\'')
             check_single_q();
         else if (var->line[i] == '"')

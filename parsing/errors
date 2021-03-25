@@ -10,6 +10,8 @@ echo "hello\$"
 echo "hello\\"
 backslask work
 -----------------------------------------
+
+
 ------------- check backslash in sq -------
 backslask not work
 -----------------------------------------

@@ -191,6 +191,7 @@ void    search_cmd_args(int *j)
     var->split_pip[*j] = ft_strtrim(var->split_pip[*j], " ");
     node->args = ft_split(var->split_pip[*j], ' ');
     correct_flag_neg();
+    
     node->cmd = node->args[0];
 }
 
@@ -269,15 +270,26 @@ void    del_sq_dq(char **line, int *i, int *sq, int *dq)
     }
 }
 
-void    replace_dollar(char **line, int *i, int *sq)
-{
-    int  s_index_dollar;
+// void    replace_dollar(char **line, int *i, int *sq)
+// {
+//     int  s_index_dollar;
 
-    s_index_dollar = 0;
-    if ((*line)[*i] == '$' && *sq == 0)
-    {
+//     s_index_dollar = 0;
+//     if ((*line)[*i] == '$' && *sq == 0)
+//     {
         
+//     }
+// }
+
+int check_last_bs(int i)
+{
+    t_var *var = get_struc_var(NULL);
+    while (var->line[++i])
+    {
+        if (ft_isprint(var->line[i]))
+            return (1);
     }
+    return (0);
 }
 
 void clear_line(char **line)
@@ -289,13 +301,27 @@ void clear_line(char **line)
     while ((*line)[++i] != '\0')
     {
        del_sq_dq(line, &i, &sq, &dq);
-       replace_dollar(line, &i, &sq);
+    //    replace_dollar(line, &i, &sq);
        if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\'))
             new_str(line, i);
-        if (dq == 0 && sq == 0 && (*line)[i] == '\\')
-            new_str(line, i);
-        if ((*line)[i] > 0 && ((*line)[i] == ';' || (*line)[i] == '|'))
+        if ((dq || sq) && (*line)[i] > 0)
             (*line)[i] = -(*line)[i];
+        if (dq == 0 && sq == 0 && (*line)[i] == '\\' && (*line)[i + 1] == '\\')
+        {
+            new_str(line, i);
+            (*line)[i] = -(*line)[i];
+        }
+        if (dq == 0 && sq == 0 && (*line)[i] == '\\')
+        {
+            if ((*line)[i + 1] == '\0')
+            {
+                hundel_error(new_line);
+                return ;
+            }
+            new_str(line, i);
+            if ((*line)[i] == '\'' || (*line)[i] == '\"')
+                (*line)[i] = -(*line)[i];
+        }
     }
 }
 
@@ -339,12 +365,12 @@ void    fill_command()
     int j;
 
     i = -1;
-    // var->prs = (t_parser *)malloc(sizeof(t_parser));
-    // var->prs->next_prs = NULL;
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
-        // clear_line(&(var->split_sc[i]));
+        clear_line(&(var->split_sc[i]));
+        if (var->error != 0 )
+            return ;
         free_list_cmd(var->prs);
         j = -1;
         var->split_pip = ft_split(var->split_sc[i], '|');
@@ -377,6 +403,17 @@ void    fill_command()
     
 // }
 
+void    verify_bs_with_split()
+{
+    t_var *var = get_struc_var(NULL);
+    int i = -1;
+    while (var->line[++i])
+    {
+        if (var->line[i] == '\\' && (var->line[i + 1] == ';'))
+            var->line[i + 1] = -var->line[i + 1];
+    }
+}
+
 int main(int ac, char **av, char **env)
 {
     int r;
@@ -389,18 +426,16 @@ int main(int ac, char **av, char **env)
     get_struc_var(var);
     get_env(env);
     var->home = find_value("HOME");
-    // print_list_env(var->head_env);
     while (r)
     {
         init_symbol();
         ft_putstr_fd("\033[1;45m$minishell$~> \033[0m", 1);
         get_next_line(0, &var->line);
         syntax_error();
+        verify_bs_with_split();
         if (var->error != 0 && !(var->error = 0))
             continue ;
-        clear_line(&(var->line));
         fill_command();
-        // exit(0);
     }
 
     return (0);
