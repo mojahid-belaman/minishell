@@ -270,14 +270,37 @@ void    del_sq_dq(char **line, int *i, int *sq, int *dq)
     }
 }
 
+int	ft_isalphnum(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	if (c == '_')
+		return (1);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	else
+		return (0);
+}
+
+int set_index(char *str, int i)
+{
+
+}
+
 // void    replace_dollar(char **line, int *i, int *sq)
 // {
-//     int  s_index_dollar;
+//     int index_dollar;
+//     char *tmp;
 
-//     s_index_dollar = 0;
 //     if ((*line)[*i] == '$' && *sq == 0)
 //     {
-        
+//         index_dollar = set_index((*line) + *i + 1, *i);
+//         // printf("|j = %d|\n", j);
+//         // printf("|*i = %d|\n", *i);
+//         // printf("|*line = %s|\n", (*line) + *i + 1);
+//         tmp = ft_substr((*line) + *i + 1, 0, j);
+//         printf("|%s|\n", tmp);
+//         exit(0);
 //     }
 // }
 
@@ -301,8 +324,8 @@ void clear_line(char **line)
     while ((*line)[++i] != '\0')
     {
        del_sq_dq(line, &i, &sq, &dq);
-    //    replace_dollar(line, &i, &sq);
-       if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\'))
+       replace_dollar(line, &i, &sq);
+       if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\' || (*line)[i + 1] == '`'))
             new_str(line, i);
         if ((dq || sq) && (*line)[i] > 0)
             (*line)[i] = -(*line)[i];
