@@ -10,11 +10,15 @@ SRC = ./parsing/get_next_line.c\
 	  ./parsing/ft_error.c\
 	  ./parsing/get_structs.c\
 	  ./parsing/get_env.c\
+	  ./parsing/create_lists_prs.c\
+	  ./parsing/get_dollars.c\
+	  ./parsing/get_cmd_arg.c\
+	  ./parsing/get_files.c\
+	  ./parsing/outils.c\
 	  ./execution/builtin.c\
 	  ./execution/execution.c\
 	  ./execution/export_beta.c\
 	  ./execution/linked_list.c
-
 
 OBJ = $(SRC:.c=.o)
 
@@ -31,9 +35,5 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 	@make -C libft fclean
-
-help:
-	@echo "SRC: $(SRC)"
-	@echo "OBJ: $(OBJ)"
 
 re: fclean all

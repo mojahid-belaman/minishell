@@ -15,10 +15,7 @@ void    check_allflgs()
         hundel_error(token_dsc);
     else if (var->semi_colomn || var->redir_left || var->redir_right
         || var->redir_double || var->pipe || var->double_q || var->single_q)
-        {
-         
         hundel_error(new_line);
-        }
 }
 
 void    check_carac(char c)
