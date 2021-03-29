@@ -48,7 +48,14 @@ void	chpwd_env()
 		pwd = pwd->next;
 	while (oldpwd && ft_strncmp("OLDPWD", oldpwd->key, 6))
 		oldpwd = oldpwd->next;
-	*(var->prs->args + 1) = getcwd(cwd, sizeof(cwd));
+	if (!(getcwd(cwd, sizeof(cwd))))
+	{
+		pwd->value = ft_strjoin(pwd->value, "/");
+		*(var->prs->args + 1) = ft_strjoin(pwd->value, *(var->prs->args + 1));
+		printf("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+	}
+	else
+		*(var->prs->args + 1) = cwd;
 	if (oldpwd->print == 1 && pwd->print == 1)
 	{
 		oldpwd->value = ft_strdup(pwd->value);

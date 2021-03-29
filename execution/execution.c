@@ -19,6 +19,8 @@ void    print_list_env(t_env *head)
 void    builtin()
 {
 	t_var *var = get_struc_var(NULL);
+
+		// puts("segfault");
 	if (!(ft_strncmp("cd", *(var->prs->args), 3)))
 		builtin_cd();
 	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)))
