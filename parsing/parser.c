@@ -6,7 +6,6 @@
 void    init_symbol()
 {
     t_var *var = get_struc_var(NULL);
-
     var->double_q = 0;
     var->single_q = 0;
     var->semi_colomn = 0;
@@ -114,8 +113,6 @@ void    fill_command()
             print_list();
         }
         execute();
-        // count_node_cmd();
-        // count_node_file();
     }
 }
 

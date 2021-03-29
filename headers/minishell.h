@@ -63,6 +63,7 @@ typedef struct s_var
     char	 **split_pip;
     int 	step;
     char    *home;
+    int     status;
     t_parser *prs;
     t_parser *prsTail;
     t_env *head_env;
