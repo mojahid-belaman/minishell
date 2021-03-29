@@ -192,22 +192,3 @@ int     builtin_exit()
 	}
 	exit (0);
 }
-
-void    builtin()
-{
-	t_var *var = get_struc_var(NULL);
-	if (!(ft_strncmp("cd", *(var->prs->args), 3)))
-		builtin_cd();
-	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)))
-		builtin_pwd();
-	else if (!(ft_strncmp("env", *(var->prs->args), 4)))
-		builtin_env();
-	else if (!(ft_strncmp("unset", *(var->prs->args), 6)))
-		builtin_unset();
-	else if (!(ft_strncmp("exit", *(var->prs->args), 5)))
-		builtin_exit();
-	else if (!(ft_strncmp("export", *(var->prs->args), 7)))
-		builtin_export();
-	else
-		printf("minishell: %s: command not found\n", *(var->prs->args));
-}
