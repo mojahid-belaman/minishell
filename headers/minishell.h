@@ -26,10 +26,10 @@
 
 typedef struct s_env
 {
-    char *key;
-    char *value;
-    int print;
-    struct s_env *next;
+	char *key;
+	char *value;
+	int print;
+	struct s_env *next;
 }               t_env;
 
 typedef struct s_files
@@ -41,31 +41,31 @@ typedef struct s_files
 
 typedef struct s_parser
 {
-    char *cmd;
-    char **args;
-    t_files *file_head;
-    struct s_parser *next_prs;
+	char *cmd;
+	char **args;
+	t_files *file_head;
+	struct s_parser *next_prs;
 }               t_parser;
 
 typedef struct s_var
 {
-    int 	single_q;
-    int 	double_q;
-    int 	semi_colomn;
-    int 	pipe;
-    int 	redir_left;
-    int 	redir_right;
-    int 	redir_double;
-    int 	back_sl;
-    int 	error;
-    char	 *line;
-    char	 **split_sc;
-    char	 **split_pip;
-    int 	step;
-    char    *home;
-    t_parser *prs;
-    t_parser *prsTail;
-    t_env *head_env;
+	int 		single_q;
+	int 		double_q;
+	int 		semi_colomn;
+	int 		pipe;
+	int 		redir_left;
+	int 		redir_right;
+	int 		redir_double;
+	int 		back_sl;
+	int 		error;
+	char		*line;
+	char		**split_sc;
+	char		**split_pip;
+	int 		step;
+	char		*home;
+	t_parser	*prs;
+	t_parser	*prsTail;
+	t_env		*head_env;
 }              t_var;
 
 //parsing
@@ -108,7 +108,6 @@ void    builtin_unset();
 int     builtin_exit();
 void    builtin_echo();
 void    builtin_export();
-void    builtin();
 void    execution();
 void	execute();
 // need to be removed
