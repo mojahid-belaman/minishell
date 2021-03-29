@@ -21,14 +21,15 @@ void	ft_lstadd_back(t_env **alst, t_env *new)
 char	*find_value(char *find)
 {
 	t_var *var = get_struc_var(NULL);
-	while (var->head_env)
+	t_env *current = var->head_env;
+	while (current)
 	{
-		if (!ft_strncmp(var->head_env->key, find, ft_strlen(find)))
+		if (!ft_strncmp(current->key, find, ft_strlen(find)))
 			break;
-		var->head_env = var->head_env->next;
+		current = current->next;
 	}
-	if (var->head_env && var->head_env->print)
-		return (ft_strdup(var->head_env->value));
+	if (current && current->print)
+		return (ft_strdup(current->value));
 	return (ft_strdup(""));
 }
 

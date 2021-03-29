@@ -1,5 +1,5 @@
- export TEST+=LOL
- exec_test 'export ='
+export TEST+=LOL
+exec_test 'export ='
 exec_test 'export 1TEST= ;' $ENV_SHOW
 exec_test 'export TEST ;' $EXPORT_SHOW
 exec_test 'export ""="" ; ' $ENV_SHOW
@@ -8,3 +8,14 @@ exec_test 'export TE+S=T="" ;' $ENV_SHOW
 exec_test 'export TEST=LOL ; echo $TEST ;' $ENV_SHOW
 exec_test 'export TEST=LOL ; echo $TEST$TEST$TEST=lol$TEST'
 exec_test 'export TEST=LOL; export TEST+=LOL ; echo $TEST ;' $ENV_SHOW
+
+echo
+echo -nnnnnnnnnn -nnnnnnnl hello
+echo -n -n - hello
+echo hello -n
+echo -n -n - -n -n hewljhs
+echo -nhello
+echo hello -n 
+echo -n -n - -n -n hewljhs
+echo -nhello
+-nhello

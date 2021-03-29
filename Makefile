@@ -13,7 +13,8 @@ SRC = ./parsing/get_next_line.c\
 	  ./execution/builtin.c\
 	  ./execution/execution.c\
 	  ./execution/export_beta.c\
-	  ./execution/linked_list.c
+	  ./execution/linked_list.c\
+	  ./execution/echo.c
 
 
 OBJ = $(SRC:.c=.o)

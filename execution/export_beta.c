@@ -13,9 +13,9 @@ void	export_env()
 	current = var->head_env;
 	while(current)
 	{
-		if (current->print)
+		if (current->print == 1)
 		{
-			key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
+			// key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
 			key_value[i] = ft_strjoin(current->key, "=\"");
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], current->value);
@@ -23,10 +23,13 @@ void	export_env()
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], "\"");
 			free(tmp);
+			i++;
 		}
-		else
+		else if (current->print == 0)
+		{
 			key_value[i] = ft_strdup(current->key);
-		i++;
+			i++;
+		}
 		current = current->next;
 	}
 	i = 0;
@@ -50,6 +53,7 @@ void	export_env()
 	i = 0;
 	while(key_value[i])
 	{
+		// need to fix the " issue;
 		printf("declare -x %s\n", key_value[i]);
 		i++;
 	}

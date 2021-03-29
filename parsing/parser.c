@@ -348,7 +348,7 @@ void    fill_command()
             createCmdsList(prs);
             search_file(&j);
             search_cmd_args(&j);
-            print_list();
+            // print_list();
         }
         execute();
         // count_node_cmd();
