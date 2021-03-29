@@ -63,12 +63,14 @@ typedef struct s_var
     char	 **split_pip;
     int 	step;
     char    *home;
+    int     status;
     t_parser *prs;
     t_parser *prsTail;
     t_env *head_env;
 }              t_var;
 
 //parsing
+int     isprint_car(int p);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strchr(const char *s, int c);
@@ -91,6 +93,15 @@ void    ft_lstadd_back(t_env **alst, t_env *news);
 t_env   *create_node(char **key_value);
 char    **split_env(char *line);
 t_var   *get_struc_var(t_var *ptr);
+void    free_list_cmd(t_parser *prs);
+void    free_list_files(t_parser *prs);
+void    add_prs_tonode(t_parser *node);
+void    add_files_tonode(t_files *fil);
+void    search_file(int *j);
+void    search_cmd_args(int *j);
+void    clear_line(char **line);
+int     set_index(char *str);
+char    *get_env_value(char *key);
 //execution
 char	*get_home();
 int		get_oldpwd();
