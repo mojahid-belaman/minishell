@@ -16,7 +16,7 @@ void    print_list_env(t_env *head)
 	
 }
 
-void    builtin()
+void    execute()
 {
 	t_var *var = get_struc_var(NULL);
 
@@ -66,10 +66,4 @@ void	execution()
 	}
 	else
 		wait(NULL);
-}
-
-void	execute()
-{
-	// need to fix the export error!! it segfaults.
-	builtin();
 }
