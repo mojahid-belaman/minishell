@@ -25,9 +25,8 @@ void del_sq_dq(char **line, int *i, int *sq, int *dq)
 	}
 }
 
-void replace_dollar(char **line, int *i, int *sq, int *dq)
+void replace_dollar(t_var *var, char **line, int *i, int *sq, int *dq)
 {
-	t_var *var = get_struc_var(NULL);
 	int index_dollar;
 	char *str_after_doll;
 	char *str_value_doll;
@@ -49,8 +48,9 @@ void replace_dollar(char **line, int *i, int *sq, int *dq)
 			free(str_value_doll);
 			(*line)[*i] = '\0';
 			str_value_doll = ft_strjoin((*line), str_after_doll);
+			free(*line);
 			(*line) = str_value_doll;
-			free(str_value_doll);
+			free(str_after_doll);
 		}
 	}
 	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'') && (*dq == 0 || *sq == 0))
@@ -60,7 +60,7 @@ void replace_dollar(char **line, int *i, int *sq, int *dq)
 	}
 }
 
-void clear_line(char **line)
+void clear_line(t_var *var, char **line)
 {
 	int i = -1;
 	int dq = 0;
@@ -69,7 +69,7 @@ void clear_line(char **line)
 	while ((*line)[++i] != '\0')
 	{
 		del_sq_dq(line, &i, &sq, &dq);
-		replace_dollar(line, &i, &sq, &dq);
+		replace_dollar(var, line, &i, &sq, &dq);
 		if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\' || (*line)[i + 1] == '`'))
 			new_str(line, i);
 		if ((dq || sq) && (*line)[i] > 0)

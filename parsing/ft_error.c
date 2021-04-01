@@ -59,8 +59,15 @@ void free_list_cmd(t_parser *prs)
 {
     t_var *var = get_struc_var(NULL);
     t_parser *curr;
+    int i = -1;
 
     curr = prs;
+    if (var->split_pip)
+    {
+        while (var->split_pip[++i])
+            free(var->split_pip[i]);
+        free(var->split_pip);
+    }
     while (curr)
     {
         var->prsTail = curr->next_prs;

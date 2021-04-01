@@ -46,9 +46,8 @@ char *get_filename(int *i, int *j)
     return (tmp);
 }
 
-void search_file(int *j)
+void search_file(t_var *var, int *j)
 {
-    t_var *var = get_struc_var(NULL);
     t_files *fil;
     int i;
 
@@ -83,6 +82,7 @@ void search_file(int *j)
             fil->next = NULL;
         }
     }
-    if (fil->next == NULL)
+    fil->type = '1';
+    if (fil->type == '1')
         free(fil);
 }

@@ -23,21 +23,21 @@ void init_symbol()
     var->prsTail = NULL;
 }
 
-void print_list()
+void print_list(t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     t_parser *curr_prs;
     t_files *curr_fils;
 
     curr_prs = var->prs;
-    int i = 0;
+    int i;
     while (curr_prs)
     {
         i = 0;
         curr_fils = curr_prs->file_head;
+        printf("|%p|\n", curr_prs);
         printf("\ncommand = |%s|\n", curr_prs->cmd);
         while (curr_prs->args[++i])
-            printf("\narg[%d] = |%s|\n", i, curr_prs->args[i]);
+            printf("\narg[%d] =  |%s|\n", i, curr_prs->args[i]);
         while (curr_fils)
         {
             printf("\ntype_redirection = |%c|\n", curr_fils->type);
@@ -64,19 +64,19 @@ void free_files(t_parser *prs)
     prs->file_head = NULL;
 }
 
-// void ft_free_args(char **args)
-// {
-//     int i;
+void ft_free_args(char **args)
+{
+    int i;
 
-//     i = 0;
-//     while (args[i])
-//     {
-//         free(args[i]);
-//         i++;
-//     }
-//     if (args)
-//         free(args);
-// }
+    i = 0;
+    while (args[i])
+    {
+        free(args[i]);
+        i++;
+    }
+    if (args)
+        free(args);
+}
 
 void free_list(t_var *var)
 {
@@ -86,10 +86,8 @@ void free_list(t_var *var)
     while (curr)
     {
         var->prsTail = curr->next_prs;
-        if (curr->cmd)
-            free(curr->cmd);
-        // if (curr->args)
-        //     ft_free_args(curr->args);
+        if (curr->args)
+            ft_free_args(curr->args);
         if (curr->file_head)
             free_files(curr);
         free(curr);
@@ -107,22 +105,23 @@ void ft_free(t_var *var)
     {
         while (var->split_pip[++i])
             free(var->split_pip[i]);
-        free(var->split_pip);
+        if (var->split_pip)
+            free(var->split_pip);
     }
     if (var->split_sc)
     {
         while (var->split_sc[++j])
             free(var->split_sc[j]);
-        free(var->split_sc);
+        if (var->split_sc)
+            free(var->split_sc);
     }
     if (var->line)
         free(var->line);
     free_list(var);
 }
 
-void fill_command()
+void fill_command(t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     t_parser *prs = NULL;
     int i;
     int j;
@@ -131,7 +130,7 @@ void fill_command()
     var->split_sc = ft_split(var->line, ';');
     while (var->split_sc[++i])
     {
-        clear_line(&(var->split_sc[i]));
+        clear_line(var, &(var->split_sc[i]));
         if (!var->split_sc[0][0])
             return;
         if (var->error != 0)
@@ -144,28 +143,28 @@ void fill_command()
             prs = (t_parser *)malloc(sizeof(t_parser));
             prs->file_head = NULL;
             prs->next_prs = NULL;
-            add_prs_tonode(prs);
-            search_file(&j);
-            search_cmd_args(&j);
+            add_prs_tonode(var, prs);
+            search_file(var, &j);
+            search_cmd_args(var, &j);
         }
-        print_list();
+        print_list(var);
         // execute();
     }
 }
 
-int main(void)
+int main(int ac, char **av, char **env)
 {
     int r;
     int i;
     t_var *var;
 
     r = 1;
-    // ac = 1;
-    // av = NULL;
+    ac = 1;
+    av = NULL;
     var = (t_var *)malloc(sizeof(t_var));
     get_struc_var(var);
-    // get_env(env);
-    // var->home = find_value("HOME");
+    get_env(env);
+    var->home = find_value("HOME");
     while (r)
     {
         i = -1;
@@ -175,7 +174,7 @@ int main(void)
         syntax_error(var, i);
         if (var->error != 0 && !(var->error = 0))
             continue;
-        fill_command();
+        fill_command(var);
         ft_free(var);
     }
     return (0);

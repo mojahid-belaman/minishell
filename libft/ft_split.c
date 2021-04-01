@@ -6,13 +6,13 @@
 /*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/21 13:25:51 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/03/04 17:37:29 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/01 17:18:00 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static int	ft_nbr_words(char *str, char c)
+static int ft_nbr_words(char *str, char c)
 {
 	int nbr;
 	int i;
@@ -24,7 +24,7 @@ static int	ft_nbr_words(char *str, char c)
 		while (str[i] == c)
 			i++;
 		if (str[i] != c && str[i] != '\0' &&
-				(str[i + 1] == c || str[i + 1] == '\0'))
+			(str[i + 1] == c || str[i + 1] == '\0'))
 		{
 			i++;
 			nbr++;
@@ -36,7 +36,7 @@ static int	ft_nbr_words(char *str, char c)
 	return (nbr);
 }
 
-static int	ft_next_word_size(char *str, int k, char c)
+static int ft_next_word_size(char *str, int k, char c)
 {
 	int word_size;
 
@@ -49,15 +49,15 @@ static int	ft_next_word_size(char *str, int k, char c)
 	return (word_size);
 }
 
-static char	*my_str(char *str, int *k, char c)
+static char *my_str(char *str, int *k, char c)
 {
-	int		j;
-	int		z;
-	char	*new_str;
+	int j;
+	int z;
+	char *new_str;
 
 	j = 0;
 	z = *k;
-	new_str = (char*)malloc(sizeof(char) * (ft_next_word_size(str, z, c) + 1));
+	new_str = (char *)malloc(sizeof(char) * (ft_next_word_size(str, z, c) + 1));
 	if (!new_str)
 		return (NULL);
 	while (str[z] != c && str[z])
@@ -67,7 +67,7 @@ static char	*my_str(char *str, int *k, char c)
 	return (new_str);
 }
 
-static char	**free_tab(char **tab, int n)
+static char **free_tab(char **tab, int n)
 {
 	int i;
 
@@ -81,19 +81,19 @@ static char	**free_tab(char **tab, int n)
 	return (NULL);
 }
 
-char		**ft_split(char const *s, char c)
+char **ft_split(char const *s, char c)
 {
-	int		i;
-	int		k;
-	char	**new_str;
-	char	*str;
+	int i;
+	int k;
+	char **new_str;
+	char *str;
 
 	i = 0;
 	k = 0;
-	str = (char*)s;
+	str = (char *)s;
 	if (!str)
 		return (NULL);
-	new_str = (char**)malloc((ft_nbr_words(str, c) + 1) * sizeof(char*));
+	new_str = (char **)malloc((ft_nbr_words(str, c) + 1) * sizeof(char *));
 	if (!new_str)
 		return (NULL);
 	while (str[k])

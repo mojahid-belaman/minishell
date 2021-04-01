@@ -165,7 +165,11 @@ int hundel_pip_sp(t_var *var, int i)
 
 void syntax_error(t_var *var, int i)
 {
+	char *tmp;
+
+	tmp = var->line;
 	var->line = ft_strtrim(var->line, " ");
+	free(tmp);
 	while (var->line[++i])
 	{
 		if (hundel_backsl_one(var, &i))

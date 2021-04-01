@@ -97,11 +97,11 @@ char **split_env(char *line);
 t_var *get_struc_var(t_var *ptr);
 void free_list_cmd(t_parser *prs);
 void free_list_files(t_parser *prs);
-void add_prs_tonode(t_parser *node);
+void add_prs_tonode(t_var *var, t_parser *node);
 void add_files_tonode(t_files *fil);
-void search_file(int *j);
-void search_cmd_args(int *j);
-void clear_line(char **line);
+void search_file(t_var *var, int *j);
+void search_cmd_args(t_var *var, int *j);
+void clear_line(t_var *var, char **line);
 int set_index(char *str);
 char *get_env_value(char *key);
 //execution
