@@ -41,6 +41,7 @@ void replace_dollar(t_var *var, char **line, int *i, int *sq, int *dq)
 			index_dollar = set_index((*line) + *i + 1);
 			str_after_doll = ft_substr((*line) + *i + 1, 0, index_dollar);
 			str_value_doll = get_env_value(str_after_doll);
+			free(str_after_doll);
 		}
 		if (index_dollar != 0)
 		{
@@ -70,6 +71,7 @@ void clear_line(t_var *var, char **line)
 	{
 		del_sq_dq(line, &i, &sq, &dq);
 		replace_dollar(var, line, &i, &sq, &dq);
+		del_sq_dq(line, &i, &sq, &dq);
 		if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\' || (*line)[i + 1] == '`'))
 			new_str(line, i);
 		if ((dq || sq) && (*line)[i] > 0)

@@ -26,6 +26,13 @@
 #define red `tput setaf 1`
 #define reset `tput sgr0`
 
+typedef struct s_history
+{
+	char *input;
+	struct s_history *next;
+	struct s_history *prev;
+} t_history;
+
 typedef struct s_env
 {
 	char *key;
@@ -69,6 +76,7 @@ typedef struct s_var
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
+	t_history *head_his;
 } t_var;
 
 //parsing
