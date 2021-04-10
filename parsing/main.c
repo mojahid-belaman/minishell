@@ -70,14 +70,41 @@ void delete_node(t_var *var)
     }
 }
 
-char *read_line(t_var *var)
+void normal_mode(struct termios config)
+{
+    if (tcsetattr(0, TCSANOW, &config) < 0)
+        ft_putstr_fd("error\n", 2);
+}
+
+struct termios termios_config()
 {
     struct termios s_termios;
+    struct termios old;
+    char *term_type;
+
+    if (tcgetattr(0, &old) < 0)
+        ft_putstr_fd("error\n", 2);
+    s_termios = old;
+    s_termios.c_lflag &= ~(ECHO | ICANON);
+    term_type = getenv("TERM");
+    if (tgetent(NULL, term_type) < 0)
+        ft_putstr_fd("error\n", 2);
+    if (tcsetattr(0, TCSANOW, &s_termios) < 0)
+        ft_putstr_fd("error\n", 2);
+    return (old);
+}
+
+char *read_line(t_var *var)
+{
+
     t_history *list;
     t_history *his;
     t_history *curr;
+    struct termios old;
+
     // int i;
     // int row;
+    // int col;
     // int len;
     // int cursor;
     int read_press;
@@ -89,16 +116,7 @@ char *read_line(t_var *var)
     his->input[0] = 0;
     list = NULL;
 
-    if (tcgetattr(0, &s_termios) < 0)
-        ft_putstr_fd("error\n", 2);
-    s_termios.c_lflag &= ~(ECHO | ICANON);
-    char *term_type = getenv("TERM");
-    int ret = tgetent(NULL, term_type);
-    if (ret == -1)
-        ft_putstr_fd("error\n", 2);
-    if (tcsetattr(0, TCSANOW, &s_termios) < 0)
-        ft_putstr_fd("error\n", 2);
-    ft_putstr_fd("\033[1;32mreadline~> \033[0m", 1);
+    old = termios_config();
     if (!(var->head_his))
     {
         var->head_his = his;
@@ -137,7 +155,7 @@ char *read_line(t_var *var)
                 continue;
             list = list->prev;
             ft_putstr_fd("\r\033[0K", 1);
-            ft_putstr_fd("\033[1;32mreadline~> \033[0m", 1);
+            ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
             ft_putstr_fd(list->input, 1);
         }
         else if (read_press == key_dw)
@@ -146,7 +164,7 @@ char *read_line(t_var *var)
                 continue;
             list = list->next;
             ft_putstr_fd("\r\033[0K", 1);
-            ft_putstr_fd("\033[1;32mreadline~> \033[0m", 1);
+            ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
             ft_putstr_fd(list->input, 1);
         }
         else if (read_press == key_en)
@@ -155,17 +173,21 @@ char *read_line(t_var *var)
             delete_node(var);
             if (list->input[0] != 0)
                 my_dll(var, list);
+            // normal_mode(old);
             break;
         }
     }
-    return (list->input);
+    return (ft_strdup(list->input));
 }
 
-int main()
-{
-    t_var var;
-    var = (t_var){0};
-    while (1)
-        read_line(&var);
-    return (0);
-}
+// int main()
+// {
+//     t_var var;
+//     var = (t_var){0};
+//     while (1)
+//     {
+//        char *str = read_line(&var);
+//         printf("|%s|\n", str);
+//     }
+//     return (0);
+// }

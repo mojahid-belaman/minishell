@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "../headers/minishell.h"
 
 void init_symbol()
@@ -151,32 +148,31 @@ void fill_command(t_var *var)
     }
 }
 
-void my_dll(t_var *var, char *str)
-{
-    t_history *curr;
-    t_history *his;
+// void my_dll(t_var *var, char *str)
+// {
+//     t_history *curr;
+//     t_history *his;
 
+//     his = (t_history *)malloc(sizeof(t_history));
+//     his->next = NULL;
+//     his->prev = NULL;
+//     his->input = str;
 
-    his = (t_history *)malloc(sizeof(t_history));
-    his->next = NULL;
-    his->prev = NULL;
-    his->input = str;
-
-    if (!var->head_his)
-    {
-        var->head_his = his;
-        printf("str : |%s|\n", var->head_his->input);
-    }
-    else
-    {
-        curr = var->head_his;
-        while (curr->next)
-            curr = curr->next;
-        his->prev = curr;
-        curr->next = his;
-        printf("prev : |%s| now |%s|\n", curr->next->prev->input, curr->next->input);
-    }
-}
+//     if (!var->head_his)
+//     {
+//         var->head_his = his;
+//         printf("str : |%s|\n", var->head_his->input);
+//     }
+//     else
+//     {
+//         curr = var->head_his;
+//         while (curr->next)
+//             curr = curr->next;
+//         his->prev = curr;
+//         curr->next = his;
+//         printf("prev : |%s| now |%s|\n", curr->next->prev->input, curr->next->input);
+//     }
+// }
 
 int main(int ac, char **av, char **env)
 {
@@ -197,8 +193,10 @@ int main(int ac, char **av, char **env)
         i = -1;
         init_symbol();
         ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
-        get_next_line(0, &var->line);
+        // get_next_line(0, &var->line);
         // my_dll(var, var->line);
+        var->line = read_line(var);
+        // printf("|%s|\n", var->line);
         syntax_error(var, i);
         if (var->error != 0 && !(var->error = 0))
             continue;

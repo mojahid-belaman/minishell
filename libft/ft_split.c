@@ -6,7 +6,7 @@
 /*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/21 13:25:51 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/04/01 17:18:00 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/10 17:01:10 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,16 @@ static char *my_str(char *str, int *k, char c)
 	return (new_str);
 }
 
-static char **free_tab(char **tab, int n)
+static char **free_tab(char **tabl, int n)
 {
 	int i;
 
 	i = 0;
-	if (tab)
+	if (tabl)
 	{
 		while (i < n)
-			free(tab[i++]);
-		free(tab);
+			free(tabl[i++]);
+		free(tabl);
 	}
 	return (NULL);
 }

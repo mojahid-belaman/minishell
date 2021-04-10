@@ -2,9 +2,7 @@ NAME = minishell
 CFLAGS = -Wall -Wextra -Werror
 CC = gcc
 LIB = libft/libft.a
-SRC = 	./parsing/get_next_line.c\
-	  	./parsing/get_next_line_utils.c\
-	  	./parsing/parser.c\
+SRC = 	./parsing/parser.c\
 	  	./parsing/check_errors.c\
 	  	./parsing/check_flags.c\
 	  	./parsing/ft_error.c\
@@ -16,6 +14,7 @@ SRC = 	./parsing/get_next_line.c\
 	  	./parsing/get_files.c\
 	  	./parsing/outils.c\
 		./parsing/check_flgs_sdr.c\
+		./parsing/main.c\
 	  	./execution/builtin.c\
 	  	./execution/execution.c\
 	  	./execution/export_beta.c\
@@ -32,7 +31,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C libft
-	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIB) -lncurses -o $(NAME)
 	@echo "$(white)${bold}LIBRARY CREATION${ED}"
 	@echo "$(white)${bold}... DONE ...${ED}"
 

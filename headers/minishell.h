@@ -10,6 +10,12 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include "../libft/libft.h"
+#include <curses.h>
+#include <term.h>
+#define key_u 0x415b1b
+#define key_dw 0x425b1b
+#define key_en 10
+#define key_del 127
 
 #define BUFFER_SIZE 1024
 #define token_rr 1
@@ -28,7 +34,8 @@
 
 typedef struct s_history
 {
-	char *input;
+	char input[4096];
+	int cursor;
 	struct s_history *next;
 	struct s_history *prev;
 } t_history;
@@ -112,6 +119,7 @@ void search_cmd_args(t_var *var, int *j);
 void clear_line(t_var *var, char **line);
 int set_index(char *str);
 char *get_env_value(char *key);
+char *read_line(t_var *var);
 //execution
 char *get_home();
 int get_oldpwd();
