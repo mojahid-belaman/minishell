@@ -145,7 +145,7 @@ void fill_command(t_var *var)
             search_cmd_args(var, &j);
         }
         // print_list(var);
-        execute();
+        execute(var);
         if (var->exit)
             break;
     }
