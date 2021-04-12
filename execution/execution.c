@@ -1,7 +1,7 @@
 
 #include "../headers/minishell.h"
 
-void    print_list_env(t_env *head)
+void print_list_env(t_env *head)
 {
 	t_env *curr;
 
@@ -13,14 +13,13 @@ void    print_list_env(t_env *head)
 		printf("|%s||%s|\n", curr->key, curr->value);
 		curr = curr->next;
 	}
-	
 }
 
-void    execute()
+void execute()
 {
 	t_var *var = get_struc_var(NULL);
 
-		// puts("segfault");
+	// puts("segfault");
 	if (!(ft_strncmp("cd", *(var->prs->args), 3)))
 		builtin_cd();
 	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)))
@@ -40,11 +39,11 @@ void    execute()
 	// 	printf("minishell: %s: command not found\n", *(var->prs->args));
 }
 
-void	execution()
+void execution()
 {
-	t_var	*var = get_struc_var(NULL);
-	char	*tmp = find_value("PATH");
-	char	**path;
+	t_var *var = get_struc_var(NULL);
+	char *tmp = find_value("PATH");
+	char **path;
 	struct stat buffer;
 	int id = 0;
 	int i = 0;
@@ -53,16 +52,16 @@ void	execution()
 	if (id == 0)
 	{
 		free(tmp);
-		while(path[i])
+		while (path[i])
 		{
 			tmp = ft_strjoin(path[i], "/");
 			tmp = ft_strjoin(tmp, *var->prs->args);
-			if (!stat(tmp,  &buffer))
+			if (!stat(tmp, &buffer))
 				execve(tmp, var->prs->args, NULL);
 			i++;
 			free(tmp);
 			tmp = NULL;
-		}	
+		}
 	}
 	else
 		wait(NULL);
