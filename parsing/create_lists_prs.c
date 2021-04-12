@@ -3,7 +3,7 @@
 void    add_files_tonode(t_files *fil)
 {
     t_var *var = get_struc_var(NULL);
-    printf("\nfilename=%s|typeRedir=%c|addressNodefile=%p|addressWholeCmd=%p\n", fil->file_name, fil->type ,fil, var->prsTail);
+    // printf("\nfilename=%s|typeRedir=%c|addressNodefile=%p|addressWholeCmd=%p\n", fil->file_name, fil->type ,fil, var->prsTail);
     t_files *curr;
     
     curr = var->prsTail->file_head;

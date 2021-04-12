@@ -9,6 +9,7 @@
 # include <stdio.h>
 # include <limits.h>
 # include <sys/stat.h>
+# include <dirent.h>
 # include "../libft/libft.h"
 
 # define BUFFER_SIZE 1024
@@ -63,6 +64,8 @@ typedef struct s_var
 	char		**split_pip;
 	int 		step;
 	char		*home;
+	int			exit;
+	int			fd[2];
 	t_parser	*prs;
 	t_parser	*prsTail;
 	t_env		*head_env;
@@ -115,11 +118,13 @@ void	builtin_cd();
 void	builtin_pwd();
 void    builtin_env();
 void    builtin_unset();
-int     builtin_exit();
+void     builtin_exit();
 void    builtin_echo();
 void    builtin_export();
 void    execution();
 void	execute();
+int		ft_sign(char c);
+int		ft_isdig(char *s);
 // need to be removed
 void    print_list_env(t_env *head);
 #endif

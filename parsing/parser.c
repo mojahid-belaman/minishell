@@ -21,6 +21,7 @@ void    init_symbol()
     var->split_pip = NULL;
     var->prs = NULL;
     var->prsTail = NULL;
+    var->exit = 0;
 }
 
 void    print_list()
@@ -110,9 +111,11 @@ void    fill_command()
             add_prs_tonode(prs);
             search_file(&j);
             search_cmd_args(&j);
-            // print_list();
         }
+            // print_list();
         execute();
+        if (var->exit)
+            break;
     }
 }
 
