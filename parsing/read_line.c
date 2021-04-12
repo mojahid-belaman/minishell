@@ -16,7 +16,7 @@
 //     *col = ft_atoi(answer + i + 1);
 // }
 
-void my_dll(t_var *var, t_history *list)
+void my_dll(t_var *var, t_history *list, char *input)
 {
     t_history *curr;
     t_history *his;
@@ -27,8 +27,8 @@ void my_dll(t_var *var, t_history *list)
     his->next = NULL;
     his->prev = NULL;
     his->cursor = list->cursor;
-    ft_memcpy(his->input, list->input, len);
-    his->input[len] = 0;
+    // ft_memcpy(his->input, list->input, len);
+    his->input = ft_strdup(input);
     if (!var->head_his)
     {
         var->head_his = his;
@@ -61,10 +61,12 @@ void delete_node(t_var *var)
     if (prev)
     {
         prev->next = NULL;
+        free(list->input);
         free(list);
     }
     else
     {
+        free(var->head_his->input);
         free(var->head_his);
         var->head_his = NULL;
     }
@@ -101,19 +103,19 @@ char *read_line(t_var *var)
     t_history *his;
     t_history *curr;
     struct termios old;
-
     // int i;
     // int row;
     // int col;
     // int len;
     // int cursor;
     int read_press;
+    char *tmp;
 
     his = (t_history *)malloc(sizeof(t_history));
     his->next = NULL;
     his->prev = NULL;
     his->cursor = 0;
-    his->input[0] = 0;
+    his->input = NULL;
     list = NULL;
 
     old = termios_config();
@@ -137,7 +139,44 @@ char *read_line(t_var *var)
         read(0, &read_press, 4);
         if (read_press > 31 && read_press < 127)
         {
-            list->input[list->cursor] = read_press;
+            int fd = open("file", O_RDWR | O_CREAT | O_TRUNC, 0666);
+            if (!list->input)
+            {
+                list->input = (char *)malloc(list->cursor + 2);
+                list->input[list->cursor] = read_press;
+                list->input[list->cursor + 1] = '\0';
+            }
+            else
+            {
+                int len = 0;
+                int i = 0;
+                while (list->input[len])
+                    len++;
+                tmp = (char *)malloc(len + 2);
+                i = 0;
+                while (i < len)
+                {
+                    tmp[i] = list->input[i];
+                    i++;
+                }
+                free(list->input);
+                tmp[i] = read_press;
+                tmp[i + 1] = '\0';
+                list->input = (char *)malloc(len + 2);
+                i = 0;
+                while (tmp[i])
+                {
+                    list->input[i] = tmp[i];
+                    i++;
+                }
+                list->input[i] = '\0';
+                free(tmp);
+            }
+            ft_putstr_fd(list->input, fd);
+            ft_putstr_fd("|", fd);
+            ft_putnbr_fd(list->cursor, fd);
+            ft_putstr_fd("\n", fd);
+            close(fd);
             ft_putstr_fd(list->input + list->cursor, 1);
             list->cursor++;
         }
@@ -170,14 +209,20 @@ char *read_line(t_var *var)
         else if (read_press == key_en)
         {
             ft_putstr_fd("\n", 1);
+            if (!list->input)
+            {
+                ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
+                continue;
+            }
+            tmp = ft_strdup(list->input);
             delete_node(var);
-            if (list->input[0] != 0)
-                my_dll(var, list);
-            // normal_mode(old);
+            if (tmp)
+                my_dll(var, list, tmp);
+            normal_mode(old);
             break;
         }
     }
-    return (ft_strdup(list->input));
+    return (tmp);
 }
 
 // int main()

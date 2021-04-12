@@ -17,7 +17,7 @@
 #define key_en 10
 #define key_del 127
 
-#define BUFFER_SIZE 1024
+#define LEN_MAX_CMD 4096
 #define token_rr 1
 #define token_rl 2
 #define token_dr 3
@@ -34,7 +34,7 @@
 
 typedef struct s_history
 {
-	char input[4096];
+	char *input;
 	int cursor;
 	struct s_history *next;
 	struct s_history *prev;
@@ -85,7 +85,7 @@ typedef struct s_var
 	t_env *head_env;
 	t_history *head_his;
 } t_var;
-
+char ***g_env;
 //parsing
 int isprint_car(int p);
 char *ft_strjoin(char const *s1, char const *s2);
@@ -120,6 +120,7 @@ void clear_line(t_var *var, char **line);
 int set_index(char *str);
 char *get_env_value(char *key);
 char *read_line(t_var *var);
+void ft_free_args(char **args);
 //execution
 char *get_home();
 int get_oldpwd();

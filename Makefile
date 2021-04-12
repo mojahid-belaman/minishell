@@ -14,7 +14,7 @@ SRC = 	./parsing/parser.c\
 	  	./parsing/get_files.c\
 	  	./parsing/outils.c\
 		./parsing/check_flgs_sdr.c\
-		./parsing/main.c\
+		./parsing/read_line.c\
 	  	./execution/builtin.c\
 	  	./execution/execution.c\
 	  	./execution/export_beta.c\

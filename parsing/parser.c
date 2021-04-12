@@ -143,47 +143,21 @@ void fill_command(t_var *var)
             search_file(var, &j);
             search_cmd_args(var, &j);
         }
-        print_list(var);
-        // execute();
+        // print_list(var);
+        execute();
     }
 }
-
-// void my_dll(t_var *var, char *str)
-// {
-//     t_history *curr;
-//     t_history *his;
-
-//     his = (t_history *)malloc(sizeof(t_history));
-//     his->next = NULL;
-//     his->prev = NULL;
-//     his->input = str;
-
-//     if (!var->head_his)
-//     {
-//         var->head_his = his;
-//         printf("str : |%s|\n", var->head_his->input);
-//     }
-//     else
-//     {
-//         curr = var->head_his;
-//         while (curr->next)
-//             curr = curr->next;
-//         his->prev = curr;
-//         curr->next = his;
-//         printf("prev : |%s| now |%s|\n", curr->next->prev->input, curr->next->input);
-//     }
-// }
 
 int main(int ac, char **av, char **env)
 {
     int r;
     int i;
     t_var *var;
-    // t_history *curr;
 
     r = 1;
     ac = 1;
     av = NULL;
+    g_env = &env;
     var = (t_var *)malloc(sizeof(t_var));
     get_struc_var(var);
     get_env(env);
@@ -193,10 +167,7 @@ int main(int ac, char **av, char **env)
         i = -1;
         init_symbol();
         ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
-        // get_next_line(0, &var->line);
-        // my_dll(var, var->line);
         var->line = read_line(var);
-        // printf("|%s|\n", var->line);
         syntax_error(var, i);
         if (var->error != 0 && !(var->error = 0))
             continue;
