@@ -174,21 +174,63 @@ void    builtin_unset()
     }
 }
 
-int     builtin_exit()
+// int     builtin_exit()
+// {
+// 	t_var *var = get_struc_var(NULL);
+
+// 	if (*(var->prs->args + 1))
+// 	{
+// 		if ((ft_isdigit(**(var->prs->args + 1)) || (ft_sign(**(var->prs->args + 1)) && ft_isdigit(*(*(var->prs->args + 1) + 1)))) && *(var->prs->args + 2))
+// 		{
+// 			ft_putstr_fd("exit\n", 2);
+// 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+// 			return (0);
+// 		}
+// 		else if ((ft_sign(**(var->prs->args + 1)) && !(ft_isdigit(*(*(var->prs->args + 1) + 1)))) || ft_isalpha(**(var->prs->args + 1)))
+// 		{
+// 			ft_putstr_fd("exit\n", 2);
+// 			ft_putstr_fd("minishell: exit: ", 2);
+// 			ft_putstr_fd(*(var->prs->args + 1), 2);
+// 			ft_putstr_fd(": numeric argument required\n", 2);
+// 			exit (-1);
+// 		}
+// 		else
+// 		{
+// 			ft_putstr_fd("exit\n", 2);
+// 			exit(ft_atoi(*(var->prs->args + 1))) ; 
+// 		}
+// 	}
+// 	else 
+// 		exit(0);
+// }
+
+void	builtin_exit()
 {
 	t_var *var = get_struc_var(NULL);
 
-	if (*(var->prs->args + 1)&& *(var->prs->args + 2))
-		printf("minishell: exit: too many arguments\n");
 	if (*(var->prs->args + 1))
 	{
-		if (!(ft_isdigit(**(var->prs->args + 1))))
+		if (ft_isdig(*(var->prs->args + 1)) && *(var->prs->args + 2))
 		{
-			printf("minishell: exit: %s: numeric argument required\n", *(var->prs->args + 1));
+			ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 2);
+			var->exit = 1;
+			return;
+		}
+		else if (!(ft_isdig(*(var->prs->args + 1))))
+		{
+			ft_putstr_fd("exit\nminishell: exit: ", 2);
+			ft_putstr_fd(*(var->prs->args + 1), 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
 			exit (-1);
 		}
 		else
-			exit(ft_atoi(*(var->prs->args + 1))) ; 
+		{
+			ft_putstr_fd("exit\n", 2);
+			exit(ft_atoi(*(var->prs->args + 1))); 
+			// long long a = ft_atoi(*(var->prs->args + 1));
+			// printf("%lld\n", a); 
+		}
 	}
-	exit (0);
+	else
+		exit(0);
 }

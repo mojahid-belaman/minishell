@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:12:37 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/27 14:50:53 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/04/12 12:31:51 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,17 @@ void    builtin_echo()
 		i++;
 	while(*(var->prs->args + i) && *(var->prs->args + i + 1))
 	{
-		ft_putstr_fd(*(var->prs->args + i), 1);
-		ft_putchar_fd(' ', 1);
+		ft_putstr_fd(*(var->prs->args + i), var->fd[0]);
+		ft_putchar_fd(' ', var->fd[0]);
 		i++;
 	}
 	if (!(*(var->prs->args + 1)))
-		ft_putstr_fd("\n", 1);
+		ft_putstr_fd("\n", var->fd[0]);
 	else if (!check)
-		printf("%s\n", *(var->prs->args + i));
+	{
+		ft_putstr_fd(*(var->prs->args + i) , var->fd[0]);
+		ft_putstr_fd("\n", var->fd[0]);
+	}
 	else
-		ft_putstr_fd(*(var->prs->args + i), 1);
+		ft_putstr_fd(*(var->prs->args + i), var->fd[0]);
 }

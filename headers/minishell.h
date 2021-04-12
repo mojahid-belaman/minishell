@@ -10,6 +10,7 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include "../libft/libft.h"
+# include <dirent.h>
 #include <curses.h>
 #include <term.h>
 #define key_u 0x415b1b
@@ -79,13 +80,16 @@ typedef struct s_var
 	char **split_pip;
 	int step;
 	char *home;
+	int		exit;
+	int		fd[2];
 	int status;
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
 	t_history *head_his;
 } t_var;
-char ***g_env;
+
+
 //parsing
 int isprint_car(int p);
 char *ft_strjoin(char const *s1, char const *s2);
@@ -122,24 +126,26 @@ char *get_env_value(char *key);
 char *read_line(t_var *var);
 void ft_free_args(char **args);
 //execution
-char *get_home();
-int get_oldpwd();
-void chpwd_env();
-char *check_home();
-void export_env();
-void export_var(int *j);
-int echo_option(char *str, int *check);
-int ft_listsize();
-char *find_value(char *find);
-void builtin_cd();
-void builtin_pwd();
-void builtin_env();
-void builtin_unset();
-int builtin_exit();
-void builtin_echo();
-void builtin_export();
-void execution();
-void execute();
+char	*get_home();
+int		get_oldpwd();
+void	chpwd_env();
+char	*check_home();
+void	export_env();
+void	export_var(int *j);
+int     echo_option(char *str, int *check);
+int		ft_listsize();
+char	*find_value(char *find);
+void	builtin_cd();
+void	builtin_pwd();
+void    builtin_env();
+void    builtin_unset();
+void     builtin_exit();
+void    builtin_echo();
+void    builtin_export();
+void    execution();
+void	execute();
+int		ft_sign(char c);
+int		ft_isdig(char *s);
 // need to be removed
 void print_list_env(t_env *head);
 #endif

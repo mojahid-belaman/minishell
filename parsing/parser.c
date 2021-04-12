@@ -18,6 +18,7 @@ void init_symbol()
     var->split_pip = NULL;
     var->prs = NULL;
     var->prsTail = NULL;
+    var->exit = 0;
 }
 
 void print_list(t_var *var)
@@ -145,6 +146,8 @@ void fill_command(t_var *var)
         }
         // print_list(var);
         execute();
+        if (var->exit)
+            break;
     }
 }
 
@@ -157,7 +160,6 @@ int main(int ac, char **av, char **env)
     r = 1;
     ac = 1;
     av = NULL;
-    g_env = &env;
     var = (t_var *)malloc(sizeof(t_var));
     get_struc_var(var);
     get_env(env);
