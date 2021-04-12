@@ -15,9 +15,8 @@ void print_list_env(t_env *head)
 	}
 }
 
-void execution()
+void execution(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	char *tmp = find_value("PATH");
 	char **path;
 	struct stat buffer;
@@ -61,11 +60,10 @@ void	open_file()
 	}
 }
 
-void    execute()
+void    execute(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	struct stat buffer;
-	if (ft_listsize(var->prs->file_head) > 0)
+	if (ft_listsize_file(var->prs->file_head) > 0)
 		open_file();
 	if (!stat(*(var->prs->args),  &buffer))
 	{
@@ -73,20 +71,20 @@ void    execute()
 		printf("minishell: %s: is a directory\n", *(var->prs->args));
 	}
 	else if (!(ft_strncmp("cd", *(var->prs->args), 3)))
-		builtin_cd();
+		builtin_cd(var);
 	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)))
-		builtin_pwd();
+		builtin_pwd(var);
 	else if (!(ft_strncmp("env", *(var->prs->args), 4)))
-		builtin_env();
+		builtin_env(var);
 	else if (!(ft_strncmp("unset", *(var->prs->args), 6)))
-		builtin_unset();
+		builtin_unset(var);
 	else if (!(ft_strncmp("exit", *(var->prs->args), 5)))
-		builtin_exit();
+		builtin_exit(var);
 	else if (!(ft_strncmp("export", *(var->prs->args), 7)))
-		builtin_export();
+		builtin_export(var);
 	else if (!(ft_strncmp("echo", *(var->prs->args), 5)))
-		builtin_echo();
+		builtin_echo(var);
 	else
-		execution();
+		execution(var);
 }
 

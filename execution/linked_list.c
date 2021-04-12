@@ -47,3 +47,18 @@ int	ft_listsize(t_env *lst)
 	}
 	return (cpt);
 }
+
+int	ft_listsize_file(t_files *files)
+{
+	int cpt;
+
+	cpt = 0;
+	if (!files)
+		return (0);
+	while (files)
+	{
+		cpt++;
+		files = files->next;
+	}
+	return (cpt);
+}

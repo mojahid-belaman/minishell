@@ -1,11 +1,10 @@
 #include "../headers/minishell.h"
 
-void	export_env()
+void	export_env(t_var *var)
 {
 	char    **key_value;
 	char	*tmp;
 	char	*anothertmp;
-	t_var *var = get_struc_var(NULL);
 	t_env   *current;
 	int i = 0;
 	int j = 0;
@@ -59,13 +58,12 @@ void	export_env()
 	}
 }
 
-void	export_var(int *j)
+void	export_var(t_var *var, int *j)
 {
 	int i = 0;
 	char    **key_value;
 	t_env	*current;
 	char	*tmp;
-	t_var *var = get_struc_var(NULL);
 
 	key_value = (char **)malloc(3);
 	if (!ft_isalpha(**(var->prs->args + (*j))))
@@ -101,7 +99,7 @@ void	export_var(int *j)
 		{
 			tmp = *(var->prs->args + (*j));
 			*(var->prs->args + (*j)) = ft_strjoin(ft_substr(*(var->prs->args + (*j)), 0, i), ft_substr(*(var->prs->args + (*j)), i + 1, ft_strlen(*(var->prs->args + (*j))) - i - 1));
-			export_var(j);
+			export_var(var, j);
 			free(tmp);
 		}
 		else
@@ -112,16 +110,15 @@ void	export_var(int *j)
 	}
 }
 
-void    builtin_export()
+void    builtin_export(t_var *var)
 {
 	t_env	*current;
 	char	*tmp;
 	int		i;
-	t_var *var = get_struc_var(NULL);
 
 	i = 1;
 	if (!(*(var->prs->args + 1)))
-		export_env();
+		export_env(var);
 	else
 	{
 		while (*(var->prs->args + i))
@@ -136,7 +133,7 @@ void    builtin_export()
 			}
 			if (!current)
 			{
-				export_var(&i);
+				export_var(var, &i);
 			}
 			else
 			{

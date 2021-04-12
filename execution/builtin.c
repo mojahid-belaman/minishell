@@ -1,8 +1,7 @@
 #include "../headers/minishell.h"
 
-char	*get_home()
+char	*get_home(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	t_env	*current;
 
 	current = var->head_env;
@@ -17,9 +16,8 @@ char	*get_home()
 	return (ft_strdup(var->home));
 }
 
-int		get_oldpwd()
+int		get_oldpwd(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	t_env *current;
 
 	current = var->head_env;
@@ -35,9 +33,8 @@ int		get_oldpwd()
 	return (1);
 }
 
-void	chpwd_env()
+void	chpwd_env(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	char	cwd[PATH_MAX];
 	t_env	*pwd;
 	t_env	*oldpwd;
@@ -80,9 +77,8 @@ void	chpwd_env()
 	}
 }
 
-char	*check_home()
+char	*check_home(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	t_env *current;
 
 	current = var->head_env;
@@ -97,33 +93,31 @@ char	*check_home()
 		return(ft_strdup(current->value));
 }
 
-void	builtin_cd()
+void	builtin_cd(t_var *var)
 {
 	int cd;
-	t_var *var = get_struc_var(NULL);
 
 	if (!(*(var->prs->args + 1)))
 	{
-		*(var->prs->args + 1) = check_home();
+		*(var->prs->args + 1) = check_home(var);
 		if (!(*(var->prs->args + 1)))
 			return ;
 	}
 	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
-		*(var->prs->args + 1) = ft_strjoin(get_home(), *(var->prs->args + 1) + 1);
+		*(var->prs->args + 1) = ft_strjoin(get_home(var), *(var->prs->args + 1) + 1);
 	else if (!(ft_strncmp("-", *(var->prs->args + 1), 1)))
-		if(!(get_oldpwd()))
+		if(!(get_oldpwd(var)))
 			return ;
 	cd = chdir(*(var->prs->args + 1));
 	if (cd < 0)
 		printf("minishell: cd %s: No such file or directory\n", *(var->prs->args + 1));
 	else
-		chpwd_env();
+		chpwd_env(var);
 }
 
-void	builtin_pwd()
+void	builtin_pwd(t_var *var)
 {
 	char	pwd[PATH_MAX];
-	t_var *var = get_struc_var(NULL);
 	t_env	*current;
 
 	current = var->head_env;
@@ -135,9 +129,8 @@ void	builtin_pwd()
    		printf("%s\n", getcwd(pwd, sizeof(pwd)));
 }
 
-void    builtin_env()
+void    builtin_env(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	t_env	*current;
 
 	current = var->head_env;
@@ -149,9 +142,8 @@ void    builtin_env()
 	}
 }
 
-void    builtin_unset()
+void    builtin_unset(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
     t_env	*current;
     char    *tmp;
     int i = 1;
@@ -174,40 +166,8 @@ void    builtin_unset()
     }
 }
 
-// int     builtin_exit()
-// {
-// 	t_var *var = get_struc_var(NULL);
-
-// 	if (*(var->prs->args + 1))
-// 	{
-// 		if ((ft_isdigit(**(var->prs->args + 1)) || (ft_sign(**(var->prs->args + 1)) && ft_isdigit(*(*(var->prs->args + 1) + 1)))) && *(var->prs->args + 2))
-// 		{
-// 			ft_putstr_fd("exit\n", 2);
-// 			ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-// 			return (0);
-// 		}
-// 		else if ((ft_sign(**(var->prs->args + 1)) && !(ft_isdigit(*(*(var->prs->args + 1) + 1)))) || ft_isalpha(**(var->prs->args + 1)))
-// 		{
-// 			ft_putstr_fd("exit\n", 2);
-// 			ft_putstr_fd("minishell: exit: ", 2);
-// 			ft_putstr_fd(*(var->prs->args + 1), 2);
-// 			ft_putstr_fd(": numeric argument required\n", 2);
-// 			exit (-1);
-// 		}
-// 		else
-// 		{
-// 			ft_putstr_fd("exit\n", 2);
-// 			exit(ft_atoi(*(var->prs->args + 1))) ; 
-// 		}
-// 	}
-// 	else 
-// 		exit(0);
-// }
-
-void	builtin_exit()
+void	builtin_exit(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
-
 	if (*(var->prs->args + 1))
 	{
 		if (ft_isdig(*(var->prs->args + 1)) && *(var->prs->args + 2))
