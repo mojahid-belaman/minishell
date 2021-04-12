@@ -19,18 +19,22 @@ void execution(t_var *var)
 {
 	char *tmp = find_value("PATH");
 	char **path;
+	char *tmep;
 	struct stat buffer;
 	int id = 0;
 	int i = 0;
 	path = ft_split(tmp, ':');
+	free(tmp);
 	id = fork();
 	if (id == 0)
 	{
-		free(tmp);
+		// free(tmp);
 		while (path[i])
 		{
 			tmp = ft_strjoin(path[i], "/");
+			tmep = tmp;
 			tmp = ft_strjoin(tmp, *var->prs->args);
+			free(tmep);
 			if (!stat(tmp, &buffer))
 				execve(tmp, var->prs->args, NULL);
 			i++;
@@ -45,6 +49,7 @@ void execution(t_var *var)
 	}
 	else
 		wait(NULL);
+	ft_free_args(path);
 }
 
 void	open_file()
