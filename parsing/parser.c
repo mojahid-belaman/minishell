@@ -160,7 +160,6 @@ int main(int ac, char **av, char **env)
     r = 1;
     ac = 1;
     av = NULL;
-    g_env = &env;
     var = (t_var *)malloc(sizeof(t_var));
     get_struc_var(var);
     get_env(env);
