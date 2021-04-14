@@ -66,6 +66,7 @@ void	export_var(t_var *var, int *j)
 	char	*tmp;
 
 	key_value = (char **)malloc(3);
+	key_value[2] = NULL;
 	if (!ft_isalpha(**(var->prs->args + (*j))))
 	{
 		printf("minishell: export: %s:not a valid identifier\n", *(var->prs->args + (*j)));

@@ -81,6 +81,8 @@ typedef struct s_var
 	int step;
 	char *home;
 	int		exit;
+	int		old_out;
+	int		old_in;
 	int		fd[2];
 	int status;
 	t_parser *prs;

@@ -18,7 +18,7 @@ t_env *create_node(char **key_value)
     list = (t_env *)malloc(sizeof(t_env));
     list->key = ft_strdup(key_value[0]);
     list->value = ft_strdup(key_value[1]);
-    ft_key_value(key_value);
+    // ft_key_value(key_value);
     if (!ft_strncmp(key_value[1], "(null)", 6))
         list->print = 0;
     else

@@ -125,6 +125,8 @@ void fill_command(t_var *var)
 
     i = -1;
     var->split_sc = ft_split(var->line, ';');
+    var->old_out = dup(STDOUT_FILENO);
+    var->old_in = dup(STDIN_FILENO);
     while (var->split_sc[++i])
     {
         clear_line(var, &(var->split_sc[i]));
