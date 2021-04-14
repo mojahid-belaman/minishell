@@ -84,6 +84,7 @@ typedef struct s_var
 	int		old_out;
 	int		old_in;
 	int		fd[2];
+	char	**key_value;
 	int status;
 	t_parser *prs;
 	t_parser *prsTail;
@@ -145,10 +146,13 @@ void    builtin_unset(t_var *var);
 void     builtin_exit(t_var *var);
 void    builtin_echo(t_var *var);
 void    builtin_export(t_var *var);
-void    execution(t_var *var);
-void	execute(t_var *var);
+void    execution(t_var *var, char **env);
+void	sys_execution(t_var *var, char **env);
+void	error_file(char *str, t_var *var);
+int		builtin(t_var *var);
 int		ft_sign(char c);
 int		ft_isdig(char *s);
+char	**envp(t_var *var);
 // need to be removed
 void print_list_env(t_env *head);
 #endif

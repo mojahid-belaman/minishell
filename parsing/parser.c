@@ -117,7 +117,7 @@ void ft_free(t_var *var)
     free_list(var);
 }
 
-void fill_command(t_var *var)
+void fill_command(t_var *var, char **env)
 {
     t_parser *prs = NULL;
     int i;
@@ -147,7 +147,7 @@ void fill_command(t_var *var)
             search_cmd_args(var, &j);
         }
         // print_list(var);
-        execute(var);
+        execution(var, env);
         if (var->exit)
             break;
     }
@@ -175,7 +175,7 @@ int main(int ac, char **av, char **env)
         syntax_error(var, i);
         if (var->error != 0 && !(var->error = 0))
             continue;
-        fill_command(var);
+        fill_command(var, env);
         ft_free(var);
     }
     return (0);

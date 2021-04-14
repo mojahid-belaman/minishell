@@ -24,7 +24,7 @@ char	*find_value(char *find)
 	t_env *current = var->head_env;
 	while (current)
 	{
-		if (!ft_strncmp(current->key, find, ft_strlen(find)))
+		if (!(ft_strncmp(current->key, find, ft_strlen(find))) && current->print == 1)
 			break;
 		current = current->next;
 	}

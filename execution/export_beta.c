@@ -1,20 +1,20 @@
 #include "../headers/minishell.h"
 
-void	export_env(t_var *var)
+char	**envp(t_var *var)
 {
-	char    **key_value;
+	char	**key_value;
+	t_env	*current;
 	char	*tmp;
-	char	*anothertmp;
-	t_env   *current;
-	int i = 0;
-	int j = 0;
-	key_value = (char **)malloc((ft_listsize(var->head_env) + 1) * sizeof(char *));
+	int i;
+
 	current = var->head_env;
+	key_value = (char **)malloc((ft_listsize(var->head_env) + 1) * sizeof(char *));
+	i = 0;
 	while(current)
 	{
 		if (current->print == 1)
 		{
-			// key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
+			// var->key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
 			key_value[i] = ft_strjoin(current->key, "=\"");
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], current->value);
@@ -31,29 +31,40 @@ void	export_env(t_var *var)
 		}
 		current = current->next;
 	}
-	i = 0;
-	while(key_value[i])
+	return (key_value);
+}
+
+void	export_env(t_var *var)
+{
+	char	*tmp;
+	char	*anothertmp;
+	t_env   *current;
+	int i = 0;
+	int j = 0;
+	current = var->head_env;
+	var->key_value = envp(var);
+	while(var->key_value[i])
 	{
-		tmp = key_value[i];
+		tmp = var->key_value[i];
 		j = i + 1;
 		while(j < ft_listsize(var->head_env))
 		{
-			if ((ft_strncmp(tmp, key_value[j], ft_strlen(tmp))) > 0)
+			if ((ft_strncmp(tmp, var->key_value[j], ft_strlen(tmp))) > 0)
 			{
 				anothertmp = tmp;
-				tmp = key_value[j];
-				key_value[j] = anothertmp;
+				tmp = var->key_value[j];
+				var->key_value[j] = anothertmp;
 			}
-			key_value[i] = tmp;
+			var->key_value[i] = tmp;
 			j++;
 		}
 		i++;
 	}
 	i = 0;
-	while(key_value[i])
+	while(var->key_value[i])
 	{
 		// need to fix the " issue;
-		printf("declare -x %s\n", key_value[i]);
+		printf("declare -x %s\n", var->key_value[i]);
 		i++;
 	}
 }
