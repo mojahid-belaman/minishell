@@ -10,6 +10,15 @@ void	error_file(char *str, t_var *var)
 	var->error = 1;
 }
 
+void	error_command(char *str, t_var *var)
+{
+	ft_putstr_fd("bash: ", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(": command not found\n", 2);
+	var->status = 127;
+	var->error = 1;
+}
+
 void	open_file(t_var *var)
 {
 	t_files	*files;
@@ -59,25 +68,15 @@ int	builtin(t_var *var)
 		return (-1);
 	return (0);
 }
-
-void	sys_execution(t_var *var, char **env)
+char	*find_path(t_var *var, char **path)
 {
-	char		*tmp;
-	char		*temp;
-	pid_t		pid;
-	struct stat buffer;
 	int			i;
-	int			err;
-	char		**path;
-	
-	if (!(tmp = find_value("PATH")))
-	{
-		temp = tmp;
-		tmp = ft_strdup(*var->prs->args);
-		free(temp);
-	}
-	path = ft_split(tmp, ':');
+	char		*temp;
+	char		*tmp;
+	struct stat buffer;
+
 	i = 0;
+	tmp = ft_strdup("");
 	while (path[i])
 	{
 		temp = tmp;
@@ -90,21 +89,34 @@ void	sys_execution(t_var *var, char **env)
 		free(tmp);
 		tmp = NULL;
 	}
-	ft_free_args(path);
+	return (tmp);
+}
+void sys_execution(t_var *var, char **env)
+{
+	struct stat buffer;
+	int			err;
+	char 		*tmp;
+	pid_t		pid;
+	char		**path;
+
+	if (!(stat(var->prs->cmd, &buffer)))
+	{
+		if (buffer.st_mode & X_OK)
+			tmp = var->prs->cmd;
+	}
+	else
+	{
+		tmp = find_value("PATH");
+		path = ft_split(tmp, ':');
+		tmp = find_path(var, path);
+		ft_free_args(path);
+	}
 	pid = fork();
 	if (pid == 0)
 	{
-		// int i = 0;
-		// while (var->key_value[i])
-		// {
-		// ft_putstr_fd(var->key_value[i], 2);
-		// ft_putstr_fd("\n", 2);
-		// i++;
-		// }
-		// execve(tmp, var->prs->args, NULL);
 		if (execve(tmp, var->prs->args, env) < 0)
 		{
-		ft_putstr_fd("command not found\n", 2);
+			error_command(*var->prs->args, var);
 			exit(127);
 		}
 	}
