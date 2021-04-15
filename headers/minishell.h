@@ -10,15 +10,17 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include "../libft/libft.h"
-# include <dirent.h>
+#include <dirent.h>
 #include <curses.h>
 #include <term.h>
 #define key_u 0x415b1b
 #define key_dw 0x425b1b
 #define key_en 10
 #define key_del 127
+#define CTRL_L 0xc
+#define CTRL_D 0x4
+#define CTRL_C 0x3
 
-#define LEN_MAX_CMD 4096
 #define token_rr 1
 #define token_rl 2
 #define token_dr 3
@@ -27,6 +29,7 @@
 #define token_pip 5
 #define new_line 6
 #define token_dpip 8
+#define empty_file 9
 #define append 'a'
 #define right_r '>'
 #define left_r '<'
@@ -80,15 +83,14 @@ typedef struct s_var
 	char **split_pip;
 	int step;
 	char *home;
-	int		exit;
-	int		fd[2];
+	int exit;
+	int fd[2];
 	int status;
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
 	t_history *head_his;
 } t_var;
-
 
 //parsing
 int isprint_car(int p);
@@ -125,28 +127,30 @@ int set_index(char *str);
 char *get_env_value(char *key);
 char *read_line(t_var *var);
 void ft_free_args(char **args);
+int ft_strcmp(const char *s1, const char *s2);
 //execution
-char	*get_home(t_var *var);
-int		get_oldpwd(t_var *var);
-void	chpwd_env(t_var *var);
-char	*check_home(t_var *var);
-void	export_env(t_var *var);
-void	export_var(t_var *var, int *j);
-int     echo_option(char *str, int *check);
-int		ft_listsize(t_env *lst);
-int		ft_listsize_file(t_files *files);
-char	*find_value(char *find);
-void	builtin_cd(t_var *var);
-void	builtin_pwd(t_var *var);
-void    builtin_env(t_var *var);
-void    builtin_unset(t_var *var);
-void     builtin_exit(t_var *var);
-void    builtin_echo(t_var *var);
-void    builtin_export(t_var *var);
-void    execution(t_var *var);
-void	execute(t_var *var);
-int		ft_sign(char c);
-int		ft_isdig(char *s);
+char *get_home(t_var *var);
+int get_oldpwd(t_var *var);
+void chpwd_env(t_var *var);
+char *check_home(t_var *var);
+void export_env(t_var *var);
+void export_var(t_var *var, int *j);
+int echo_option(char *str, int *check);
+int ft_listsize(t_env *lst);
+int ft_listsize_file(t_files *files);
+char *find_value(char *find);
+void builtin_cd(t_var *var);
+void builtin_pwd(t_var *var);
+void builtin_env(t_var *var);
+void builtin_unset(t_var *var);
+void builtin_exit(t_var *var);
+void builtin_echo(t_var *var);
+void builtin_export(t_var *var);
+void execution(t_var *var);
+void execute(t_var *var);
+int ft_sign(char c);
+int ft_isdig(char *s);
 // need to be removed
 void print_list_env(t_env *head);
+void ft_key_value(char **str);
 #endif

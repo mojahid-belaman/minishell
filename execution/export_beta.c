@@ -1,16 +1,16 @@
 #include "../headers/minishell.h"
 
-void	export_env(t_var *var)
+void export_env(t_var *var)
 {
-	char    **key_value;
-	char	*tmp;
-	char	*anothertmp;
-	t_env   *current;
+	char **key_value;
+	char *tmp;
+	char *anothertmp;
+	t_env *current;
 	int i = 0;
 	int j = 0;
 	key_value = (char **)malloc((ft_listsize(var->head_env) + 1) * sizeof(char *));
 	current = var->head_env;
-	while(current)
+	while (current)
 	{
 		if (current->print == 1)
 		{
@@ -32,11 +32,11 @@ void	export_env(t_var *var)
 		current = current->next;
 	}
 	i = 0;
-	while(key_value[i])
+	while (key_value[i])
 	{
 		tmp = key_value[i];
 		j = i + 1;
-		while(j < ft_listsize(var->head_env))
+		while (j < ft_listsize(var->head_env))
 		{
 			if ((ft_strncmp(tmp, key_value[j], ft_strlen(tmp))) > 0)
 			{
@@ -50,7 +50,7 @@ void	export_env(t_var *var)
 		i++;
 	}
 	i = 0;
-	while(key_value[i])
+	while (key_value[i])
 	{
 		// need to fix the " issue;
 		printf("declare -x %s\n", key_value[i]);
@@ -58,20 +58,21 @@ void	export_env(t_var *var)
 	}
 }
 
-void	export_var(t_var *var, int *j)
+void export_var(t_var *var, int *j)
 {
 	int i = 0;
-	char    **key_value;
-	t_env	*current;
-	char	*tmp;
+	char **key_value;
+	t_env *current;
+	char *tmp;
 
 	key_value = (char **)malloc(3);
+	key_value[2] = NULL;
 	if (!ft_isalpha(**(var->prs->args + (*j))))
 	{
 		printf("minishell: export: %s:not a valid identifier\n", *(var->prs->args + (*j)));
-		return ;
+		return;
 	}
-	while((*(var->prs->args + (*j)))[i] && (*(var->prs->args + (*j)))[i]!= '=' && ft_isalnum((*(var->prs->args + (*j)))[i]))
+	while ((*(var->prs->args + (*j)))[i] && (*(var->prs->args + (*j)))[i] != '=' && ft_isalnum((*(var->prs->args + (*j)))[i]))
 		i++;
 	if ((*(var->prs->args + (*j)))[i] == '=' || !(*(var->prs->args + (*j)))[i])
 	{
@@ -105,16 +106,16 @@ void	export_var(t_var *var, int *j)
 		else
 		{
 			printf("minishell: export: %s:not a valid identifier\n", *(var->prs->args + (*j)));
-			return ;
+			return;
 		}
 	}
 }
 
-void    builtin_export(t_var *var)
+void builtin_export(t_var *var)
 {
-	t_env	*current;
-	char	*tmp;
-	int		i;
+	t_env *current;
+	char *tmp;
+	int i;
 
 	i = 1;
 	if (!(*(var->prs->args + 1)))
@@ -124,7 +125,7 @@ void    builtin_export(t_var *var)
 		while (*(var->prs->args + i))
 		{
 			current = var->head_env;
-			while(current)
+			while (current)
 			{
 				if (!(ft_strncmp(current->key, *(var->prs->args + i), ft_strlen(current->key))))
 					if ((*(var->prs->args + i))[ft_strlen(current->key)] == '=' || !((*(var->prs->args + i))[ft_strlen(current->key)]) || ((*(var->prs->args + i))[ft_strlen(current->key)] == '+' && (*(var->prs->args + i))[ft_strlen(current->key) + 1] == '='))

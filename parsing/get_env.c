@@ -1,24 +1,11 @@
 #include "../headers/minishell.h"
 
-void ft_key_value(char **str)
-{
-    int i;
-
-    i = -1;
-    if (!str)
-        return ;
-    while (str[++i])
-        free(str[i]);
-    free(str);
-}
-
 t_env *create_node(char **key_value)
 {
     t_env *list;
     list = (t_env *)malloc(sizeof(t_env));
     list->key = ft_strdup(key_value[0]);
     list->value = ft_strdup(key_value[1]);
-    ft_key_value(key_value);
     if (!ft_strncmp(key_value[1], "(null)", 6))
         list->print = 0;
     else

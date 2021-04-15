@@ -19,9 +19,11 @@ void hundel_error(int err)
     else if (err == token_dpip)
         ft_putstr_fd("minishell:syntax error near unexpected token `||'\n", 2);
     else if (err == new_line)
-        ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+        ft_putstr_fd("minishell:syntax error near unexpected token `newline'\n", 2);
     else if (err == token_dsc)
         ft_putstr_fd("minishell:syntax error near unexpected token `;;'\n", 2);
+    else if (err == empty_file)
+        ft_putstr_fd("minishell:ambiguous redirect", 2);
 }
 
 void free_list_files(t_parser *prs)

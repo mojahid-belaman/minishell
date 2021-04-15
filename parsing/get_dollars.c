@@ -71,6 +71,7 @@ void clear_line(t_var *var, char **line)
 	{
 		del_sq_dq(line, &i, &sq, &dq);
 		replace_dollar(var, line, &i, &sq, &dq);
+		// puts("OK\n");
 		del_sq_dq(line, &i, &sq, &dq);
 		if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\' || (*line)[i + 1] == '`'))
 			new_str(line, i);
