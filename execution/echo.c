@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:12:37 by knabouss          #+#    #+#             */
-/*   Updated: 2021/04/12 18:27:16 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/04/15 11:04:44 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,5 @@ void    builtin_echo(t_var *var)
 	}
 	else
 		ft_putstr_fd(*(var->prs->args + i), 1);
+	var->status = 0;
 }

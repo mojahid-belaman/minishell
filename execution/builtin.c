@@ -152,9 +152,7 @@ void    builtin_unset(t_var *var)
     {
         current = var->head_env;
         while (current && ft_strncmp(*(var->prs->args + i), current->key, ft_strlen(current->key)))
-		{
             current = current->next;
-        }
         if (current)
         {
             tmp = current->value;
@@ -164,6 +162,7 @@ void    builtin_unset(t_var *var)
         }
         i++;
     }
+	var->status = 0;
 }
 
 void	builtin_exit(t_var *var)

@@ -62,3 +62,18 @@ int	ft_listsize_file(t_files *files)
 	}
 	return (cpt);
 }
+
+int	ft_listsize_prs(t_parser *prs)
+{
+	int cpt;
+
+	cpt = 0;
+	if (!prs)
+		return (0);
+	while (prs)
+	{
+		cpt++;
+		prs = prs->next_prs;
+	}
+	return (cpt);
+}

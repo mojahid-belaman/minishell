@@ -84,6 +84,7 @@ typedef struct s_var
 	int		old_out;
 	int		old_in;
 	int		fd[2];
+	int		fdp[2];
 	char	**key_value;
 	int status;
 	t_parser *prs;
@@ -153,6 +154,8 @@ int		builtin(t_var *var);
 int		ft_sign(char c);
 int		ft_isdig(char *s);
 char	**envp(t_var *var);
+int	ft_listsize_prs(t_parser *prs);
+int	ft_strcmp(const char *s1, const char *s2);
 // need to be removed
 void print_list_env(t_env *head);
 #endif
