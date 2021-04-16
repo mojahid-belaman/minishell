@@ -14,6 +14,7 @@ void init_symbol()
 	var->error = 0;
 	var->step = 0;
 	var->line = NULL;
+	var->str = NULL;
 	var->split_sc = NULL;
 	var->split_pip = NULL;
 	var->prs = NULL;
@@ -142,14 +143,14 @@ void fill_command(t_var *var)
 			prs->next_prs = NULL;
 			add_prs_tonode(var, prs);
 			search_file(var, &j);
-			// if (!(var->error = 0))
-			// 	return ;
+			if (var->error && !(var->error = 0))
+				return;
 			search_cmd_args(var, &j);
 		}
-		print_list(var);
-		// execute(var);
-		// if (var->exit)
-		// 	break;
+		// print_list(var);
+		execute(var);
+		if (var->exit)
+			break;
 	}
 }
 
@@ -164,8 +165,8 @@ int main(int ac, char **av, char **env)
 	av = NULL;
 	var = (t_var *)malloc(sizeof(t_var));
 	get_struc_var(var);
-	get_env(env);
-	var->home = find_value("HOME");
+	get_env(env, var);
+	var->home = find_value("HOME", var);
 	while (r)
 	{
 		i = -1;

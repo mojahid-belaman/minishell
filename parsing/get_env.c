@@ -14,9 +14,8 @@ t_env *create_node(char **key_value)
     return (list);
 }
 
-void get_env(char **envp)
+void get_env(char **envp, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     t_env *current;
     char **key_value;
 
@@ -25,6 +24,7 @@ void get_env(char **envp)
         key_value = ft_split(*envp, '=');
         current = create_node(key_value);
         ft_lstadd_back(&var->head_env, current);
+        ft_free_args(key_value);
         envp++;
     }
 }

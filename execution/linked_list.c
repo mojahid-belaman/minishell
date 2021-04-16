@@ -18,10 +18,11 @@ void	ft_lstadd_back(t_env **alst, t_env *new)
 	}
 }
 
-char	*find_value(char *find)
+char	*find_value(char *find, t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
-	t_env *current = var->head_env;
+	t_env *current;
+	
+	current = var->head_env;
 	while (current)
 	{
 		if (!ft_strncmp(current->key, find, ft_strlen(find)))
