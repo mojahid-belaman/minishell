@@ -1,1 +1,22 @@
-hi
+total 208
+drwxr-xr-x  21 knabouss  candidate    714 Apr 16 16:59 .
+drwx------  20 knabouss  candidate    680 Apr 16 16:45 ..
+-rw-r--r--   1 knabouss  candidate  10244 Apr 16 16:46 .DS_Store
+drwxr-xr-x  15 knabouss  candidate    510 Apr 16 16:57 .git
+-rw-r--r--   1 knabouss  candidate   1217 Apr 16 15:21 Makefile
+drwxr-xr-x  16 knabouss  candidate    544 Apr 16 16:59 execution
+-rw-r--r--   1 knabouss  candidate   1208 Mar 24 12:08 export.txt
+-rw-r--r--   1 knabouss  candidate      0 Apr 16 16:59 f1
+-rw-r--r--   1 knabouss  candidate      3 Apr 16 15:21 f2
+-rw-r--r--   1 knabouss  candidate     16 Apr 16 16:59 file
+drwxr-xr-x   3 knabouss  candidate    102 Apr 16 16:57 headers
+-rw-r--r--   1 knabouss  candidate      0 Apr 16 15:21 hi
+drwxr-xr-x  76 knabouss  candidate   2584 Apr 16 16:59 libft
+-rwxr-xr-x   1 knabouss  candidate  43324 Apr 16 16:59 minishell
+drwxr-xr-x  33 knabouss  candidate   1122 Apr 16 16:59 parsing
+drwxr-xr-x   4 knabouss  candidate    136 Apr 16 15:21 readline
+-rw-r--r--   1 knabouss  candidate      3 Apr 16 15:21 teeest
+-rw-r--r--   1 knabouss  candidate   9264 Apr 16 16:46 test.txt
+-rw-r--r--   1 knabouss  candidate   1733 Apr 16 16:46 test2.txt
+-rw-r--r--   1 knabouss  candidate   4348 Apr 16 16:46 test_echo.txt
+-rw-r--r--   1 knabouss  candidate      6 Apr 16 15:21 truecolor

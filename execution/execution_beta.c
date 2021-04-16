@@ -95,7 +95,7 @@ char	*find_path(t_var *var, char **path)
 		tmp = ft_strjoin(path[i], "/");
 		free(temp);
 		tmp = ft_strjoin(tmp, *var->prs->args);
-		if (!stat(tmp, &buffer) && (buffer.st_mode & F_OK))
+		if (!stat(tmp, &buffer))
 			break;
 		i++;
 		free(tmp);
@@ -148,18 +148,18 @@ void    execution(t_var *var, char **env)
 {
 	// pid_t pid;
 	// int err;
-	if (ft_listsize_prs(var->prs) == 1)
-	{
+	// if (ft_listsize_prs(var->prs) == 1)
+	// {
 		if (ft_listsize_file(var->prs->file_head) > 0)
 			open_file(var);
 		if (builtin(var) < 0 && !var->error)
 			sys_execution(var, env);
-	}
-	else
-	{
-		pipe(var->fdp);
-		while (var->prs)
-		{
+	// }
+	// else
+	// {
+	// 	pipe(var->fdp);
+	// 	while (var->prs)
+	// 	{
 		// pid = fork();
 		// if (pid == 0)
 		// {
@@ -167,10 +167,10 @@ void    execution(t_var *var, char **env)
 			// dup2(var->fdp[1], STDOUT_FILENO);
 			// close(var->fdp[0]);
 			// close(var->fdp[1]);
-			if (ft_listsize_file(var->prs->file_head) > 0)
-				open_file(var);
-			if (builtin(var) < 0 && !var->error)
-				sys_execution(var, env);
+			// if (ft_listsize_file(var->prs->file_head) > 0)
+			// 	open_file(var);
+			// if (builtin(var) < 0 && !var->error)
+			// 	sys_execution(var, env);
 		// }
 		// else
 		// {
@@ -179,10 +179,10 @@ void    execution(t_var *var, char **env)
 		// }
 		// dup2(var->old_out, STDOUT_FILENO);
 		// dup2(var->old_out, STDOUT_FILENO);
-		var->prs = var->prs->next_prs;
-		}
-	}
+	// 	var->prs = var->prs->next_prs;
+	// 	}
+	// }
 	close(var->fd[1]);
 	dup2(var->old_in, STDIN_FILENO);
-	dup2(var->old_in, STDIN_FILENO);
+	dup2(var->old_out, STDOUT_FILENO);
 }
