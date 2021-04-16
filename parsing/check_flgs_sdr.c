@@ -35,26 +35,22 @@ void check_double_q()
         var->double_q = 1;
 }
 
-void check_redir_r(int i)
+void check_redir_r(int i, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
-
     if (var->redir_right || var->redir_left || var->redir_double)
-        hundel_error(token_rr);
+        hundel_error(token_rr, var);
     else if (var->double_q || var->single_q)
         var->line[i] = -var->line[i];
     else if (!var->double_q && !var->single_q)
         var->redir_right = 1;
 }
 
-void check_redir_l(int i)
+void check_redir_l(int i, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
-
     if (var->redir_left)
-        hundel_error(new_line);
+        hundel_error(new_line, var);
     else if (var->redir_right || var->redir_left || var->redir_double)
-        hundel_error(token_rl);
+        hundel_error(token_rl, var);
     else if (var->double_q || var->single_q)
         var->line[i] = -var->line[i];
     else if (!var->double_q && !var->single_q)

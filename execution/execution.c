@@ -17,7 +17,7 @@ void print_list_env(t_env *head)
 
 void execution(t_var *var)
 {
-	char *tmp = find_value("PATH");
+	char *tmp = find_value("PATH", var);
 	char **path;
 	char *tmep;
 	struct stat buffer;
@@ -41,7 +41,7 @@ void execution(t_var *var)
 			free(tmp);
 			tmp = NULL;
 		}
-		if (stat(*(var->prs->args),  &buffer) && (**(var->prs->args) == '.' || **(var->prs->args) == '/'))
+		if (stat(*(var->prs->args), &buffer) && (**(var->prs->args) == '.' || **(var->prs->args) == '/'))
 			printf("minishell: %s: No such file or directory\n", *(var->prs->args));
 		else if (!(path[i]))
 			printf("minishell: %s: command not found\n", *var->prs->args);
@@ -52,25 +52,27 @@ void execution(t_var *var)
 	ft_free_args(path);
 }
 
-void	open_file()
+void open_file()
 {
 	t_var *var = get_struc_var(NULL);
-	t_files	*files;
+	t_files *files;
 	// struct stat buffer;
 	files = var->prs->file_head;
 	while (files)
 	{
-		var->fd[0] = open(files->file_name, O_RDWR | O_CREAT, 0666);
+		if ((var->fd[0] = open(files->file_name, O_RDWR | O_CREAT, 0666)) < 0)
+			ft_putstr_fd("error", 2);
+		// var->fd[0] = open(files->file_name, O_RDWR | O_CREAT, 0666);
 		files = files->next;
 	}
 }
 
-void    execute(t_var *var)
+void execute(t_var *var)
 {
 	struct stat buffer;
 	if (ft_listsize_file(var->prs->file_head) > 0)
 		open_file();
-	if (!stat(*(var->prs->args),  &buffer))
+	if (!stat(*(var->prs->args), &buffer))
 	{
 		// need to specify the type
 		printf("minishell: %s: is a directory\n", *(var->prs->args));
@@ -92,4 +94,3 @@ void    execute(t_var *var)
 	else
 		execution(var);
 }
-
