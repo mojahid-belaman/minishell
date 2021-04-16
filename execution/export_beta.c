@@ -1,21 +1,20 @@
 #include "../headers/minishell.h"
 
-void	export_env()
+char	**envp(t_var *var)
 {
-	char    **key_value;
+	char	**key_value;
+	t_env	*current;
 	char	*tmp;
-	char	*anothertmp;
-	t_var *var = get_struc_var(NULL);
-	t_env   *current;
-	int i = 0;
-	int j = 0;
-	key_value = (char **)malloc((ft_listsize(var->head_env) + 1) * sizeof(char *));
+	int i;
+
 	current = var->head_env;
+	key_value = (char **)malloc((ft_listsize(var->head_env) + 1) * sizeof(char *));
+	i = 0;
 	while(current)
 	{
 		if (current->print == 1)
 		{
-			// key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
+			// var->key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
 			key_value[i] = ft_strjoin(current->key, "=\"");
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], current->value);
@@ -32,42 +31,53 @@ void	export_env()
 		}
 		current = current->next;
 	}
-	i = 0;
-	while(key_value[i])
+	return (key_value);
+}
+
+void	export_env(t_var *var)
+{
+	char	*tmp;
+	char	*anothertmp;
+	t_env   *current;
+	int i = 0;
+	int j = 0;
+	current = var->head_env;
+	var->key_value = envp(var);
+	while(var->key_value[i])
 	{
-		tmp = key_value[i];
+		tmp = var->key_value[i];
 		j = i + 1;
 		while(j < ft_listsize(var->head_env))
 		{
-			if ((ft_strncmp(tmp, key_value[j], ft_strlen(tmp))) > 0)
+			if ((ft_strncmp(tmp, var->key_value[j], ft_strlen(tmp))) > 0)
 			{
 				anothertmp = tmp;
-				tmp = key_value[j];
-				key_value[j] = anothertmp;
+				tmp = var->key_value[j];
+				var->key_value[j] = anothertmp;
 			}
-			key_value[i] = tmp;
+			var->key_value[i] = tmp;
 			j++;
 		}
 		i++;
 	}
 	i = 0;
-	while(key_value[i])
+	while(var->key_value[i])
 	{
 		// need to fix the " issue;
-		printf("declare -x %s\n", key_value[i]);
+		printf("declare -x %s\n", var->key_value[i]);
 		i++;
 	}
 }
 
-void	export_var(int *j)
+void	export_var(t_var *var, int *j)
 {
 	int i = 0;
 	char    **key_value;
 	t_env	*current;
 	char	*tmp;
-	t_var *var = get_struc_var(NULL);
 
 	key_value = (char **)malloc(3);
+	key_value[2] = NULL;
 	if (!ft_isalpha(**(var->prs->args + (*j))))
 	{
 		printf("minishell: export: %s:not a valid identifier\n", *(var->prs->args + (*j)));
@@ -101,7 +111,7 @@ void	export_var(int *j)
 		{
 			tmp = *(var->prs->args + (*j));
 			*(var->prs->args + (*j)) = ft_strjoin(ft_substr(*(var->prs->args + (*j)), 0, i), ft_substr(*(var->prs->args + (*j)), i + 1, ft_strlen(*(var->prs->args + (*j))) - i - 1));
-			export_var(j);
+			export_var(var, j);
 			free(tmp);
 		}
 		else
@@ -112,16 +122,15 @@ void	export_var(int *j)
 	}
 }
 
-void    builtin_export()
+void    builtin_export(t_var *var)
 {
 	t_env	*current;
 	char	*tmp;
 	int		i;
-	t_var *var = get_struc_var(NULL);
 
 	i = 1;
 	if (!(*(var->prs->args + 1)))
-		export_env();
+		export_env(var);
 	else
 	{
 		while (*(var->prs->args + i))
@@ -136,7 +145,7 @@ void    builtin_export()
 			}
 			if (!current)
 			{
-				export_var(&i);
+				export_var(var, &i);
 			}
 			else
 			{

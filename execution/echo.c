@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:12:37 by knabouss          #+#    #+#             */
-/*   Updated: 2021/03/27 14:50:53 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/04/15 11:04:44 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,10 @@ int     echo_option( char *str, int *check)
 	return (1);
 }
 
-void    builtin_echo()
+void    builtin_echo(t_var *var)
 {
 	int i = 1;
 	int check = 0;
-	t_var *var = get_struc_var(NULL);
 	
 	while (*(var->prs->args + i) && *(var->prs->args + i)[0] == '-' && echo_option(*(var->prs->args + i), &check))
 		i++;
@@ -43,7 +42,11 @@ void    builtin_echo()
 	if (!(*(var->prs->args + 1)))
 		ft_putstr_fd("\n", 1);
 	else if (!check)
-		printf("%s\n", *(var->prs->args + i));
+	{
+		ft_putstr_fd(*(var->prs->args + i) , 1);
+		ft_putstr_fd("\n", 1);
+	}
 	else
 		ft_putstr_fd(*(var->prs->args + i), 1);
+	var->status = 0;
 }
