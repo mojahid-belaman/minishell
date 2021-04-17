@@ -80,6 +80,28 @@ int	builtin(t_var *var)
 		return (-1);
 	return (0);
 }
+
+int	builtin_pipe(t_var *var)
+{
+	if (!(ft_strncmp("cd", *(var->prs->args), 3)) && !var->error)
+		builtin_cd(var);
+	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)) && !var->error)
+		builtin_pwd(var);
+	else if (!(ft_strncmp("env", *(var->prs->args), 4)) && !var->error)
+		builtin_env(var);
+	else if (!(ft_strncmp("unset", *(var->prs->args), 6)) && !var->error)
+		builtin_unset(var);
+	else if (!(ft_strncmp("exit", *(var->prs->args), 5)) && !var->error)
+		builtin_exit(var);
+	else if (!(ft_strncmp("export", *(var->prs->args), 7)) && !var->error)
+		builtin_export(var);
+	else if (!(ft_strncmp("echo", *(var->prs->args), 5)) && !var->error)
+		builtin_echo(var);
+	else
+		return (-1);
+	return (0);
+}
+
 char	*find_path(t_var *var, char **path)
 {
 	int			i;
@@ -103,6 +125,7 @@ char	*find_path(t_var *var, char **path)
 	}
 	return (tmp);
 }
+
 void sys_execution(t_var *var, char **env)
 {
 	struct stat buffer;
@@ -144,45 +167,112 @@ void sys_execution(t_var *var, char **env)
 	}
 }
 
+void	sys_execution_pipe(t_var *var, char **env)
+{
+	struct stat buffer;
+	char 		*tmp = NULL;
+	char		**path;
+
+	if (!(stat(var->prs->cmd, &buffer)))
+	{
+		if (buffer.st_mode & X_OK)
+			tmp = var->prs->cmd;
+		else 
+			ft_putstr_fd("error, here ISDIR\n", 2);
+	}
+	else
+	{
+		tmp = find_value("PATH");
+		path = ft_split(tmp, ':');
+		tmp = find_path(var, path);
+		ft_free_args(path);
+	}
+	if (execve(tmp, var->prs->args, env) < 0)
+	{
+		if (!(ft_strcmp(tmp, "")))
+			ft_putstr_fd("error!", 2);
+		else
+			error_command(*var->prs->args, var);
+		exit(127);
+	}
+}
+
+void	execute_pipe(t_var *var, char **env)
+{
+	int i = -1;
+	int err;
+	int pipenumber = ft_listsize_prs(var->prs) - 1;
+	int	*pipefds = malloc(sizeof(int) * (2 * pipenumber));
+	pid_t pid;
+	pid_t *p = malloc(sizeof(pid_t) * (2 * pipenumber));
+	int j = 0;
+
+	while(++i < pipenumber)
+	{
+		if (pipe(pipefds + i * 2) < 0)
+			perror("pipe failed");
+	}
+	i = -1;
+	while(var->prs)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			//if not last
+			if (var->prs->next_prs)
+			{
+				if (dup2(pipefds[j + 1], STDOUT_FILENO) < 0)
+					perror("failed 1");
+			}
+			//if not first
+			if (j != 0)
+			{
+				if (dup2(pipefds[j - 2], STDIN_FILENO) < 0)
+					perror("failed 2");
+			}
+			while (++i < 2 * pipenumber)
+				close(pipefds[i]);	
+			i = -1;
+			if (builtin_pipe(var) < 0 && !var->error)
+				sys_execution_pipe(var, env);
+			exit(0);
+		}
+		else if (pid < 0)
+		{
+			ft_putstr_fd("error1", 2);
+			exit(127);
+		}
+		var->prs = var->prs->next_prs;
+		p[j / 2] = pid;
+		j+= 2;
+	}
+	i = -1;
+	while(++i < 2 * pipenumber)
+		close(pipefds[i]);
+	i = -1;
+	while(++i < pipenumber + 1)
+	{
+		waitpid(p[i] ,&var->status, 0);
+		// wait(&var->status);
+	}
+	var->status = WEXITSTATUS(err);
+	// ft_putstr_fd("endup with pipe\n", 2);
+}
+
 void    execution(t_var *var, char **env)
 {
-	// pid_t pid;
-	// int err;
-	// if (ft_listsize_prs(var->prs) == 1)
-	// {
+	if (ft_listsize_prs(var->prs) == 1)
+	{
 		if (ft_listsize_file(var->prs->file_head) > 0)
 			open_file(var);
 		if (builtin(var) < 0 && !var->error)
 			sys_execution(var, env);
-	// }
-	// else
-	// {
-	// 	pipe(var->fdp);
-	// 	while (var->prs)
-	// 	{
-		// pid = fork();
-		// if (pid == 0)
-		// {
-			// dup2(var->fdp[0], STDIN_FILENO);
-			// dup2(var->fdp[1], STDOUT_FILENO);
-			// close(var->fdp[0]);
-			// close(var->fdp[1]);
-			// if (ft_listsize_file(var->prs->file_head) > 0)
-			// 	open_file(var);
-			// if (builtin(var) < 0 && !var->error)
-			// 	sys_execution(var, env);
-		// }
-		// else
-		// {
-		// 	waitpid(pid, err, 0);
-		// 	var->status = WEXITSTATUS(err);
-		// }
-		// dup2(var->old_out, STDOUT_FILENO);
-		// dup2(var->old_out, STDOUT_FILENO);
-	// 	var->prs = var->prs->next_prs;
-	// 	}
-	// }
-	close(var->fd[1]);
+	}
+	else
+	{
+		// ft_putstr_fd("entered the exec pipe\n", 2);
+		execute_pipe(var, env);;
+	}
 	dup2(var->old_in, STDIN_FILENO);
 	dup2(var->old_out, STDOUT_FILENO);
 }

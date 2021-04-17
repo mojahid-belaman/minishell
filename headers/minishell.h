@@ -156,6 +156,9 @@ int		ft_isdig(char *s);
 char	**envp(t_var *var);
 int	ft_listsize_prs(t_parser *prs);
 int	ft_strcmp(const char *s1, const char *s2);
+int		builtin_pipe(t_var *var);
+void	execute_pipe(t_var *var, char **env);
+void	sys_execution_pipe(t_var *var, char **env);
 // need to be removed
 void print_list_env(t_env *head);
 #endif

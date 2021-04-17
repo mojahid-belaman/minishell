@@ -96,7 +96,6 @@ char	*check_home(t_var *var)
 void	builtin_cd(t_var *var)
 {
 	int cd;
-
 	if (!(*(var->prs->args + 1)))
 	{
 		*(var->prs->args + 1) = check_home(var);
