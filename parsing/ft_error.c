@@ -22,13 +22,6 @@ void hundel_error(int err, t_var *var)
         ft_putstr_fd("minishell:syntax error near unexpected token `newline'\n", 2);
     else if (err == token_dsc)
         ft_putstr_fd("minishell:syntax error near unexpected token `;;'\n", 2);
-    else if (err == empty_file)
-    {
-        ft_putstr_fd("minishell: $", 2);
-        ft_putstr_fd(var->str, 2);
-        ft_putstr_fd(": ambiguous redirect\n", 2);
-        free(var->str);
-    }
 }
 
 void free_list_files(t_parser *prs)
