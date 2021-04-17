@@ -143,7 +143,7 @@ void sys_execution(t_var *var, char **env)
 	}
 	else
 	{
-		tmp = find_value("PATH");
+		tmp = find_value("PATH", var);
 		path = ft_split(tmp, ':');
 		tmp = find_path(var, path);
 		ft_free_args(path);
@@ -182,7 +182,7 @@ void	sys_execution_pipe(t_var *var, char **env)
 	}
 	else
 	{
-		tmp = find_value("PATH");
+		tmp = find_value("PATH", var);
 		path = ft_split(tmp, ':');
 		tmp = find_path(var, path);
 		ft_free_args(path);
