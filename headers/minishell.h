@@ -29,7 +29,6 @@
 #define token_pip 5
 #define new_line 6
 #define token_dpip 8
-#define empty_file 9
 #define append 'a'
 #define right_r '>'
 #define left_r '<'
@@ -79,7 +78,6 @@ typedef struct s_var
 	int back_sl;
 	int error;
 	char *line;
-	char *str;
 	char **split_sc;
 	char **split_pip;
 	int step;

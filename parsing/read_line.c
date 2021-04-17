@@ -51,28 +51,32 @@ void delete_node(t_var *var)
     }
 }
 
-void normal_mode(struct termios config)
+void err_termios(char *err)
 {
-    if (tcsetattr(0, TCSANOW, &config) < 0)
-        ft_putstr_fd("error\n", 2);
+    ft_putstr_fd(err, 2);
+    exit(-1);
 }
 
-struct termios termios_config()
+void termios_config(struct termios *old_attr)
 {
-    struct termios s_termios;
-    struct termios old;
+    struct termios new_attr;
     char *term_type;
+    int ret;
 
-    if (tcgetattr(0, &old) < 0)
-        ft_putstr_fd("error\n", 2);
-    s_termios = old;
-    s_termios.c_lflag &= ~(ECHO | ICANON | ISIG);
     term_type = getenv("TERM");
-    if (tgetent(NULL, term_type) < 0)
-        ft_putstr_fd("error\n", 2);
-    if (tcsetattr(0, TCSANOW, &s_termios) < 0)
-        ft_putstr_fd("error\n", 2);
-    return (old);
+    if (term_type == NULL)
+        err_termios("\r\033[0KTERM must be set (see 'env').\n");
+    ret = tgetent(NULL, term_type);
+    if (ret < 0)
+        err_termios("\r\033[0KCould not access to the termcap database..\n");
+    if (ret == 0)
+        err_termios("\r\033[0KTerminal type is not defined in termcap database.\n");
+    if (tcgetattr(STDIN_FILENO, old_attr) < 0)
+        err_termios("Error tcgetattr\n");
+    new_attr = *old_attr;
+    new_attr.c_lflag &= ~(ECHO | ICANON | ISIG);
+    if (tcsetattr(STDIN_FILENO, TCSANOW, &new_attr) < 0)
+        err_termios("\r\033[0KError tcsetattr.\n");
 }
 
 t_history *create_node_hist()
@@ -108,7 +112,7 @@ void assign_list(t_var *var, t_history **ls_actual, t_history *his)
     }
 }
 
-void re_malloc(t_history *ls_actual, int read_press, char *tmp)
+void re_alloc(t_history *ls_actual, int read_press, char *tmp)
 {
     int len = 0;
     int i = 0;
@@ -140,14 +144,14 @@ char *read_line(t_var *var)
 {
     t_history *ls_actual;
     t_history *his;
-    struct termios old;
+    struct termios old_attr;
     int read_press;
     char *tmp;
 
     tmp = NULL;
     his = create_node_hist();
     ls_actual = NULL;
-    old = termios_config();
+    termios_config(&old_attr);
     assign_list(var, &ls_actual, his);
     while (1)
     {
@@ -155,7 +159,6 @@ char *read_line(t_var *var)
         read(0, &read_press, 4);
         if (read_press > 31 && read_press < 127)
         {
-            // int fd = open("file", O_RDWR | O_CREAT | O_TRUNC, 0666);
             if (!ls_actual->input)
             {
                 ls_actual->input = (char *)malloc(ls_actual->cursor + 2);
@@ -163,12 +166,7 @@ char *read_line(t_var *var)
                 ls_actual->input[ls_actual->cursor + 1] = '\0';
             }
             else
-                re_malloc(ls_actual, read_press, tmp);
-            // ft_putstr_fd(ls_actual->input, fd);
-            // ft_putstr_fd("|", fd);
-            // ft_putnbr_fd(ls_actual->cursor, fd);
-            // ft_putstr_fd("\n", fd);
-            // close(fd);
+                re_alloc(ls_actual, read_press, tmp);
             ft_putstr_fd(ls_actual->input + ls_actual->cursor, 1);
             ls_actual->cursor++;
         }
@@ -210,7 +208,7 @@ char *read_line(t_var *var)
             delete_node(var);
             if (tmp)
                 my_dll(var, ls_actual, tmp);
-            normal_mode(old);
+            tcsetattr(STDIN_FILENO, TCSANOW, &old_attr);
             break;
         }
         else if (read_press == CTRL_C)

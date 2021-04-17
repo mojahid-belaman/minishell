@@ -14,7 +14,6 @@ void init_symbol()
 	var->error = 0;
 	var->step = 0;
 	var->line = NULL;
-	var->str = NULL;
 	var->split_sc = NULL;
 	var->split_pip = NULL;
 	var->prs = NULL;
@@ -143,8 +142,6 @@ void fill_command(t_var *var)
 			prs->next_prs = NULL;
 			add_prs_tonode(var, prs);
 			search_file(var, &j);
-			if (var->error && !(var->error = 0))
-				return;
 			search_cmd_args(var, &j);
 		}
 		// print_list(var);
@@ -158,26 +155,25 @@ int main(int ac, char **av, char **env)
 {
 	int r;
 	int i;
-	t_var *var;
+	t_var var;
 
 	r = 1;
 	ac = 1;
 	av = NULL;
-	var = (t_var *)malloc(sizeof(t_var));
-	get_struc_var(var);
-	get_env(env, var);
-	var->home = find_value("HOME", var);
+	get_struc_var(&var);
+	get_env(env, &var);
+	var.home = find_value("HOME", &var);
 	while (r)
 	{
 		i = -1;
 		init_symbol();
 		ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
-		var->line = read_line(var);
-		syntax_error(var, i);
-		if (var->error != 0 && !(var->error = 0))
+		var.line = read_line(&var);
+		syntax_error(&var, i);
+		if (var.error != 0 && !(var.error = 0))
 			continue;
-		fill_command(var);
-		ft_free(var);
+		fill_command(&var);
+		ft_free(&var);
 	}
 	return (0);
 }

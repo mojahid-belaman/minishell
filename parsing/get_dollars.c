@@ -40,15 +40,15 @@ void replace_dollar(t_var *var, char **line, int *i, int *sq, int *dq)
 		{
 			index_dollar = set_index((*line) + *i + 1);
 			str_after_doll = ft_substr((*line) + *i + 1, 0, index_dollar);
-			var->str = ft_strdup(str_after_doll);
+			// var->str = ft_strdup(str_after_doll);
 			str_value_doll = get_env_value(str_after_doll);
 			if (!ft_strcmp(str_value_doll, "") && ((*line)[*i - 2] == '>' || (*line)[*i - 2] == '<'))
 			{
-				hundel_error(empty_file, var);
+				// hundel_error(empty_file, var);
 				free(str_after_doll);
 				return;
 			}
-			free(var->str);
+			// free(var->str);
 			free(str_after_doll);
 		}
 		if (index_dollar != 0)
@@ -80,8 +80,8 @@ void clear_line(t_var *var, char **line)
 	{
 		del_sq_dq(line, &i, &sq, &dq);
 		replace_dollar(var, line, &i, &sq, &dq);
-		if (var->error)
-			return;
+		// if (var->error)
+		// 	return;
 		del_sq_dq(line, &i, &sq, &dq);
 		if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\' || (*line)[i + 1] == '`'))
 			new_str(line, i);
