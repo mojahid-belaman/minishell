@@ -117,38 +117,40 @@ void ft_free(t_var *var)
 	free_list(var);
 }
 
-void fill_command(t_var *var)
+void fill_command(t_var *var, char **env)
 {
 	t_parser *prs = NULL;
 	int i;
 	int j;
 
-	i = -1;
-	var->split_sc = ft_split(var->line, ';');
-	while (var->split_sc[++i])
-	{
-		clear_line(var, &(var->split_sc[i]));
-		if (!var->split_sc[0][0])
-			return;
-		if (var->error != 0)
-			return;
-		free_list_cmd(var->prs);
-		j = -1;
-		var->split_pip = ft_split(var->split_sc[i], '|');
-		while (var->split_pip[++j])
-		{
-			prs = (t_parser *)malloc(sizeof(t_parser));
-			prs->file_head = NULL;
-			prs->next_prs = NULL;
-			add_prs_tonode(var, prs);
-			search_file(var, &j);
-			search_cmd_args(var, &j);
-		}
-		// print_list(var);
-		execute(var);
-		if (var->exit)
-			break;
-	}
+    i = -1;
+    var->split_sc = ft_split(var->line, ';');
+    var->old_out = dup(STDOUT_FILENO);
+    var->old_in = dup(STDIN_FILENO);
+    while (var->split_sc[++i])
+    {
+        clear_line(var, &(var->split_sc[i]));
+        if (!var->split_sc[0][0])
+            return;
+        if (var->error != 0)
+            return;
+        free_list_cmd(var->prs);
+        j = -1;
+        var->split_pip = ft_split(var->split_sc[i], '|');
+        while (var->split_pip[++j])
+        {
+            prs = (t_parser *)malloc(sizeof(t_parser));
+            prs->file_head = NULL;
+            prs->next_prs = NULL;
+            add_prs_tonode(var, prs);
+            search_file(var, &j);
+            search_cmd_args(var, &j);
+        }
+        // print_list(var);
+        execution(var, env);
+        if (var->exit)
+            break;
+    }
 }
 
 int main(int ac, char **av, char **env)
@@ -172,7 +174,7 @@ int main(int ac, char **av, char **env)
 		syntax_error(&var, i);
 		if (var.error != 0 && !(var.error = 0))
 			continue;
-		fill_command(&var);
+		fill_command(&var, env);
 		ft_free(&var);
 	}
 	return (0);

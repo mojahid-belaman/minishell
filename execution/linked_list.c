@@ -25,7 +25,7 @@ char	*find_value(char *find, t_var *var)
 	current = var->head_env;
 	while (current)
 	{
-		if (!ft_strncmp(current->key, find, ft_strlen(find)))
+		if (!(ft_strncmp(current->key, find, ft_strlen(find))) && current->print == 1)
 			break;
 		current = current->next;
 	}
@@ -60,6 +60,21 @@ int	ft_listsize_file(t_files *files)
 	{
 		cpt++;
 		files = files->next;
+	}
+	return (cpt);
+}
+
+int	ft_listsize_prs(t_parser *prs)
+{
+	int cpt;
+
+	cpt = 0;
+	if (!prs)
+		return (0);
+	while (prs)
+	{
+		cpt++;
+		prs = prs->next_prs;
 	}
 	return (cpt);
 }
