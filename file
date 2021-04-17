@@ -1,1 +1,1 @@
-echo dfjk > $PWD/|16
+pwd|2

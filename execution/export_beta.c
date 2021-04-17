@@ -37,34 +37,35 @@ char	**envp(t_var *var)
 void	export_env(t_var *var)
 {
 	char	*tmp;
+	char	**key_value;
 	char	*anothertmp;
 	t_env   *current;
 	int i = 0;
 	int j = 0;
 	current = var->head_env;
-	var->key_value = envp(var);
-	while(var->key_value[i])
+	key_value = envp(var);
+	while(key_value[i])
 	{
-		tmp = var->key_value[i];
+		tmp = key_value[i];
 		j = i + 1;
 		while(j < ft_listsize(var->head_env))
 		{
-			if ((ft_strncmp(tmp, var->key_value[j], ft_strlen(tmp))) > 0)
+			if ((ft_strncmp(tmp, key_value[j], ft_strlen(tmp))) > 0)
 			{
 				anothertmp = tmp;
-				tmp = var->key_value[j];
-				var->key_value[j] = anothertmp;
+				tmp = key_value[j];
+				key_value[j] = anothertmp;
 			}
-			var->key_value[i] = tmp;
+			key_value[i] = tmp;
 			j++;
 		}
 		i++;
 	}
 	i = 0;
-	while(var->key_value[i])
+	while(key_value[i])
 	{
 		// need to fix the " issue;
-		printf("declare -x %s\n", var->key_value[i]);
+		printf("declare -x %s\n", key_value[i]);
 		i++;
 	}
 }
