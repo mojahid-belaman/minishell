@@ -81,27 +81,6 @@ int	builtin(t_var *var)
 	return (0);
 }
 
-int	builtin_pipe(t_var *var)
-{
-	if (!(ft_strncmp("cd", *(var->prs->args), 3)) && !var->error)
-		builtin_cd(var);
-	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)) && !var->error)
-		builtin_pwd(var);
-	else if (!(ft_strncmp("env", *(var->prs->args), 4)) && !var->error)
-		builtin_env(var);
-	else if (!(ft_strncmp("unset", *(var->prs->args), 6)) && !var->error)
-		builtin_unset(var);
-	else if (!(ft_strncmp("exit", *(var->prs->args), 5)) && !var->error)
-		builtin_exit(var);
-	else if (!(ft_strncmp("export", *(var->prs->args), 7)) && !var->error)
-		builtin_export(var);
-	else if (!(ft_strncmp("echo", *(var->prs->args), 5)) && !var->error)
-		builtin_echo(var);
-	else
-		return (-1);
-	return (0);
-}
-
 char	*find_path(t_var *var, char **path)
 {
 	int			i;
@@ -233,7 +212,7 @@ void	execute_pipe(t_var *var, char **env)
 			while (++i < 2 * pipenumber)
 				close(pipefds[i]);	
 			i = -1;
-			if (builtin_pipe(var) < 0 && !var->error)
+			if (builtin(var) < 0 && !var->error)
 				sys_execution_pipe(var, env);
 			exit(0);
 		}
