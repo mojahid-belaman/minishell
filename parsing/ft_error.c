@@ -1,11 +1,11 @@
 #include "../headers/minishell.h"
 
-void hundel_error(int err)
+void hundel_error(int err, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
-
     var->error = err;
     var->status = 258;
+    free(var->line);
+    var->line = NULL;
     if (err == token_rl)
         ft_putstr_fd("minishell:syntax error near unexpected token `<'\n", 2);
     else if (err == token_rr)
@@ -19,9 +19,16 @@ void hundel_error(int err)
     else if (err == token_dpip)
         ft_putstr_fd("minishell:syntax error near unexpected token `||'\n", 2);
     else if (err == new_line)
-        ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+        ft_putstr_fd("minishell:syntax error near unexpected token `newline'\n", 2);
     else if (err == token_dsc)
         ft_putstr_fd("minishell:syntax error near unexpected token `;;'\n", 2);
+    else if (err == empty_file)
+    {
+        ft_putstr_fd("minishell: $", 2);
+        ft_putstr_fd(var->str, 2);
+        ft_putstr_fd(": ambiguous redirect\n", 2);
+        free(var->str);
+    }
 }
 
 void free_list_files(t_parser *prs)

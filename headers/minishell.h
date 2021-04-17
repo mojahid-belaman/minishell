@@ -10,15 +10,17 @@
 #include <limits.h>
 #include <sys/stat.h>
 #include "../libft/libft.h"
-# include <dirent.h>
+#include <dirent.h>
 #include <curses.h>
 #include <term.h>
 #define key_u 0x415b1b
 #define key_dw 0x425b1b
 #define key_en 10
 #define key_del 127
+#define CTRL_L 0xc
+#define CTRL_D 0x4
+#define CTRL_C 0x3
 
-#define LEN_MAX_CMD 4096
 #define token_rr 1
 #define token_rl 2
 #define token_dr 3
@@ -27,6 +29,7 @@
 #define token_pip 5
 #define new_line 6
 #define token_dpip 8
+#define empty_file 9
 #define append 'a'
 #define right_r '>'
 #define left_r '<'
@@ -76,6 +79,7 @@ typedef struct s_var
 	int back_sl;
 	int error;
 	char *line;
+	char *str;
 	char **split_sc;
 	char **split_pip;
 	int step;
@@ -93,7 +97,6 @@ typedef struct s_var
 	t_history *head_his;
 } t_var;
 
-
 //parsing
 int isprint_car(int p);
 char *ft_strjoin(char const *s1, char const *s2);
@@ -103,17 +106,17 @@ char *ft_strdup(const char *src);
 size_t ft_strlen(const char *str);
 int get_next_line(int fd, char **line);
 void syntax_error(t_var *var, int i);
-int hund_last_sc(int i);
+int hund_last_sc(int i, t_var *var);
 void check_single_q();
 void check_double_q();
-void check_redir_r();
-void check_redir_l();
-void check_redir_d(int i);
-void check_semicolomn(int i);
-void check_pipe(int i);
-void conv_neg_space(int i);
-void hundel_error(int err);
-void get_env(char **envp);
+void check_redir_r(int i, t_var *var);
+void check_redir_l(int i, t_var *var);
+void check_redir_d(int i, t_var *var);
+void check_semicolomn(int i, t_var *var);
+void check_pipe(int i, t_var *var);
+void conv_neg_space(int i, t_var *var);
+void hundel_error(int err, t_var *var);
+void get_env(char **envp, t_var *var);
 void ft_lstadd_back(t_env **alst, t_env *news);
 t_env *create_node(char **key_value);
 char **split_env(char *line);
@@ -129,6 +132,7 @@ int set_index(char *str);
 char *get_env_value(char *key);
 char *read_line(t_var *var);
 void ft_free_args(char **args);
+int ft_strcmp(const char *s1, const char *s2);
 //execution
 char	*get_home(t_var *var);
 int		get_oldpwd(t_var *var);
@@ -139,7 +143,7 @@ void	export_var(t_var *var, int *j);
 int     echo_option(char *str, int *check);
 int		ft_listsize(t_env *lst);
 int		ft_listsize_file(t_files *files);
-char	*find_value(char *find);
+char *find_value(char *find, t_var *var);
 void	builtin_cd(t_var *var);
 void	builtin_pwd(t_var *var);
 void    builtin_env(t_var *var);
@@ -161,4 +165,5 @@ void	execute_pipe(t_var *var, char **env);
 void	sys_execution_pipe(t_var *var, char **env);
 // need to be removed
 void print_list_env(t_env *head);
+void ft_key_value(char **str);
 #endif

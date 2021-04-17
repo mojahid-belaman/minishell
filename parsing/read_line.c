@@ -1,21 +1,5 @@
 #include "../headers/minishell.h"
 
-// void init_cursor(int *row, int *col)
-// {
-//     char answer[20];
-//     int i;
-
-//     ft_putstr_fd("\e[6n", 0);
-//     ft_bzero(answer, 20);
-//     i = read(0, answer, 20);
-//     answer[i] = 0;
-//     i = 2;
-//     *row = ft_atoi(answer + i);
-//     while (ft_isdigit(answer[i]))
-//         i++;
-//     *col = ft_atoi(answer + i + 1);
-// }
-
 void my_dll(t_var *var, t_history *list, char *input)
 {
     t_history *curr;
@@ -27,13 +11,9 @@ void my_dll(t_var *var, t_history *list, char *input)
     his->next = NULL;
     his->prev = NULL;
     his->cursor = list->cursor;
-    // ft_memcpy(his->input, list->input, len);
     his->input = ft_strdup(input);
     if (!var->head_his)
-    {
         var->head_his = his;
-        // printf("str : |%s|\n", var->head_his->input);
-    }
     else
     {
         curr = var->head_his;
@@ -41,7 +21,6 @@ void my_dll(t_var *var, t_history *list, char *input)
             curr = curr->next;
         his->prev = curr;
         curr->next = his;
-        // printf("prev : |%s| now |%s|\n", his->prev->input, his->input);
     }
 }
 
@@ -87,7 +66,7 @@ struct termios termios_config()
     if (tcgetattr(0, &old) < 0)
         ft_putstr_fd("error\n", 2);
     s_termios = old;
-    s_termios.c_lflag &= ~(ECHO | ICANON);
+    s_termios.c_lflag &= ~(ECHO | ICANON | ISIG);
     term_type = getenv("TERM");
     if (tgetent(NULL, term_type) < 0)
         ft_putstr_fd("error\n", 2);
@@ -96,33 +75,27 @@ struct termios termios_config()
     return (old);
 }
 
-char *read_line(t_var *var)
+t_history *create_node_hist()
 {
-
-    t_history *list;
     t_history *his;
-    t_history *curr;
-    struct termios old;
-    // int i;
-    // int row;
-    // int col;
-    // int len;
-    // int cursor;
-    int read_press;
-    char *tmp;
 
+    his = NULL;
     his = (t_history *)malloc(sizeof(t_history));
     his->next = NULL;
     his->prev = NULL;
     his->cursor = 0;
     his->input = NULL;
-    list = NULL;
+    return (his);
+}
 
-    old = termios_config();
+void assign_list(t_var *var, t_history **ls_actual, t_history *his)
+{
+    t_history *curr;
+
     if (!(var->head_his))
     {
         var->head_his = his;
-        list = his;
+        *ls_actual = his;
     }
     else
     {
@@ -131,108 +104,135 @@ char *read_line(t_var *var)
             curr = curr->next;
         his->prev = curr;
         curr->next = his;
-        list = curr->next;
+        *ls_actual = curr->next;
     }
+}
+
+void re_malloc(t_history *ls_actual, int read_press, char *tmp)
+{
+    int len = 0;
+    int i = 0;
+
+    while (ls_actual->input[len])
+        len++;
+    tmp = (char *)malloc(len + 2);
+    i = 0;
+    while (i < len)
+    {
+        tmp[i] = ls_actual->input[i];
+        i++;
+    }
+    free(ls_actual->input);
+    tmp[i] = read_press;
+    tmp[i + 1] = '\0';
+    ls_actual->input = (char *)malloc(len + 2);
+    i = 0;
+    while (tmp[i])
+    {
+        ls_actual->input[i] = tmp[i];
+        i++;
+    }
+    ls_actual->input[i] = '\0';
+    free(tmp);
+}
+
+char *read_line(t_var *var)
+{
+    t_history *ls_actual;
+    t_history *his;
+    struct termios old;
+    int read_press;
+    char *tmp;
+
+    tmp = NULL;
+    his = create_node_hist();
+    ls_actual = NULL;
+    old = termios_config();
+    assign_list(var, &ls_actual, his);
     while (1)
     {
         read_press = 0;
         read(0, &read_press, 4);
         if (read_press > 31 && read_press < 127)
         {
-            int fd = open("file", O_RDWR | O_CREAT | O_TRUNC, 0666);
-            if (!list->input)
+            // int fd = open("file", O_RDWR | O_CREAT | O_TRUNC, 0666);
+            if (!ls_actual->input)
             {
-                list->input = (char *)malloc(list->cursor + 2);
-                list->input[list->cursor] = read_press;
-                list->input[list->cursor + 1] = '\0';
+                ls_actual->input = (char *)malloc(ls_actual->cursor + 2);
+                ls_actual->input[ls_actual->cursor] = read_press;
+                ls_actual->input[ls_actual->cursor + 1] = '\0';
             }
             else
-            {
-                int len = 0;
-                int i = 0;
-                while (list->input[len])
-                    len++;
-                tmp = (char *)malloc(len + 2);
-                i = 0;
-                while (i < len)
-                {
-                    tmp[i] = list->input[i];
-                    i++;
-                }
-                free(list->input);
-                tmp[i] = read_press;
-                tmp[i + 1] = '\0';
-                list->input = (char *)malloc(len + 2);
-                i = 0;
-                while (tmp[i])
-                {
-                    list->input[i] = tmp[i];
-                    i++;
-                }
-                list->input[i] = '\0';
-                free(tmp);
-            }
-            ft_putstr_fd(list->input, fd);
-            ft_putstr_fd("|", fd);
-            ft_putnbr_fd(list->cursor, fd);
-            ft_putstr_fd("\n", fd);
-            close(fd);
-            ft_putstr_fd(list->input + list->cursor, 1);
-            list->cursor++;
+                re_malloc(ls_actual, read_press, tmp);
+            // ft_putstr_fd(ls_actual->input, fd);
+            // ft_putstr_fd("|", fd);
+            // ft_putnbr_fd(ls_actual->cursor, fd);
+            // ft_putstr_fd("\n", fd);
+            // close(fd);
+            ft_putstr_fd(ls_actual->input + ls_actual->cursor, 1);
+            ls_actual->cursor++;
         }
         else if (read_press == key_del)
         {
-            if (!list->cursor)
+            if (!ls_actual->cursor)
                 continue;
-            list->cursor--;
-            list->input[list->cursor] = 0;
+            ls_actual->cursor--;
+            ls_actual->input[ls_actual->cursor] = 0;
             ft_putstr_fd("\033[1D\033[K", 1);
         }
         else if (read_press == key_u)
         {
-            if (!list->prev)
+            if (!ls_actual->prev)
                 continue;
-            list = list->prev;
+            ls_actual = ls_actual->prev;
             ft_putstr_fd("\r\033[0K", 1);
             ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
-            ft_putstr_fd(list->input, 1);
+            ft_putstr_fd(ls_actual->input, 1);
         }
         else if (read_press == key_dw)
         {
-            if (!list->next)
+            if (!ls_actual->next)
                 continue;
-            list = list->next;
+            ls_actual = ls_actual->next;
             ft_putstr_fd("\r\033[0K", 1);
             ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
-            ft_putstr_fd(list->input, 1);
+            ft_putstr_fd(ls_actual->input, 1);
         }
         else if (read_press == key_en)
         {
             ft_putstr_fd("\n", 1);
-            if (!list->input)
+            if (!ls_actual->input)
             {
                 ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
                 continue;
             }
-            tmp = ft_strdup(list->input);
+            tmp = ft_strdup(ls_actual->input);
             delete_node(var);
             if (tmp)
-                my_dll(var, list, tmp);
+                my_dll(var, ls_actual, tmp);
             normal_mode(old);
             break;
+        }
+        else if (read_press == CTRL_C)
+        {
+            delete_node(var);
+            his = create_node_hist();
+            assign_list(var, &ls_actual, his);
+            ft_putstr_fd("\n", 1);
+            ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
+        }
+        else if (read_press == CTRL_D)
+        {
+            if (ls_actual->input)
+                continue;
+            if (var->status)
+            {
+                ft_putstr_fd("exit", 1);
+                exit(1);
+            }
+            ft_putstr_fd("exit", 1);
+            exit(0);
         }
     }
     return (tmp);
 }
-
-// int main()
-// {
-//     t_var var;
-//     var = (t_var){0};
-//     while (1)
-//     {
-//        char *str = read_line(&var);
-//         printf("|%s|\n", str);
-//     }
-//     return (0);
-// }

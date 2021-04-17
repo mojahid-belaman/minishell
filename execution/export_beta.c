@@ -19,14 +19,19 @@ char	**envp(t_var *var)
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], current->value);
 			free(tmp);
+			tmp = NULL;
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], "\"");
 			free(tmp);
+			tmp = NULL;
 			i++;
 		}
 		else if (current->print == 0)
 		{
+			tmp = key_value[i];
 			key_value[i] = ft_strdup(current->key);
+			free(tmp);
+			tmp = NULL;
 			i++;
 		}
 		current = current->next;
@@ -48,7 +53,7 @@ void	export_env(t_var *var)
 	{
 		tmp = key_value[i];
 		j = i + 1;
-		while(j < ft_listsize(var->head_env))
+		while (j < ft_listsize(var->head_env))
 		{
 			if ((ft_strncmp(tmp, key_value[j], ft_strlen(tmp))) > 0)
 			{
@@ -62,29 +67,31 @@ void	export_env(t_var *var)
 		i++;
 	}
 	i = 0;
-	while(key_value[i])
+	while (key_value[i])
 	{
 		// need to fix the " issue;
 		printf("declare -x %s\n", key_value[i]);
 		i++;
 	}
+	ft_free_args(key_value);
 }
 
-void	export_var(t_var *var, int *j)
+void export_var(t_var *var, int *j)
 {
 	int i = 0;
-	char    **key_value;
-	t_env	*current;
-	char	*tmp;
+	char **key_value;
+	t_env *current;
+	char *tmp;
 
-	key_value = (char **)malloc(3);
+	key_value = (char **)malloc(3 * sizeof(char *));
 	key_value[2] = NULL;
 	if (!ft_isalpha(**(var->prs->args + (*j))))
 	{
 		printf("minishell: export: %s:not a valid identifier\n", *(var->prs->args + (*j)));
-		return ;
+		ft_free_args(key_value);
+		return;
 	}
-	while((*(var->prs->args + (*j)))[i] && (*(var->prs->args + (*j)))[i]!= '=' && ft_isalnum((*(var->prs->args + (*j)))[i]))
+	while ((*(var->prs->args + (*j)))[i] && (*(var->prs->args + (*j)))[i] != '=' && ft_isalnum((*(var->prs->args + (*j)))[i]))
 		i++;
 	if ((*(var->prs->args + (*j)))[i] == '=' || !(*(var->prs->args + (*j)))[i])
 	{
@@ -104,6 +111,7 @@ void	export_var(t_var *var, int *j)
 			key_value[1] = ft_substr(*(var->prs->args + (*j)), i + 1, ft_strlen(*(var->prs->args + (*j))) - i);
 		}
 		current = create_node(key_value);
+		ft_free_args(key_value);
 		ft_lstadd_back(&var->head_env, current);
 	}
 	else if (!ft_isalpha((*(var->prs->args + (*j)))[i]))
@@ -118,16 +126,16 @@ void	export_var(t_var *var, int *j)
 		else
 		{
 			printf("minishell: export: %s:not a valid identifier\n", *(var->prs->args + (*j)));
-			return ;
+			return;
 		}
 	}
 }
 
-void    builtin_export(t_var *var)
+void builtin_export(t_var *var)
 {
-	t_env	*current;
-	char	*tmp;
-	int		i;
+	t_env *current;
+	char *tmp;
+	int i;
 
 	i = 1;
 	if (!(*(var->prs->args + 1)))
@@ -137,7 +145,7 @@ void    builtin_export(t_var *var)
 		while (*(var->prs->args + i))
 		{
 			current = var->head_env;
-			while(current)
+			while (current)
 			{
 				if (!(ft_strncmp(current->key, *(var->prs->args + i), ft_strlen(current->key))))
 					if ((*(var->prs->args + i))[ft_strlen(current->key)] == '=' || !((*(var->prs->args + i))[ft_strlen(current->key)]) || ((*(var->prs->args + i))[ft_strlen(current->key)] == '+' && (*(var->prs->args + i))[ft_strlen(current->key) + 1] == '='))
@@ -155,6 +163,7 @@ void    builtin_export(t_var *var)
 					tmp = current->value;
 					current->value = ft_strjoin(current->value, (*(var->prs->args + i)) + ft_strlen(current->key) + 2);
 					free(tmp);
+					tmp = NULL;
 				}
 				else if ((*(var->prs->args + i))[ft_strlen(current->key)])
 				{

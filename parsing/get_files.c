@@ -77,6 +77,10 @@ void search_file(t_var *var, int *j)
         }
         if (fil->type != '1')
         {
+            // if (!ft_strcmp(fil->file_name, ""))
+            //     hundel_error(empty_file, var);
+            // if (var->error)
+            //     return;
             add_files_tonode(fil);
             fil = (t_files *)malloc(sizeof(t_files));
             fil->next = NULL;
