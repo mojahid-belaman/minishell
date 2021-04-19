@@ -55,9 +55,8 @@ void free_args(char **args)
         free(args);
 }
 
-void free_list_cmd(t_parser *prs)
+void free_list_cmd(t_parser *prs, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     t_parser *curr;
     int i = -1;
 

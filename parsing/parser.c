@@ -1,8 +1,7 @@
 #include "../headers/minishell.h"
 
-void init_symbol()
+void init_symbol(t_var *var)
 {
-	t_var *var = get_struc_var(NULL);
 	var->double_q = 0;
 	var->single_q = 0;
 	var->semi_colomn = 0;
@@ -65,12 +64,9 @@ void ft_free_args(char **args)
 {
 	int i;
 
-	i = 0;
-	while (args[i])
-	{
+	i = -1;
+	while (args[++i])
 		free(args[i]);
-		i++;
-	}
 	if (args)
 		free(args);
 }
@@ -78,13 +74,13 @@ void ft_free_args(char **args)
 void free_list(t_var *var)
 {
 	t_parser *curr;
-
 	curr = var->prs;
 	while (curr)
 	{
 		var->prsTail = curr->next_prs;
 		if (curr->args)
 			ft_free_args(curr->args);
+		curr->args = NULL;
 		if (curr->file_head)
 			free_files(curr);
 		free(curr);
@@ -123,34 +119,37 @@ void fill_command(t_var *var, char **env)
 	int i;
 	int j;
 
-    i = -1;
-    var->split_sc = ft_split(var->line, ';');
-    var->old_out = dup(STDOUT_FILENO);
-    var->old_in = dup(STDIN_FILENO);
-    while (var->split_sc[++i])
-    {
-        clear_line(var, &(var->split_sc[i]));
-        if (!var->split_sc[0][0])
-            return;
-        if (var->error != 0)
-            return;
-        free_list_cmd(var->prs);
-        j = -1;
-        var->split_pip = ft_split(var->split_sc[i], '|');
-        while (var->split_pip[++j])
-        {
-            prs = (t_parser *)malloc(sizeof(t_parser));
-            prs->file_head = NULL;
-            prs->next_prs = NULL;
-            add_prs_tonode(var, prs);
-            search_file(var, &j);
-            search_cmd_args(var, &j);
-        }
-        // print_list(var);
-        execution(var, env);
-        if (var->exit)
-            break;
-    }
+	i = -1;
+	var->split_sc = ft_split(var->line, ';');
+	var->old_out = dup(STDOUT_FILENO);
+	var->old_in = dup(STDIN_FILENO);
+	while (var->split_sc[++i])
+	{
+		clear_line(var, &(var->split_sc[i]));
+		free_list_cmd(var->prs, var);
+		j = -1;
+		var->split_pip = ft_split(var->split_sc[i], '|');
+		while (var->split_pip[++j])
+		{
+			prs = (t_parser *)malloc(sizeof(t_parser));
+			prs->file_head = NULL;
+			prs->next_prs = NULL;
+			add_prs_tonode(var, prs);
+			search_file(var, &j);
+			search_cmd_args(var, &j);
+		}
+		// (void)env;
+		// print_list(var);
+
+		execution(var, env);
+		// int j = -1;
+		// while (var->prs->args[++j])
+		// {
+		// 	printf("{%s}\n", var->prs->args[j]);
+		// }
+		if (var->exit)
+			break;
+	}
 }
 
 int main(int ac, char **av, char **env)
@@ -162,19 +161,25 @@ int main(int ac, char **av, char **env)
 	r = 1;
 	ac = 1;
 	av = NULL;
-	get_struc_var(&var);
+	// get_struc_var(&var);
 	get_env(env, &var);
 	var.home = find_value("HOME", &var);
 	while (r)
 	{
 		i = -1;
-		init_symbol();
+		init_symbol(&var);
 		ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
 		var.line = read_line(&var);
 		syntax_error(&var, i);
 		if (var.error != 0 && !(var.error = 0))
 			continue;
 		fill_command(&var, env);
+		// int j = -1;
+		// while (var.prs->args[++j])
+		// {
+		// 	printf("{%s}\n", var.prs->args[j]);
+		// }
+
 		ft_free(&var);
 	}
 	return (0);
