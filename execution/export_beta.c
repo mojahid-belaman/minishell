@@ -14,7 +14,6 @@ char	**envp(t_var *var)
 	{
 		if (current->print == 1)
 		{
-			// var->key_value[i] = (char *)malloc(ft_strlen(current->key) + ft_strlen(current->value) + 1);
 			key_value[i] = ft_strjoin(current->key, "=\"");
 			tmp = key_value[i];
 			key_value[i] = ft_strjoin(key_value[i], current->value);
