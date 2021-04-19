@@ -29,6 +29,7 @@
 #define token_pip 5
 #define new_line 6
 #define token_dpip 8
+#define token_dollar -90
 #define append 'a'
 #define right_r '>'
 #define left_r '<'
@@ -82,12 +83,12 @@ typedef struct s_var
 	char **split_pip;
 	int step;
 	char *home;
-	int		exit;
-	int		old_out;
-	int		old_in;
-	int		fd[2];
-	int		fdp[2];
-	char	**key_value;
+	int exit;
+	int old_out;
+	int old_in;
+	int fd[2];
+	int fdp[2];
+	char **key_value;
 	int status;
 	t_parser *prs;
 	t_parser *prsTail;
@@ -119,28 +120,28 @@ void ft_lstadd_back(t_env **alst, t_env *news);
 t_env *create_node(char **key_value);
 char **split_env(char *line);
 t_var *get_struc_var(t_var *ptr);
-void free_list_cmd(t_parser *prs);
+void free_list_cmd(t_parser *prs, t_var *var);
 void free_list_files(t_parser *prs);
 void add_prs_tonode(t_var *var, t_parser *node);
-void add_files_tonode(t_files *fil);
+void add_files_tonode(t_files *fil, t_var *var);
 void search_file(t_var *var, int *j);
 void search_cmd_args(t_var *var, int *j);
 void clear_line(t_var *var, char **line);
 int set_index(char *str);
-char *get_env_value(char *key);
+char *get_env_value(char *key, t_var *var);
 char *read_line(t_var *var);
 void ft_free_args(char **args);
 int ft_strcmp(const char *s1, const char *s2);
 //execution
-char	*get_home(t_var *var);
-int		get_oldpwd(t_var *var);
-void	chpwd_env(t_var *var);
-char	*check_home(t_var *var);
-void	export_env(t_var *var);
-void	export_var(t_var *var, int *j);
-int     echo_option(char *str, int *check);
-int		ft_listsize(t_env *lst);
-int		ft_listsize_file(t_files *files);
+char *get_home(t_var *var);
+int get_oldpwd(t_var *var);
+void chpwd_env(t_var *var);
+char *check_home(t_var *var);
+void export_env(t_var *var);
+void export_var(t_var *var, int *j);
+int echo_option(char *str, int *check);
+int ft_listsize(t_env *lst);
+int ft_listsize_file(t_files *files);
 char *find_value(char *find, t_var *var);
 void	builtin_cd(t_var *var);
 void	builtin_pwd(t_var *var);
