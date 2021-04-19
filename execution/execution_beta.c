@@ -29,9 +29,8 @@ void	open_file(t_var *var)
 	{
 		if (files->type == '>' || files->type == 'a')
 		{
-			if (files->type == '>' && *files->file_name != token_)
+			if (files->type == '>')
 				var->fd[1] = open(files->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			else if (*files->file_name == -90)
 			else
 				var->fd[1] = open(files->file_name, O_WRONLY | O_CREAT | O_APPEND, 0666);
 			if (var->fd[1] < 0 && !(stat(files->file_name, &buffer)))
