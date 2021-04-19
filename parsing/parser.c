@@ -146,10 +146,16 @@ void fill_command(t_var *var, char **env)
             search_file(var, &j);
             search_cmd_args(var, &j);
         }
+		// (void)env;
         // print_list(var);
         execution(var, env);
         if (var->exit)
             break;
+		// int j = -1;
+		// while (var->prs->args[++j])
+		// {
+		// 	printf("{%s}\n", var->prs->args[j]);
+		// }
     }
 }
 
