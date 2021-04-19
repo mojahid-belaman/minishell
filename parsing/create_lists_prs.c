@@ -1,8 +1,7 @@
 #include "../headers/minishell.h"
 
-void add_files_tonode(t_files *fil)
+void add_files_tonode(t_files *fil, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     // printf("\nfilename=%s|typeRedir=%c|addressNodefile=%p|addressWholeCmd=%p\n", fil->file_name, fil->type ,fil, var->prsTail);
     t_files *curr;
 

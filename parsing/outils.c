@@ -56,9 +56,8 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
-char    *get_env_value(char *key)
+char    *get_env_value(char *key, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     t_env *curr;
 
     if (var->head_env)

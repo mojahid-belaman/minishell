@@ -53,6 +53,7 @@ void	chpwd_env(t_var *var)
 	}
 	else
 		*(var->prs->args + 1) = cwd;
+
 	if (oldpwd->print == 1 && pwd->print == 1)
 	{
 		oldpwd->value = ft_strdup(pwd->value);

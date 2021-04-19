@@ -122,12 +122,12 @@ int hundel_sq_dq_sm(t_var *var, int i)
 {
 	if (var->line[i] == '\'')
 	{
-		check_single_q();
+		check_single_q(var);
 		return (1);
 	}
 	else if (var->line[i] == '"')
 	{
-		check_double_q();
+		check_double_q(var);
 		return (1);
 	}
 	else if (var->line[i] == ';')
