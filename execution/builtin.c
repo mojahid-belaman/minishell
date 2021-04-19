@@ -11,32 +11,17 @@ char	*get_home(t_var *var)
 			break;
 		current = current->next;
 	}
-	if (current && current->print)
+	if (current && current->print == 1)
 		return(ft_strdup(current->value));
 	return (ft_strdup(var->home));
 }
 
-int		get_oldpwd(t_var *var)
-{
-	t_env *current;
-
-	current = var->head_env;
-	while (ft_strncmp("OLDPWD", current->key, 6) && current)
-		current = current->next;
-	if (!current || !current->print || current->print == 2)
-	{
-		printf("minishell : cd: OLDPWD not set\n");
-		return (0);
-	}
-	*(var->prs->args + 1) = current->value;
-	printf("%s\n", *(var->prs->args + 1));
-	return (1);
-}
-
-void	chpwd_env(t_var *var)
+void    chpwd_env(t_var *var)
 {
 	char	cwd[PATH_MAX];
 	t_env	*pwd;
+	char    *path;
+	char    *tmp;
 	t_env	*oldpwd;
 
 	oldpwd = var->head_env;
@@ -45,37 +30,49 @@ void	chpwd_env(t_var *var)
 		pwd = pwd->next;
 	while (oldpwd && ft_strncmp("OLDPWD", oldpwd->key, 6))
 		oldpwd = oldpwd->next;
+	if (*(var->prs->args + 1))
+		path = ft_strdup(*(var->prs->args + 1));
+	else
+		path = NULL;
 	if (!(getcwd(cwd, sizeof(cwd))))
 	{
+		tmp = pwd->value;
 		pwd->value = ft_strjoin(pwd->value, "/");
-		*(var->prs->args + 1) = ft_strjoin(pwd->value, *(var->prs->args + 1));
-		printf("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+		free(tmp);
+		tmp = path;
+		path = ft_strjoin(pwd->value, *(var->prs->args + 1));
+		free(tmp);
+		ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 1);
 	}
 	else
-		*(var->prs->args + 1) = cwd;
-
+	{
+		tmp = path;
+		path = ft_strdup(cwd);
+		free(tmp);
+	}
 	if (oldpwd->print == 1 && pwd->print == 1)
 	{
 		oldpwd->value = ft_strdup(pwd->value);
-		pwd->value = ft_strdup(*(var->prs->args + 1));
+		pwd->value = ft_strdup(path);
 	}
 	else if (oldpwd->print == 2 && pwd->print == 1)
 	{
 		oldpwd->value = ft_strdup(pwd->value);
-		pwd->value = ft_strdup(*(var->prs->args + 1));
+		pwd->value = ft_strdup(path);
 		oldpwd->print = 3;
 	}
 	else if (oldpwd->print == 1 && pwd->print == 2)
 	{
 		oldpwd->value = ft_strdup("");
-		pwd->value = ft_strdup(*(var->prs->args + 1));
+		pwd->value = ft_strdup(path);
 		oldpwd->print = 2;
 	}
 	else if (oldpwd->print == 2 && pwd->print == 2)
 	{
 		oldpwd->value = ft_strdup(pwd->value);
-		pwd->value = ft_strdup(*(var->prs->args + 1));
+		pwd->value = ft_strdup(path);
 	}
+	free(path);
 }
 
 char	*check_home(t_var *var)
@@ -97,18 +94,18 @@ char	*check_home(t_var *var)
 void	builtin_cd(t_var *var)
 {
 	int cd;
+	char	*home;
 	if (!(*(var->prs->args + 1)))
 	{
-		*(var->prs->args + 1) = check_home(var);
-		if (!(*(var->prs->args + 1)))
+		home = check_home(var);
+		if (!home)
 			return ;
+		cd = chdir(home);
 	}
 	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
 		*(var->prs->args + 1) = ft_strjoin(get_home(var), *(var->prs->args + 1) + 1);
-	else if (!(ft_strncmp("-", *(var->prs->args + 1), 1)))
-		if(!(get_oldpwd(var)))
-			return ;
-	cd = chdir(*(var->prs->args + 1));
+	if (*(var->prs->args + 1))
+		cd = chdir(*(var->prs->args + 1));
 	if (cd < 0)
 		printf("minishell: cd %s: No such file or directory\n", *(var->prs->args + 1));
 	else
@@ -191,5 +188,5 @@ void	builtin_exit(t_var *var)
 		}
 	}
 	else
-		exit(0);
+		exit(var->status);
 }

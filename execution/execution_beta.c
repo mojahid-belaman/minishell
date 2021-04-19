@@ -35,8 +35,6 @@ void	open_file(t_var *var)
 				var->fd[1] = open(files->file_name, O_WRONLY | O_CREAT | O_APPEND, 0666);
 			if (var->fd[1] < 0 && !(stat(files->file_name, &buffer)))
 			{
-				// if (S_ISDIR(buffer.st_mode))
-				// 	ft_putstr_fd("error, is directory\n", 2);
 				if (buffer.st_mode & S_IFMT & S_IFDIR)
 					ft_putstr_fd("error, is directory\n", 2);
 				else if (!(buffer.st_mode & W_OK))
@@ -179,7 +177,6 @@ void	sys_execution_pipe(t_var *var, char **env)
 void	execute_pipe(t_var *var, char **env)
 {
 	int i = -1;
-	int err;
 	int pipenumber = ft_listsize_prs(var->prs) - 1;
 	int	*pipefds = malloc(sizeof(int) * (2 * pipenumber));
 	pid_t pid;
@@ -199,16 +196,12 @@ void	execute_pipe(t_var *var, char **env)
 		{
 			//if not last
 			if (var->prs->next_prs)
-			{
-				if (dup2(pipefds[j + 1], STDOUT_FILENO) < 0)
-					perror("failed 1");
-			}
+				dup2(pipefds[j + 1], STDOUT_FILENO);
 			//if not first
 			if (j != 0)
-			{
-				if (dup2(pipefds[j - 2], STDIN_FILENO) < 0)
-					perror("failed 2");
-			}
+				dup2(pipefds[j - 2], STDIN_FILENO);
+			if (ft_listsize_file(var->prs->file_head) > 0)
+				open_file(var);
 			while (++i < 2 * pipenumber)
 				close(pipefds[i]);	
 			i = -1;
@@ -230,12 +223,8 @@ void	execute_pipe(t_var *var, char **env)
 		close(pipefds[i]);
 	i = -1;
 	while(++i < pipenumber + 1)
-	{
 		waitpid(p[i] ,&var->status, 0);
-		// wait(&var->status);
-	}
-	var->status = WEXITSTATUS(err);
-	// ft_putstr_fd("endup with pipe\n", 2);
+	var->status = WEXITSTATUS(var->status);
 }
 
 void    execution(t_var *var, char **env)
@@ -248,10 +237,7 @@ void    execution(t_var *var, char **env)
 			sys_execution(var, env);
 	}
 	else
-	{
-		// ft_putstr_fd("entered the exec pipe\n", 2);
-		execute_pipe(var, env);;
-	}
+		execute_pipe(var, env);
 	dup2(var->old_in, STDIN_FILENO);
 	dup2(var->old_out, STDOUT_FILENO);
 }
