@@ -16,23 +16,6 @@ char	*get_home(t_var *var)
 	return (ft_strdup(var->home));
 }
 
-int		get_oldpwd(t_var *var)
-{
-	t_env *current;
-
-	current = var->head_env;
-	while (ft_strncmp("OLDPWD", current->key, 6) && current)
-		current = current->next;
-	if (!current || !current->print || current->print == 2)
-	{
-		printf("minishell : cd: OLDPWD not set\n");
-		return (0);
-	}
-	*(var->prs->args + 1) = current->value;
-	printf("%s\n", *(var->prs->args + 1));
-	return (1);
-}
-
 void    chpwd_env(t_var *var)
 {
 	char	cwd[PATH_MAX];
@@ -121,9 +104,6 @@ void	builtin_cd(t_var *var)
 	}
 	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
 		*(var->prs->args + 1) = ft_strjoin(get_home(var), *(var->prs->args + 1) + 1);
-	// else if (!(ft_strncmp("-", *(var->prs->args + 1), 1)))
-	// 	if(!(get_oldpwd(var)))
-	// 		return ;
 	if (*(var->prs->args + 1))
 		cd = chdir(*(var->prs->args + 1));
 	if (cd < 0)

@@ -147,7 +147,7 @@ void fill_command(t_var *var, char **env)
             search_file(var, &j);
             search_cmd_args(var, &j);
         }
-		(void)env;
+		// (void)env;
         // print_list(var);
         execution(var, env);
         if (var->exit)
