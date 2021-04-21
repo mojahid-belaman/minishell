@@ -1,68 +1,26 @@
 #include "../headers/minishell.h"
 
-void check_allflgs(t_var *var)
+void	check_allflgs(t_var *var)
 {
 	if (var->semi_colomn)
 		hundel_error(token_dsc, var);
-	else if (var->semi_colomn || var->redir_left || var->redir_right || var->redir_double || var->pipe || var->double_q || var->single_q)
+	else if (var->semi_colomn || var->redir_left || var->redir_right
+		|| var->redir_double || var->pipe || var->double_q || var->single_q)
 		hundel_error(new_line, var);
 }
 
-void check_carac(char c, t_var *var)
+int	hundel_backsl_two(t_var *var, int *i)
 {
-	if ((var->semi_colomn || var->redir_left || var->redir_right || var->redir_double || var->pipe) && isprint_car(c))
-	{
-		var->semi_colomn = 0;
-		var->redir_left = 0;
-		var->redir_right = 0;
-		var->redir_double = 0;
-		var->pipe = 0;
-	}
-}
-
-int hund_last_sc(int i, t_var *var)
-{
-	if (var->redir_right || var->redir_left || var->redir_double || var->semi_colomn || var->pipe)
-		hundel_error(token_sc, var);
-	while (var->line[++i])
-		if (isprint_car(var->line[i]) || var->line[i] != '"')
-			return (1);
-	return (0);
-}
-
-void hundel_semicolomne(t_var *var, int i)
-{
-
-	if (var->line[0] == ';' && var->line[i + 1] != ';')
-		hundel_error(token_sc, var);
-	else if (var->line[i + 1] == ';')
-		hundel_error(token_dsc, var);
-	else if (hund_last_sc(i, var))
-		check_semicolomn(i, var);
-}
-
-void off_flags_covneg(t_var *var, int *i)
-{
-	if (var->redir_right || var->redir_left || var->redir_double || var->semi_colomn)
-	{
-		var->redir_right = 0;
-		var->redir_left = 0;
-		var->redir_double = 0;
-		var->semi_colomn = 0;
-	}
-	var->line[*i + 1] = -var->line[*i + 1];
-	(*i)++;
-}
-
-int hundel_backsl_two(t_var *var, int *i)
-{
-	if (!var->double_q && var->line[*i] == '\\' &&
-		(var->line[*i + 1] == ';' || var->line[*i + 1] == '|' || var->line[*i + 1] == ' ' || var->line[*i + 1] == '>' || var->line[*i + 1] == '<'))
+	if (!var->double_q && var->line[*i] == '\\'
+		&& (var->line[*i + 1] == ';' || var->line[*i + 1] == '|'
+			|| var->line[*i + 1] == ' ' || var->line[*i + 1] == '>'
+			|| var->line[*i + 1] == '<'))
 	{
 		off_flags_covneg(var, i);
 		return (1);
 	}
-	else if (var->double_q && var->line[*i] == '\\' && (var->line[*i + 1] == ';'))
+	else if (var->double_q && var->line[*i] == '\\'
+		&& (var->line[*i + 1] == ';'))
 	{
 		var->line[*i + 1] = -var->line[*i + 1];
 		return (1);
@@ -75,7 +33,7 @@ int hundel_backsl_two(t_var *var, int *i)
 	return (0);
 }
 
-int hundel_backsl_one(t_var *var, int *i)
+int	hundel_backsl_one(t_var *var, int *i)
 {
 	if (!var->single_q && var->line[*i] == '\\' && var->line[*i + 1] == '`')
 	{
@@ -97,7 +55,7 @@ int hundel_backsl_one(t_var *var, int *i)
 	return (0);
 }
 
-int hundel_all_redir(t_var *var, int *i)
+int	hundel_all_redir(t_var *var, int *i)
 {
 	if (var->line[*i] == '>' && var->line[*i + 1] == '>')
 	{
@@ -118,74 +76,29 @@ int hundel_all_redir(t_var *var, int *i)
 	return (0);
 }
 
-int hundel_sq_dq_sm(t_var *var, int i)
+void	syntax_error(t_var *var, int i)
 {
-	if (var->line[i] == '\'')
-	{
-		check_single_q(var);
-		return (1);
-	}
-	else if (var->line[i] == '"')
-	{
-		check_double_q(var);
-		return (1);
-	}
-	else if (var->line[i] == ';')
-	{
-		hundel_semicolomne(var, i);
-		return (1);
-	}
-	return (0);
-}
-
-int hundel_pip_sp(t_var *var, int i)
-{
-	if (var->line[i] == '|')
-	{
-		check_pipe(i, var);
-		return (1);
-	}
-	else if (var->line[i] == ' ')
-	{
-		conv_neg_space(i, var);
-		return (1);
-	}
-	else
-	{
-		check_carac(var->line[i], var);
-		return (1);
-	}
-	return (0);
-}
-
-void syntax_error(t_var *var, int i)
-{
-	char *tmp;
-
-	tmp = var->line;
-	var->line = ft_strtrim(var->line, " ");
-	free(tmp);
 	while (var->line[++i])
 	{
 		if (hundel_backsl_one(var, &i))
 		{
 			if (var->error != 0)
-				return;
+				return ;
 		}
 		else if (hundel_sq_dq_sm(var, i))
 		{
 			if (var->error != 0)
-				return;
+				return ;
 		}
 		else if (hundel_all_redir(var, &i))
 		{
 			if (var->error != 0)
-				return;
+				return ;
 		}
 		else if (hundel_pip_sp(var, i))
 		{
 			if (var->error != 0)
-				return;
+				return ;
 		}
 	}
 	check_allflgs(var);

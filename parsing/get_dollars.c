@@ -1,6 +1,6 @@
 #include "../headers/minishell.h"
 
-void new_str(char **str, int index)
+void	new_str(char **str, int index)
 {
 	while ((*str)[index] != '\0')
 	{
@@ -9,7 +9,7 @@ void new_str(char **str, int index)
 	}
 }
 
-void del_sq_dq(char **line, int *i, int *sq, int *dq)
+void	del_sq_dq(char **line, int *i, int *sq, int *dq)
 {
 	if ((*line)[*i] == '\"' && *sq == 0)
 	{
@@ -25,7 +25,7 @@ void del_sq_dq(char **line, int *i, int *sq, int *dq)
 	}
 }
 
-void replace_dollar(t_var *var, char **line, int *i, int *sq, int *dq)
+void	replace_dollar(t_var *var, char **line, int *i, int *sq, int *dq)
 {
 	int index_dollar;
 	char *str_after_doll;

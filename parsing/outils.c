@@ -75,3 +75,14 @@ char    *get_env_value(char *key, t_var *var)
     }
     return (ft_strdup(""));
 }
+
+int	hund_last_sc(int i, t_var *var)
+{
+	if (var->redir_right || var->redir_left || var->redir_double
+		|| var->semi_colomn || var->pipe)
+		hundel_error(token_sc, var);
+	while (var->line[++i])
+		if (isprint_car(var->line[i]) || var->line[i] != '"')
+			return (1);
+	return (0);
+}
