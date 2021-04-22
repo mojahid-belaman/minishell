@@ -31,7 +31,7 @@ void	hundel_semicolomne(t_var *var, int i)
 {
 	if (var->line[0] == ';' && var->line[i + 1] != ';')
 		hundel_error(token_sc, var);
-	else if (var->line[i + 1] == ';')
+	else if (var->line[i + 1] == ';' && var->single_q && var->double_q)
 		hundel_error(token_dsc, var);
 	else if (hund_last_sc(i, var))
 		check_semicolomn(i, var);

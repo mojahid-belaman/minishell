@@ -1,6 +1,6 @@
 #include "../headers/minishell.h"
 
-void init_symbol(t_var *var)
+void	init_symbol(t_var *var)
 {
 	var->double_q = 0;
 	var->single_q = 0;
@@ -20,11 +20,13 @@ void init_symbol(t_var *var)
 	var->exit = 0;
 }
 
-void free_files(t_parser *prs)
+void	free_files(t_parser *prs)
 {
-	t_files *curr = prs->file_head;
-	t_files *next_node = NULL;
+	t_files	*curr;
+	t_files	*next_node;
 
+	curr = prs->file_head;
+	next_node = NULL;
 	while (curr)
 	{
 		next_node = curr->next;
@@ -36,9 +38,33 @@ void free_files(t_parser *prs)
 	prs->file_head = NULL;
 }
 
-void ft_free_args(char **args)
+void print_list(t_var *var)
 {
+	t_parser *curr_prs;
+	t_files *curr_fils;
+
+	curr_prs = var->prs;
 	int i;
+	while (curr_prs)
+	{
+		i = 0;
+		curr_fils = curr_prs->file_head;
+		printf("\ncommand = |%s|\n", curr_prs->cmd);
+		while (curr_prs->args[++i])
+			printf("\narg[%d] =  |%s|\n", i, curr_prs->args[i]);
+		while (curr_fils)
+		{
+			printf("\ntype_redirection = |%c|\n", curr_fils->type);
+			printf("\nfile_name = |%s|\n", curr_fils->file_name);
+			curr_fils = curr_fils->next;
+		}
+		curr_prs = curr_prs->next_prs;
+	}
+}
+
+void	ft_free_args(char **args)
+{
+	int	i;
 
 	i = -1;
 	while (args[++i])
@@ -47,9 +73,10 @@ void ft_free_args(char **args)
 		free(args);
 }
 
-void free_list(t_var *var)
+void	free_list(t_var *var)
 {
-	t_parser *curr;
+	t_parser	*curr;
+
 	curr = var->prs;
 	while (curr)
 	{
@@ -65,11 +92,13 @@ void free_list(t_var *var)
 	var->prs = NULL;
 }
 
-void ft_free(t_var *var)
+void	ft_free(t_var *var)
 {
-	int i = -1;
-	int j = -1;
+	int	i;
+	int	j;
 
+	i = -1;
+	j = -1;
 	if (var->split_pip)
 	{
 		while (var->split_pip[++i])
@@ -89,12 +118,23 @@ void ft_free(t_var *var)
 	free_list(var);
 }
 
-void fill_command(t_var *var, char **env)
+void	ft_subcmd(t_parser *prs, t_var *var, int *j)
 {
-	t_parser *prs = NULL;
-	int i;
-	int j;
+	prs = (t_parser *)malloc(sizeof(t_parser));
+	prs->file_head = NULL;
+	prs->next_prs = NULL;
+	add_prs_tonode(var, prs);
+	search_file(var, j);
+	search_cmd_args(var, j);
+}
 
+void	fill_command(t_var *var, char **env)
+{
+	t_parser	*prs;
+	int			i;
+	int			j;
+
+	prs = NULL;
 	i = -1;
 	var->split_sc = ft_split(var->line, ';');
 	var->old_out = dup(STDOUT_FILENO);
@@ -106,21 +146,16 @@ void fill_command(t_var *var, char **env)
 		j = -1;
 		var->split_pip = ft_split(var->split_sc[i], '|');
 		while (var->split_pip[++j])
-		{
-			prs = (t_parser *)malloc(sizeof(t_parser));
-			prs->file_head = NULL;
-			prs->next_prs = NULL;
-			add_prs_tonode(var, prs);
-			search_file(var, &j);
-			search_cmd_args(var, &j);
-		}
-		execution(var, env);
-		if (var->exit)
-			break;
+			ft_subcmd(prs, var, &j);
+		(void)env;
+		print_list(var);
+		// execution(var, env);
+		// if (var->exit)
+		// 	break ;
 	}
 }
 
-int main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **env)
 {
 	int r;
 	int i;

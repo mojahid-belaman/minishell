@@ -12,25 +12,25 @@ int	ft_isalphnum(int c)
 		return (0);
 }
 
-int set_index(char *str)
+int	set_index(char *str)
 {
-    int j;
+	int	j;
 
-    j = -1;
-    while (str[++j] != '\0')
-    {
-        if (ft_isalphnum(str[j]))
-        {
-            if (ft_isalphnum(str[j]) == 2 && str[j - 1] == '$')
-            {
-                j++;
-                break ;
-            }
-        }
-        if (!ft_isalphnum(str[j]))
-            break ;
-    }
-    return (j);
+	j = -1;
+	while (str[++j] != '\0')
+	{
+		if (ft_isalphnum(str[j]))
+		{
+			if (ft_isalphnum(str[j]) == 2 && str[j - 1] == '$')
+			{
+				j++;
+				break ;
+			}
+		}
+		if (!ft_isalphnum(str[j]))
+			break ;
+	}
+	return (j);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)
@@ -43,7 +43,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	str2 = (unsigned char *)s2;
 	index = 0;
 	if (s1 == NULL || s2 == NULL)
-		return(-1);
+		return (-1);
 	while (str1[index] != '\0' && str2[index] != '\0')
 	{
 		if (str1[index] != str2[index])
@@ -51,29 +51,29 @@ int	ft_strcmp(const char *s1, const char *s2)
 		index++;
 	}
 	if (((str1[index] != '\0' && str2[index] == '\0')
-				|| (str1[index] == '\0' && str2[index] != '\0')))
+			|| (str1[index] == '\0' && str2[index] != '\0')))
 		return (str1[index] - str2[index]);
 	return (0);
 }
 
-char    *get_env_value(char *key, t_var *var)
+char	*get_env_value(t_var *var)
 {
-    t_env *curr;
+	t_env	*curr;
 
-    if (var->head_env)
-    {
-        curr = var->head_env;
-        while (curr && ft_strcmp(curr->key, key) != 0)
-            curr = curr->next;
-        if (curr)
-        {
-            if (curr->value)
-                return (ft_strdup(curr->value));
-            else
-                return (ft_strdup(""));
-        }
-    }
-    return (ft_strdup(""));
+	if (var->head_env)
+	{
+		curr = var->head_env;
+		while (curr && ft_strcmp(curr->key, var->str_key) != 0)
+			curr = curr->next;
+		if (curr)
+		{
+			if (curr->value)
+				return (ft_strdup(curr->value));
+			else
+				return (ft_strdup(""));
+		}
+	}
+	return (ft_strdup(""));
 }
 
 int	hund_last_sc(int i, t_var *var)
