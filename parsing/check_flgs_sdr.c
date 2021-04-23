@@ -1,8 +1,7 @@
 #include "../headers/minishell.h"
 
-void off_redir()
+void off_redir(t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     if (var->redir_left || var->redir_right || var->redir_double)
     {
         var->redir_left = 0;
@@ -13,10 +12,9 @@ void off_redir()
         var->semi_colomn = 0;
 }
 
-void check_single_q()
+void check_single_q(t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
-    off_redir();
+    off_redir(var);
     if (var->single_q)
         var->single_q = 0;
     else if (!var->double_q && !var->single_q)
@@ -25,10 +23,9 @@ void check_single_q()
         var->semi_colomn = 0;
 }
 
-void check_double_q()
+void check_double_q(t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
-    off_redir();
+    off_redir(var);
     if (var->double_q)
         var->double_q = 0;
     else if (!var->double_q && !var->single_q)

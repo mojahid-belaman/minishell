@@ -1,8 +1,7 @@
 #include "../headers/minishell.h"
 
-void remove_file(int *i, int org, int *j)
+void remove_file(int *i, int org, int *j, t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
     char *str1;
     char *str2;
     int len;
@@ -17,13 +16,12 @@ void remove_file(int *i, int org, int *j)
     *i = org - 1;
 }
 
-char *get_filename(int *i, int *j)
+char *get_filename(int *i, int *j, t_var *var)
 {
     int org;
     int start;
     int end;
     char *tmp;
-    t_var *var = get_struc_var(NULL);
 
     org = *i;
     start = 0;
@@ -41,7 +39,7 @@ char *get_filename(int *i, int *j)
         end++;
     }
     tmp = ft_substr(var->split_pip[*j], org + var->step + start, end);
-    remove_file(i, org, j);
+    remove_file(i, org, j, var);
     (*i)--;
     return (tmp);
 }
@@ -61,23 +59,23 @@ void search_file(t_var *var, int *j)
         {
             fil->type = append;
             var->step = 2;
-            fil->file_name = get_filename(&i, j);
+            fil->file_name = get_filename(&i, j, var);
         }
         else if (var->split_pip[*j][i] == '>')
         {
             fil->type = right_r;
             var->step = 1;
-            fil->file_name = get_filename(&i, j);
+            fil->file_name = get_filename(&i, j, var);
         }
         else if (var->split_pip[*j][i] == '<')
         {
             fil->type = left_r;
             var->step = 1;
-            fil->file_name = get_filename(&i, j);
+            fil->file_name = get_filename(&i, j, var);
         }
         if (fil->type != '1')
         {
-            add_files_tonode(fil);
+            add_files_tonode(fil, var);
             fil = (t_files *)malloc(sizeof(t_files));
             fil->next = NULL;
         }

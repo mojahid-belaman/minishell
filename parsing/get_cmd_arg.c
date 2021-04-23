@@ -1,9 +1,7 @@
 #include "../headers/minishell.h"
 
-void correct_flag_neg()
+void correct_flag_neg(t_var *var)
 {
-    t_var *var = get_struc_var(NULL);
-
     t_files *fil;
     int i;
     int j;
@@ -16,7 +14,7 @@ void correct_flag_neg()
         j = -1;
         while (fil->file_name[++j])
         {
-            if (fil->file_name[j] < 0)
+            if (fil->file_name[j] < 0 && fil->file_name[j] != -90)
                 fil->file_name[j] = -fil->file_name[j];
         }
         fil = fil->next;
@@ -36,12 +34,14 @@ void search_cmd_args(t_var *var, int *j)
 {
     t_parser *node;
     char *tmp;
-
+    
     node = var->prsTail;
     tmp = var->split_pip[*j];
     var->split_pip[*j] = ft_strtrim(var->split_pip[*j], " ");
     free(tmp);
     node->args = ft_split(var->split_pip[*j], ' ');
-    correct_flag_neg();
+    correct_flag_neg(var);
     node->cmd = node->args[0];
+    // if (!ft_strcmp(node->cmd, "cd"))
+    //     node->args[2] = NULL;
 }
