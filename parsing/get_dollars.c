@@ -20,10 +20,8 @@ void	func_change_line(t_var *var, char **line, int *i)
 
 void	replace_dollar(t_var *var, char **line, int *i)
 {
-	char	type;
-
 	var->i_d = 1;
-	type = define_type_red(line, i, &type);
+	var->type = define_type_red(line, i, var);
 	if ((*line)[*i] == '$' && var->single_q == 0)
 	{
 		if ((*line)[*i + 1] == '?')
@@ -31,14 +29,16 @@ void	replace_dollar(t_var *var, char **line, int *i)
 		else
 		{
 			func_val_dollar(var, line, i);
-			if (check_empty_dollar(var, line, i, type))
+			if (check_empty_dollar(var, line, i))
 				return ;
 		}
 		if (var->i_d != 0)
 			func_change_line(var, line, i);
 	}
-	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"'
-		|| (*line)[*i + 1] == '\'')
+	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
+		&& (var->double_q == 1 || var->single_q == 1))
+		return ;
+	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
 		&& (var->double_q == 0 || var->single_q == 0))
 	{
 		new_str(line, *i);
@@ -86,5 +86,10 @@ void	clear_line(t_var *var, char **line)
 		replace_dollar(var, line, &i);
 		del_sq_dq(line, &i, var);
 		check_line(var, line, &i);
+		if ((*line)[i - 1] == '$')
+		{
+			i = i - 1;
+			replace_dollar(var, line, &i);
+		}
 	}
 }

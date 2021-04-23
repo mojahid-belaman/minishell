@@ -78,6 +78,7 @@ typedef struct s_var
 	int redir_double;
 	int back_sl;
 	int error;
+	char type;
 	char *line;
 	char **split_sc;
 	char **split_pip;
@@ -151,8 +152,8 @@ void	off_flags_covneg(t_var *var, int *i);
 int	hund_last_sc(int i, t_var *var);
 void	new_str(char **str, int index);
 void	del_sq_dq(char **line, int *i, t_var *var);
-char	define_type_red(char **line, int *i, char *type);
-int	check_empty_dollar(t_var *var, char **line, int *i, char type);
+char	define_type_red(char **line, int *i, t_var *var);
+int	check_empty_dollar(t_var *var, char **line, int *i);
 //execution
 char *get_home(t_var *var);
 int get_oldpwd(t_var *var);

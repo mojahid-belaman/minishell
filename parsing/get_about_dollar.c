@@ -11,6 +11,15 @@ void	new_str(char **str, int index)
 
 void	del_sq_dq(char **line, int *i, t_var *var)
 {
+	if (((*line)[*i] == '\"' || (*line)[*i] == '\'')
+		&& ((*line)[*i + 1] == '>' || (*line)[*i + 1] == '<'))
+	{
+		(*line)[*i] = ' ';
+		if (var->double_q)
+			var->double_q = !(var->double_q);
+		else
+			var->single_q = !(var->single_q);
+	}
 	if ((*line)[*i] == '\"' && var->single_q == 0)
 	{
 		new_str(line, *i);
@@ -25,21 +34,21 @@ void	del_sq_dq(char **line, int *i, t_var *var)
 	}
 }
 
-char	define_type_red(char **line, int *i, char *type)
+char	define_type_red(char **line, int *i, t_var *var)
 {
 	if ((*line)[*i] == '>' && (*line)[*i - 1] == '>')
-		return (*type = 'a');
+		return (var->type = 'a');
 	else if ((*line)[*i] == '>')
-		return (*type = '>');
+		return (var->type = '>');
 	else if ((*line)[*i] == '<')
-		return (*type = '<');
-	return (*type);
+		return (var->type = '<');
+	return (var->type);
 }
 
-int	check_empty_dollar(t_var *var, char **line, int *i, char type)
+int	check_empty_dollar(t_var *var, char **line, int *i)
 {
 	if (!ft_strcmp(var->str_val, "")
-		&& (type == 'a' || type == '>' || type == '<'))
+		&& (var->type == 'a' || var->type == '>' || var->type == '<'))
 	{
 		free(var->str_key);
 		if (var->i_d != 0)

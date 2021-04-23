@@ -38,13 +38,13 @@ void	free_files(t_parser *prs)
 	prs->file_head = NULL;
 }
 
-void print_list(t_var *var)
+void	print_list(t_var *var)
 {
-	t_parser *curr_prs;
-	t_files *curr_fils;
+	t_parser	*curr_prs;
+	t_files		*curr_fils;
+	int			i;
 
 	curr_prs = var->prs;
-	int i;
 	while (curr_prs)
 	{
 		i = 0;
@@ -142,6 +142,7 @@ void	fill_command(t_var *var, char **env)
 	while (var->split_sc[++i])
 	{
 		clear_line(var, &(var->split_sc[i]));
+		printf("{%s}\n", var->split_sc[i]);
 		free_list_cmd(var->prs, var);
 		j = -1;
 		var->split_pip = ft_split(var->split_sc[i], '|');
@@ -157,17 +158,15 @@ void	fill_command(t_var *var, char **env)
 
 int	main(int ac, char **av, char **env)
 {
-	int r;
-	int i;
-	t_var var;
+	t_var	var;
+	int		i;
 	char	*tmp;
 
-	r = 1;
 	ac = 1;
 	av = NULL;
 	get_env(env, &var);
 	var.home = find_value("HOME", &var);
-	while (r)
+	while (1)
 	{
 		i = -1;
 		init_symbol(&var);
@@ -178,7 +177,7 @@ int	main(int ac, char **av, char **env)
 		free(tmp);
 		syntax_error(&var, i);
 		if (var.error != 0 && !(var.error = 0))
-			continue;
+			continue ;
 		fill_command(&var, env);
 		ft_free(&var);
 	}
