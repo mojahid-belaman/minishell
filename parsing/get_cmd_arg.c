@@ -41,7 +41,7 @@ void search_cmd_args(t_var *var, int *j)
     free(tmp);
     node->args = ft_split(var->split_pip[*j], ' ');
     correct_flag_neg(var);
-    // node->cmd = ft_strdup(node->args[0]);
+    node->cmd = node->args[0];
     // if (!ft_strcmp(node->cmd, "cd"))
     //     node->args[2] = NULL;
 }

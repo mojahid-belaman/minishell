@@ -140,13 +140,7 @@ void fill_command(t_var *var, char **env)
 		}
 		// (void)env;
 		// print_list(var);
-
 		execution(var, env);
-		// int j = -1;
-		// while (var->prs->args[++j])
-		// {
-		// 	printf("{%s}\n", var->prs->args[j]);
-		// }
 		if (var->exit)
 			break;
 	}
@@ -174,12 +168,6 @@ int main(int ac, char **av, char **env)
 		if (var.error != 0 && !(var.error = 0))
 			continue;
 		fill_command(&var, env);
-		// int j = -1;
-		// while (var.prs->args[++j])
-		// {
-		// 	printf("{%s}\n", var.prs->args[j]);
-		// }
-
 		ft_free(&var);
 	}
 	return (0);
