@@ -34,6 +34,20 @@ char	*find_value(char *find, t_var *var)
 	return (ft_strdup(""));
 }
 
+// int	key_exist(t_var *var, char *key)
+// {
+// 	t_env *current;
+	
+// 	current = var->head_env;
+// 	while (current)
+// 	{
+// 		if (!(ft_strncmp(current->key, key, ft_strlen(key))) && current->print) 
+// 			return (1);
+// 		current = current->next;
+// 	}
+// 	return (0);
+// }
+
 int	ft_listsize(t_env *lst)
 {
 	int cpt;

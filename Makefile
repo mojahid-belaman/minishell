@@ -21,7 +21,7 @@ SRC = 	./parsing/parser.c\
 		./parsing/get_about_dollar.c\
 	  	./execution/builtin.c\
 	  	./execution/execution_beta.c\
-	  	./execution/export_beta.c\
+	  	./execution/export_gamma.c\
 	  	./execution/linked_list.c\
 		./execution/echo.c\
 		./execution/utils.c

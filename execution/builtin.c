@@ -47,7 +47,7 @@ void    chpwd_env(t_var *var)
 		tmp = path;
 		path = ft_strjoin(pwd->value, *(var->prs->args + 1));
 		free(tmp);
-		ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 1);
+		ft_putstr_fd("cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
 	}
 	else
 	{
@@ -106,7 +106,7 @@ char	*check_home(t_var *var)
 		current = current->next;
 	if (!current || !current->print)
 	{
-		printf("minishell: cd: HOME not set\n");
+		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 		return(NULL);
 	}
 	else
@@ -136,7 +136,7 @@ void	builtin_cd(t_var *var)
 	if (*(var->prs->args + 1))
 		cd = chdir(*(var->prs->args + 1));
 	if (cd < 0)
-		printf("minishell: cd %s: No such file or directory\n", *(var->prs->args + 1));
+		ft_putstr_error("minishell: cd: ", *(var->prs->args + 1), ": No such file or directory\n");
 	else
 		chpwd_env(var);
 }
@@ -163,7 +163,12 @@ void    builtin_env(t_var *var)
 	while(current)
 	{
 		if (current->print == 1)
-			printf("%s=%s\n", current->key, current->value);
+		{
+			ft_putstr_fd(current->key, 1);
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd(current->value,1);
+			ft_putchar_fd('\n', 1);
+		}
 		current = current->next;
 	}
 }

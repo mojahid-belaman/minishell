@@ -3,18 +3,14 @@
 
 void	error_file(char *str, t_var *var)
 {
-	ft_putstr_fd("bash: ", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": No such file or directory\n", 2);
+	ft_putstr_error("minishell: ", str, ": No such file or directory\n");
 	var->status = 1;
 	var->error = 1;
 }
 
 void	error_command(char *str, t_var *var)
 {
-	ft_putstr_fd("bash: ", 2);
-	ft_putstr_fd(str, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_putstr_error("minishell: ", str, ": command not found\n");
 	var->status = 127;
 	var->error = 1;
 }
@@ -29,16 +25,23 @@ void	open_file(t_var *var)
 	{
 		if (files->type == '>' || files->type == 'a')
 		{
-			if (files->type == '>')
+			if (files->type == '>' && *files->file_name != token_dollar)
 				var->fd[1] = open(files->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-			else
+			else if (files->type == 'a' && *files->file_name != token_dollar)
 				var->fd[1] = open(files->file_name, O_WRONLY | O_CREAT | O_APPEND, 0666);
+			else if (*files->file_name == token_dollar)
+			{
+				*files->file_name = 36;
+				ft_putstr_error( "minishell: ", files->file_name, ": ambiguous redirect\n");
+				var->error = 1;
+				return;
+			}
 			if (var->fd[1] < 0 && !(stat(files->file_name, &buffer)))
 			{
 				if (buffer.st_mode & S_IFMT & S_IFDIR)
-					ft_putstr_fd("error, is directory\n", 2);
+				ft_putstr_error("minishell:", files->file_name, ": Is a directory\n");
 				else if (!(buffer.st_mode & W_OK))
-					ft_putstr_fd("Permission denied\n", 2);
+					ft_putstr_error("minishell:", files->file_name, "Permission denied\n");
 				var->status = 1;
 				var->error = 1;
 			}
@@ -48,6 +51,13 @@ void	open_file(t_var *var)
 		else
 		{
 			var->fd[0] = open(files->file_name, O_RDONLY);
+			if (*files->file_name == token_dollar)
+			{
+				*files->file_name = 36;
+				ft_putstr_error( "minishell: ", files->file_name, ": ambiguous redirect\n");
+				var->error = 1;
+				return;
+			}
 			if (var->fd[0] < 0)
 				error_file(files->file_name, var);
 			else
@@ -107,16 +117,24 @@ void sys_execution(t_var *var, char **env)
 {
 	struct stat buffer;
 	int			err;
-	char 		*tmp;
+	char 		*tmp = NULL;
 	pid_t		pid;
 	char		**path;
 
 	if (!(stat(var->prs->cmd, &buffer)))
 	{
-		if (buffer.st_mode & X_OK)
+		if (buffer.st_mode & S_IFMT & S_IFDIR)
+		{
+			ft_putstr_error("minishell: ", var->prs->cmd, ": is a directory\n");
+			return ;
+		}
+		else if (buffer.st_mode & X_OK)
 			tmp = var->prs->cmd;
-		else 
-			ft_putstr_fd("error, here ISDIR\n", 2);
+	}
+	else if (var->prs->cmd[0] == '.' || var->prs->cmd[0] == '/')
+	{
+		ft_putstr_error("minishell: ", var->prs->cmd, ": No such file or directory\n");
+		return ;
 	}
 	else
 	{
@@ -131,7 +149,10 @@ void sys_execution(t_var *var, char **env)
 		if (execve(tmp, var->prs->args, env) < 0)
 		{
 			if (!(ft_strcmp(tmp, "")))
-				ft_putstr_fd("error!", 2);
+			{
+				ft_putstr_error("minishell: ", tmp, ": No such file or directory\n");
+				free(tmp);
+			}
 			else
 				error_command(*var->prs->args, var);
 			exit(127);
@@ -152,10 +173,18 @@ void	sys_execution_pipe(t_var *var, char **env)
 
 	if (!(stat(var->prs->cmd, &buffer)))
 	{
-		if (buffer.st_mode & X_OK)
+		if (buffer.st_mode & S_IFMT & S_IFDIR)
+		{
+			ft_putstr_error("minishell: ", var->prs->cmd, ": is a directory\n");
+			return ;
+		}
+		else if (buffer.st_mode & X_OK)
 			tmp = var->prs->cmd;
-		else 
-			ft_putstr_fd("error, here ISDIR\n", 2);
+	}
+	else if (var->prs->cmd[0] == '.' || var->prs->cmd[0] == '/')
+	{
+		ft_putstr_error("minishell: ", var->prs->cmd, ": No such file or directory\n");
+		return ;
 	}
 	else
 	{
@@ -184,10 +213,7 @@ void	execute_pipe(t_var *var, char **env)
 	int j = 0;
 
 	while(++i < pipenumber)
-	{
-		if (pipe(pipefds + i * 2) < 0)
-			perror("pipe failed");
-	}
+		pipe(pipefds + i * 2);
 	i = -1;
 	while(var->prs)
 	{
@@ -233,11 +259,16 @@ void    execution(t_var *var, char **env)
 	{
 		if (ft_listsize_file(var->prs->file_head) > 0)
 			open_file(var);
-		if (builtin(var) < 0 && !var->error)
-			sys_execution(var, env);
+		if (!var->error)
+		{
+			if (builtin(var) < 0 && !var->error)
+				sys_execution(var, env);
+		}
 	}
-	else
+	else if (ft_listsize_prs(var->prs) > 1)
 		execute_pipe(var, env);
+	else 
+		ft_putstr_error("minishell: ", " ", "command not found\n");
 	dup2(var->old_in, STDIN_FILENO);
 	dup2(var->old_out, STDOUT_FILENO);
 }

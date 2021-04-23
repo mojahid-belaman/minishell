@@ -183,6 +183,7 @@ int	ft_listsize_prs(t_parser *prs);
 int	ft_strcmp(const char *s1, const char *s2);
 void	execute_pipe(t_var *var, char **env);
 void	sys_execution_pipe(t_var *var, char **env);
+void	ft_putstr_error(char *str1, char *str2, char *str3);
 // need to be removed
 void print_list_env(t_env *head);
 void ft_key_value(char **str);

@@ -21,3 +21,10 @@ int ft_sign(char c)
 	else
 		return (0);
 }
+
+void	ft_putstr_error(char *str1, char *str2, char *str3)
+{
+	ft_putstr_fd(str1, 2);
+	ft_putstr_fd(str2, 2);
+	ft_putstr_fd(str3, 2);
+}
