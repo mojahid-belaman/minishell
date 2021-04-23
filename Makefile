@@ -6,7 +6,6 @@ SRC = 	./parsing/parser.c\
 	  	./parsing/check_errors.c\
 	  	./parsing/check_flags.c\
 	  	./parsing/ft_error.c\
-	  	./parsing/get_structs.c\
 	  	./parsing/get_env.c\
 	  	./parsing/create_lists_prs.c\
 	  	./parsing/get_dollars.c\
@@ -15,6 +14,11 @@ SRC = 	./parsing/parser.c\
 	  	./parsing/outils.c\
 		./parsing/check_flgs_sdr.c\
 		./parsing/read_line.c\
+		./parsing/outils_readline.c\
+		./parsing/signals_readline.c\
+		./parsing/press_key.c\
+		./parsing/hundel_error.c\
+		./parsing/get_about_dollar.c\
 	  	./execution/builtin.c\
 	  	./execution/execution_beta.c\
 	  	./execution/export_gamma.c\

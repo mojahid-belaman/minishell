@@ -3,7 +3,7 @@
 char	*get_home(t_var *var)
 {
 	t_env	*current;
-
+	char *tmp;
 	current = var->head_env;
 	while(current)
 	{
@@ -12,7 +12,12 @@ char	*get_home(t_var *var)
 		current = current->next;
 	}
 	if (current && current->print == 1)
-		return(ft_strdup(current->value));
+	{
+		tmp = current->value;
+		current->value = ft_strdup(current->value);
+		free(tmp);
+		return(current->value);
+	}
 	return (ft_strdup(var->home));
 }
 
@@ -52,26 +57,43 @@ void    chpwd_env(t_var *var)
 	}
 	if (oldpwd->print == 1 && pwd->print == 1)
 	{
+		tmp = oldpwd->value;
 		oldpwd->value = ft_strdup(pwd->value);
+		free(tmp);
+		tmp = pwd->value;
 		pwd->value = ft_strdup(path);
+		free(tmp);
 	}
 	else if (oldpwd->print == 2 && pwd->print == 1)
 	{
+		tmp = oldpwd->value;
 		oldpwd->value = ft_strdup(pwd->value);
+		free(tmp);
+		tmp = pwd->value;
 		pwd->value = ft_strdup(path);
+		free(tmp);
 		oldpwd->print = 3;
 	}
 	else if (oldpwd->print == 1 && pwd->print == 2)
 	{
+		tmp = oldpwd->value;
 		oldpwd->value = ft_strdup("");
+		free(tmp);
+		tmp = pwd->value;
 		pwd->value = ft_strdup(path);
+		free(tmp);
 		oldpwd->print = 2;
 	}
 	else if (oldpwd->print == 2 && pwd->print == 2)
 	{
+		tmp = oldpwd->value;
 		oldpwd->value = ft_strdup(pwd->value);
+		free(tmp);
+		tmp = pwd->value;
 		pwd->value = ft_strdup(path);
+		free(tmp);
 	}
+	tmp = NULL;
 	free(path);
 }
 
@@ -94,16 +116,23 @@ char	*check_home(t_var *var)
 void	builtin_cd(t_var *var)
 {
 	int cd;
+	char	*tmp;
 	char	*home;
+
 	if (!(*(var->prs->args + 1)))
 	{
 		home = check_home(var);
 		if (!home)
 			return ;
 		cd = chdir(home);
+		free(home);
 	}
 	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
+	{
+		tmp = *(var->prs->args + 1);
 		*(var->prs->args + 1) = ft_strjoin(get_home(var), *(var->prs->args + 1) + 1);
+		free(tmp);
+	}
 	if (*(var->prs->args + 1))
 		cd = chdir(*(var->prs->args + 1));
 	if (cd < 0)

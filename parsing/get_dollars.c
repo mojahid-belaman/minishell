@@ -1,110 +1,95 @@
 #include "../headers/minishell.h"
 
-void new_str(char **str, int index)
+void	func_val_dollar(t_var *var, char **line, int *i)
 {
-	while ((*str)[index] != '\0')
-	{
-		(*str)[index] = (*str)[index + 1];
-		index++;
-	}
+	var->i_d = set_index((*line) + *i + 1);
+	var->str_key = ft_substr((*line) + *i + 1, 0, var->i_d);
+	var->str_val = get_env_value(var);
 }
 
-void del_sq_dq(char **line, int *i, int *sq, int *dq)
+void	func_change_line(t_var *var, char **line, int *i)
 {
-	if ((*line)[*i] == '\"' && *sq == 0)
-	{
-		new_str(line, *i);
-		*dq = !(*dq);
-		del_sq_dq(line, i, sq, dq);
-	}
-	if ((*line)[*i] == '\'' && *dq == 0)
-	{
-		new_str(line, *i);
-		*sq = !(*sq);
-		del_sq_dq(line, i, sq, dq);
-	}
+	var->str_key = ft_strjoin(var->str_val, (*line) + *i + 1 + var->i_d);
+	free(var->str_val);
+	(*line)[*i] = '\0';
+	var->str_val = ft_strjoin((*line), var->str_key);
+	free(*line);
+	free(var->str_key);
+	(*line) = var->str_val;
 }
 
-void replace_dollar(t_var *var, char **line, int *i, int *sq, int *dq)
+void	replace_dollar(t_var *var, char **line, int *i)
 {
-	int index_dollar;
-	char *str_after_doll;
-	char *str_value_doll;
-	char type;
-
-	index_dollar = 1;
-	if ((*line)[*i] == '>' && (*line)[*i - 1] == '>')
-		type = 'a';
-	else if ((*line)[*i] == '>')
-		type = '>';
-	else if ((*line)[*i] == '<')
-		type = '<';
-	if ((*line)[*i] == '$' && *sq == 0)
+	var->i_d = 1;
+	var->type = define_type_red(line, i, var);
+	if ((*line)[*i] == '$' && var->single_q == 0)
 	{
 		if ((*line)[*i + 1] == '?')
-			str_value_doll = ft_itoa(var->status);
+			var->str_val = ft_itoa(var->status);
 		else
 		{
-			index_dollar = set_index((*line) + *i + 1);
-			str_after_doll = ft_substr((*line) + *i + 1, 0, index_dollar);
-			str_value_doll = get_env_value(str_after_doll, var);
-			if (!ft_strcmp(str_value_doll, "") && (type == 'a' || type == '>' || type == '<'))
-			{
-				free(str_after_doll);
-				if (index_dollar != 0)
-					(*line)[*i] = token_dollar;
-				return;
-			}
-			free(str_after_doll);
+			func_val_dollar(var, line, i);
+			if (check_empty_dollar(var, line, i))
+				return ;
 		}
-		if (index_dollar != 0)
-		{
-			str_after_doll = ft_strjoin(str_value_doll, (*line) + *i + 1 + index_dollar);
-			free(str_value_doll);
-			(*line)[*i] = '\0';
-			str_value_doll = ft_strjoin((*line), str_after_doll);
-			free(*line);
-			free(str_after_doll);
-			(*line) = str_value_doll;
-		}
+		if (var->i_d != 0)
+			func_change_line(var, line, i);
 	}
-	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'') && (*dq == 0 || *sq == 0))
+	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
+		&& (var->double_q == 1 || var->single_q == 1))
+		return ;
+	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
+		&& (var->double_q == 0 || var->single_q == 0))
 	{
 		new_str(line, *i);
-		del_sq_dq(line, i, sq, dq);
+		del_sq_dq(line, i, var);
 	}
 }
 
-void clear_line(t_var *var, char **line)
+void	check_line(t_var *var, char **line, int *i)
 {
-	int i = -1;
-	int dq = 0;
-	int sq = 0;
+	if (var->double_q == 1 && (*line)[*i] == '\\' && ((*line)[*i + 1] == '$'
+		|| (*line)[*i + 1] == '\"' || (*line)[*i + 1] == '\\'
+		|| (*line)[*i + 1] == '`'))
+		new_str(line, *i);
+	if ((var->double_q || var->single_q) && (*line)[*i] > 0)
+		(*line)[*i] = -(*line)[*i];
+	if (var->double_q == 0 && var->single_q == 0 && (*line)[*i] == '\\'
+		&& (*line)[*i + 1] == '\\')
+	{
+		new_str(line, *i);
+		(*line)[*i] = -(*line)[*i];
+	}
+	if (var->double_q == 0 && var->single_q == 0 && (*line)[*i] == '\\')
+	{
+		if ((*line)[*i + 1] == '\0')
+		{
+			hundel_error(new_line, var);
+			return ;
+		}
+		new_str(line, *i);
+		if ((*line)[*i] == '\'' || (*line)[*i] == '\"')
+			(*line)[*i] = -(*line)[*i];
+	}
+}
 
+void	clear_line(t_var *var, char **line)
+{
+	int	i;
+
+	var->single_q = 0;
+	var->double_q = 0;
+	i = -1;
 	while ((*line)[++i] != '\0')
 	{
-		del_sq_dq(line, &i, &sq, &dq);
-		replace_dollar(var, line, &i, &sq, &dq);
-		del_sq_dq(line, &i, &sq, &dq);
-		if (dq == 1 && (*line)[i] == '\\' && ((*line)[i + 1] == '$' || (*line)[i + 1] == '\"' || (*line)[i + 1] == '\\' || (*line)[i + 1] == '`'))
-			new_str(line, i);
-		if ((dq || sq) && (*line)[i] > 0)
-			(*line)[i] = -(*line)[i];
-		if (dq == 0 && sq == 0 && (*line)[i] == '\\' && (*line)[i + 1] == '\\')
+		del_sq_dq(line, &i, var);
+		replace_dollar(var, line, &i);
+		del_sq_dq(line, &i, var);
+		check_line(var, line, &i);
+		if ((*line)[i - 1] == '$')
 		{
-			new_str(line, i);
-			(*line)[i] = -(*line)[i];
-		}
-		if (dq == 0 && sq == 0 && (*line)[i] == '\\')
-		{
-			if ((*line)[i + 1] == '\0')
-			{
-				hundel_error(new_line, var);
-				return;
-			}
-			new_str(line, i);
-			if ((*line)[i] == '\'' || (*line)[i] == '\"')
-				(*line)[i] = -(*line)[i];
+			i = i - 1;
+			replace_dollar(var, line, &i);
 		}
 	}
 }

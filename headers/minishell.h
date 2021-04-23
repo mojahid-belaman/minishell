@@ -18,7 +18,7 @@
 #define key_en 10
 #define key_del 127
 #define CTRL_L 0xc
-#define CTRL_D 0x4
+#define CTRL_D 4
 #define CTRL_C 0x3
 
 #define token_rr 1
@@ -36,13 +36,13 @@
 #define red `tput setaf 1`
 #define reset `tput sgr0`
 
-typedef struct s_history
+typedef struct s_his
 {
 	char *input;
 	int cursor;
-	struct s_history *next;
-	struct s_history *prev;
-} t_history;
+	struct s_his *next;
+	struct s_his *prev;
+} t_his;
 
 typedef struct s_env
 {
@@ -78,9 +78,13 @@ typedef struct s_var
 	int redir_double;
 	int back_sl;
 	int error;
+	char type;
 	char *line;
 	char **split_sc;
 	char **split_pip;
+	char	*str_key;
+	char	*str_val;
+	int		i_d;
 	int step;
 	char *home;
 	int exit;
@@ -93,7 +97,7 @@ typedef struct s_var
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
-	t_history *head_his;
+	t_his *head_his;
 } t_var;
 
 //parsing
@@ -106,8 +110,8 @@ size_t ft_strlen(const char *str);
 int get_next_line(int fd, char **line);
 void syntax_error(t_var *var, int i);
 int hund_last_sc(int i, t_var *var);
-void check_single_q();
-void check_double_q();
+void check_single_q(t_var *var);
+void check_double_q(t_var *var);
 void check_redir_r(int i, t_var *var);
 void check_redir_l(int i, t_var *var);
 void check_redir_d(int i, t_var *var);
@@ -128,10 +132,28 @@ void search_file(t_var *var, int *j);
 void search_cmd_args(t_var *var, int *j);
 void clear_line(t_var *var, char **line);
 int set_index(char *str);
-char *get_env_value(char *key, t_var *var);
-char *read_line(t_var *var);
+char *get_env_value(t_var *var);
+void read_line(t_var *var);
 void ft_free_args(char **args);
 int ft_strcmp(const char *s1, const char *s2);
+void assign_list(t_var *var, t_his **ls_actual, t_his *his);
+t_his *create_node_hist(void);
+void termios_config(struct termios *old_attr);
+void delete_node(t_var *var);
+void func_cntrl_c(t_his *his, t_var *var, t_his **ls_actual);
+void func_cntrl_d(t_var *var, t_his **ls_actual);
+void func_press_del(t_his **ls_actual);
+void func_press_up(t_his **ls_actual);
+void func_press_down(t_his **ls_actual);
+void	func_cont_rdl(int rp, t_var *var, t_his *his, t_his **list);
+int	hundel_sq_dq_sm(t_var *var, int i);
+int	hundel_pip_sp(t_var *var, int i);
+void	off_flags_covneg(t_var *var, int *i);
+int	hund_last_sc(int i, t_var *var);
+void	new_str(char **str, int index);
+void	del_sq_dq(char **line, int *i, t_var *var);
+char	define_type_red(char **line, int *i, t_var *var);
+int	check_empty_dollar(t_var *var, char **line, int *i);
 //execution
 char *get_home(t_var *var);
 int get_oldpwd(t_var *var);
