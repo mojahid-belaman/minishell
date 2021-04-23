@@ -83,7 +83,7 @@ void	clear_line(t_var *var, char **line)
 	while ((*line)[++i] != '\0')
 	{
 		del_sq_dq(line, &i, var);
-		replace_dollar(var, line, &i);
+		replace_dollar(var, line, &i); 
 		del_sq_dq(line, &i, var);
 		check_line(var, line, &i);
 		if ((*line)[i - 1] == '$')
