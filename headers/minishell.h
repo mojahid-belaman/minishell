@@ -96,6 +96,8 @@ typedef struct s_var
 	t_history *head_his;
 } t_var;
 
+pid_t g_pid;
+
 //parsing
 int isprint_car(int p);
 char *ft_strjoin(char const *s1, char const *s2);
@@ -162,7 +164,9 @@ int	ft_strcmp(const char *s1, const char *s2);
 void	execute_pipe(t_var *var, char **env);
 void	sys_execution_pipe(t_var *var, char **env);
 void	ft_putstr_error(char *str1, char *str2, char *str3);
+void    chpwd_bis(t_env *pwd, t_env *oldpwd, char *path);
 // need to be removed
 void print_list_env(t_env *head);
 void ft_key_value(char **str);
+void sigint_handler(int signo);
 #endif

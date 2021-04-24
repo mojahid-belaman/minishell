@@ -118,7 +118,6 @@ void sys_execution(t_var *var, char **env)
 	struct stat buffer;
 	int			err;
 	char 		*tmp = NULL;
-	pid_t		pid;
 	char		**path;
 
 	if (!(stat(var->prs->cmd, &buffer)))
@@ -143,8 +142,8 @@ void sys_execution(t_var *var, char **env)
 		tmp = find_path(var, path);
 		ft_free_args(path);
 	}
-	pid = fork();
-	if (pid == 0)
+	g_pid = fork();
+	if (g_pid == 0)
 	{
 		if (execve(tmp, var->prs->args, env) < 0)
 		{
@@ -160,7 +159,7 @@ void sys_execution(t_var *var, char **env)
 	}
 	else
 	{
-		waitpid(pid, &err, 0);
+		waitpid(g_pid, &err, 0);
 		var->status = WEXITSTATUS(err);
 	}
 }
@@ -208,7 +207,6 @@ void	execute_pipe(t_var *var, char **env)
 	int i = -1;
 	int pipenumber = ft_listsize_prs(var->prs) - 1;
 	int	*pipefds = malloc(sizeof(int) * (2 * pipenumber));
-	pid_t pid;
 	pid_t *p = malloc(sizeof(pid_t) * (2 * pipenumber));
 	int j = 0;
 
@@ -217,8 +215,8 @@ void	execute_pipe(t_var *var, char **env)
 	i = -1;
 	while(var->prs)
 	{
-		pid = fork();
-		if (pid == 0)
+		g_pid = fork();
+		if (g_pid == 0)
 		{
 			//if not last
 			if (var->prs->next_prs)
@@ -235,13 +233,13 @@ void	execute_pipe(t_var *var, char **env)
 				sys_execution_pipe(var, env);
 			exit(0);
 		}
-		else if (pid < 0)
+		else if (g_pid < 0)
 		{
 			ft_putstr_fd("error1", 2);
 			exit(127);
 		}
 		var->prs = var->prs->next_prs;
-		p[j / 2] = pid;
+		p[j / 2] = g_pid;
 		j+= 2;
 	}
 	i = -1;
@@ -253,8 +251,23 @@ void	execute_pipe(t_var *var, char **env)
 	var->status = WEXITSTATUS(var->status);
 }
 
+void	signal_handler(int signo)
+{
+	if (g_pid == 0)
+		exit(0);
+	else if (g_pid > 0)
+	{
+		if (signo == 2)
+			ft_putstr_fd("\n", 2);
+		else if (signo == 3)
+			ft_putstr_fd("Quit: 3\n", 2);
+	}
+}
+
 void    execution(t_var *var, char **env)
 {
+	signal(SIGINT, signal_handler);
+	// signal(SIGQUIT, signal_handler);
 	if (ft_listsize_prs(var->prs) == 1)
 	{
 		if (ft_listsize_file(var->prs->file_head) > 0)
@@ -267,8 +280,6 @@ void    execution(t_var *var, char **env)
 	}
 	else if (ft_listsize_prs(var->prs) > 1)
 		execute_pipe(var, env);
-	else 
-		ft_putstr_error("minishell: ", " ", "command not found\n");
 	dup2(var->old_in, STDIN_FILENO);
 	dup2(var->old_out, STDOUT_FILENO);
 }

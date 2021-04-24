@@ -146,6 +146,7 @@ void fill_command(t_var *var, char **env)
 	}
 }
 
+
 int main(int ac, char **av, char **env)
 {
 	int r;

@@ -20,7 +20,8 @@ SRC = 	./parsing/parser.c\
 	  	./execution/export_gamma.c\
 	  	./execution/linked_list.c\
 		./execution/echo.c\
-		./execution/utils.c
+		./execution/utils.c\
+		./execution/builtin_2.c
 
 OBJ = $(SRC:.c=.o)
 
