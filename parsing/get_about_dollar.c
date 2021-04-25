@@ -1,5 +1,18 @@
 #include "../headers/minishell.h"
 
+void	check_dollar_first(t_var *var, char **line, int *i)
+{
+	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
+		&& (var->double_q == 1 || var->single_q == 1))
+		return ;
+	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
+		&& (var->double_q == 0 || var->single_q == 0))
+	{
+		new_str(line, *i);
+		del_sq_dq(line, i, var);
+	}
+}
+
 void	new_str(char **str, int index)
 {
 	while ((*str)[index] != '\0')
@@ -11,6 +24,9 @@ void	new_str(char **str, int index)
 
 void	del_sq_dq(char **line, int *i, t_var *var)
 {
+	if (((*line)[0] == '"' && (*line)[1] == '"' && (*line)[2] == '\0')
+		|| ((*line)[0] == '\'' && (*line)[1] == '\'' && (*line)[2] == '\0'))
+		return ;
 	if (((*line)[*i] == '\"' || (*line)[*i] == '\'')
 		&& ((*line)[*i + 1] == '>' || (*line)[*i + 1] == '<'))
 	{
@@ -50,10 +66,16 @@ int	check_empty_dollar(t_var *var, char **line, int *i)
 	if (!ft_strcmp(var->str_val, "")
 		&& (var->type == 'a' || var->type == '>' || var->type == '<'))
 	{
-		free(var->str_key);
-		if (var->i_d != 0)
+		free(var->str_val);
+		var->str_val = NULL;
+		if (var->i_d != 0 && (*line)[*i - 1] != '$')
+		{
 			(*line)[*i] = token_dollar;
-		return (1);
+			{
+				free(var->str_key);
+				return (1);
+			}
+		}
 	}
 	free(var->str_key);
 	return (0);

@@ -34,16 +34,13 @@ void	replace_dollar(t_var *var, char **line, int *i)
 		}
 		if (var->i_d != 0)
 			func_change_line(var, line, i);
+		else
+		{
+			if (var->str_val)
+				free(var->str_val);
+		}
 	}
-	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
-		&& (var->double_q == 1 || var->single_q == 1))
-		return ;
-	if ((*line)[*i] == '$' && ((*line)[*i + 1] == '"' || (*line)[*i + 1] == '\'')
-		&& (var->double_q == 0 || var->single_q == 0))
-	{
-		new_str(line, *i);
-		del_sq_dq(line, i, var);
-	}
+	check_dollar_first(var, line, i);
 }
 
 void	check_line(t_var *var, char **line, int *i)
@@ -83,10 +80,12 @@ void	clear_line(t_var *var, char **line)
 	while ((*line)[++i] != '\0')
 	{
 		del_sq_dq(line, &i, var);
-		replace_dollar(var, line, &i); 
+		replace_dollar(var, line, &i);
 		del_sq_dq(line, &i, var);
 		check_line(var, line, &i);
-		if ((*line)[i - 1] == '$')
+		if ((*line)[i - 1] == '$' && (*line)[i] == token_dollar)
+			continue ;
+		if ((*line)[i - 1] == '$' && (*line)[i] != '/' && (*line)[i] != '$')
 		{
 			i = i - 1;
 			replace_dollar(var, line, &i);

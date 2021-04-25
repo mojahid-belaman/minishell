@@ -154,6 +154,7 @@ void	new_str(char **str, int index);
 void	del_sq_dq(char **line, int *i, t_var *var);
 char	define_type_red(char **line, int *i, t_var *var);
 int	check_empty_dollar(t_var *var, char **line, int *i);
+void	check_dollar_first(t_var *var, char **line, int *i);
 //execution
 char *get_home(t_var *var);
 int get_oldpwd(t_var *var);
