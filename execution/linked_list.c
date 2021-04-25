@@ -20,13 +20,14 @@ void	ft_lstadd_back(t_env **alst, t_env *new)
 
 char	*find_value(char *find, t_var *var)
 {
-	t_env *current;
-	
+	t_env	*current;
+
 	current = var->head_env;
 	while (current)
 	{
-		if (!(ft_strncmp(current->key, find, ft_strlen(find))) && current->print == 1)
-			break;
+		if (!(ft_strncmp(current->key, find, \
+		ft_strlen(find))) && current->print == 1)
+			break ;
 		current = current->next;
 	}
 	if (current && current->print)
@@ -34,23 +35,9 @@ char	*find_value(char *find, t_var *var)
 	return (ft_strdup(""));
 }
 
-// int	key_exist(t_var *var, char *key)
-// {
-// 	t_env *current;
-	
-// 	current = var->head_env;
-// 	while (current)
-// 	{
-// 		if (!(ft_strncmp(current->key, key, ft_strlen(key))) && current->print) 
-// 			return (1);
-// 		current = current->next;
-// 	}
-// 	return (0);
-// }
-
 int	ft_listsize(t_env *lst)
 {
-	int cpt;
+	int	cpt;
 
 	cpt = 0;
 	if (!lst)
@@ -65,7 +52,7 @@ int	ft_listsize(t_env *lst)
 
 int	ft_listsize_file(t_files *files)
 {
-	int cpt;
+	int	cpt;
 
 	cpt = 0;
 	if (!files)
@@ -80,7 +67,7 @@ int	ft_listsize_file(t_files *files)
 
 int	ft_listsize_prs(t_parser *prs)
 {
-	int cpt;
+	int	cpt;
 
 	cpt = 0;
 	if (!prs)

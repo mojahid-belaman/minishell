@@ -94,11 +94,15 @@ typedef struct s_var
 	int fdp[2];
 	char **key_value;
 	int status;
+	int plus;
+	pid_t	*tab_pipe;
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
 	t_his *head_his;
 } t_var;
+
+pid_t g_pid;
 
 //parsing
 int isprint_car(int p);
@@ -184,7 +188,25 @@ int	ft_strcmp(const char *s1, const char *s2);
 void	execute_pipe(t_var *var, char **env);
 void	sys_execution_pipe(t_var *var, char **env);
 void	ft_putstr_error(char *str1, char *str2, char *str3);
+void    chpwd_bis(t_env *pwd, t_env *oldpwd, char *path);
+char    *new_pwd(t_var *var, t_env *pwd, char *path);
+int     existing_value_bis(t_var *var, char *key, char *value, int equal);
+int		check_args(t_var *var, char *current);
+char	**sort_key_value(t_var *var, char **key_value);
+int    addvar_export(t_var *var, char	**key_value, int i);
+int		existing_value(t_var *var, char *key, char *value, int equal);
+int     fopen_read(t_var *var, t_files *files);
+void	error_red_app(t_var *var, t_files *files);
+int		open_files(t_var *var, t_files *files);
+char    *join_command(t_var *var);
+void	open_file(t_var *var);
+char	*find_path(t_var *var, char **path);
+char	*join_path(t_var *var);
+void	ft_execve(char *tmp, t_var *var, char **env);
+void	error_command(char *str, t_var *var);
+void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env);
 // need to be removed
 void print_list_env(t_env *head);
 void ft_key_value(char **str);
+void sigint_handler(int signo);
 #endif

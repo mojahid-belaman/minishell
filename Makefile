@@ -20,11 +20,15 @@ SRC = 	./parsing/parser.c\
 		./parsing/hundel_error.c\
 		./parsing/get_about_dollar.c\
 	  	./execution/builtin.c\
-	  	./execution/execution_beta.c\
-	  	./execution/export_gamma.c\
+	  	./execution/execution.c\
+	  	./execution/execution_pipe.c\
+	  	./execution/execution_2.c\
+	  	./execution/export.c\
 	  	./execution/linked_list.c\
 		./execution/echo.c\
-		./execution/utils.c
+		./execution/utils.c\
+		./execution/builtin_2.c\
+		./execution/export_2.c
 
 OBJ = $(SRC:.c=.o)
 
