@@ -147,8 +147,8 @@ void	fill_command(t_var *var, char **env)
 		var->split_pip = ft_split(var->split_sc[i], '|');
 		while (var->split_pip[++j])
 			ft_subcmd(prs, var, &j);
-		// (void)env;
-		// print_list(var);
+		(void)env;
+		print_list(var);
 		execution(var, env);
 		if (var->exit)
 			break ;
