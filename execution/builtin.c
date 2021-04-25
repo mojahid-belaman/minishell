@@ -3,7 +3,7 @@
 char	*get_home(t_var *var)
 {
 	t_env	*current;
-
+	char *tmp;
 	current = var->head_env;
 	while (current)
 	{
@@ -43,6 +43,7 @@ void	builtin_cd(t_var *var)
 		if (!home)
 			return ;
 		cd = chdir(home);
+		free(home);
 	}
 	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
 		*(var->prs->args + 1) = ft_strjoin(get_home(var), \
