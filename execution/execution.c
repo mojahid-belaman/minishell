@@ -18,6 +18,7 @@ void	sys_execution(t_var *var, char **env)
 		ft_execve(tmp, var, env);
 	else
 	{
+		free(tmp);
 		waitpid(g_pid, &err, 0);
 		var->status = WEXITSTATUS(err);
 	}

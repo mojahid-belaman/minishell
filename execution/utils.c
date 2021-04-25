@@ -43,12 +43,12 @@ char	*find_path(t_var *var, char **path)
 		temp = tmp;
 		tmp = ft_strjoin(path[i], "/");
 		free(temp);
+		temp = tmp;
 		tmp = ft_strjoin(tmp, *var->prs->args);
+		free(temp);
 		if (!stat(tmp, &buffer))
 			break ;
 		i++;
-		free(tmp);
-		tmp = NULL;
 	}
 	return (tmp);
 }
