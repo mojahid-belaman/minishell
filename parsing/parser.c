@@ -149,9 +149,9 @@ void	fill_command(t_var *var, char **env)
 			ft_subcmd(prs, var, &j);
 		(void)env;
 		print_list(var);
-		// execution(var, env);
-		// if (var->exit)
-		// 	break ;
+		execution(var, env);
+		if (var->exit)
+			break ;
 	}
 }
 
