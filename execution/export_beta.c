@@ -35,8 +35,8 @@ int	check_args(t_var *var, char *current)
 	j = 0;
 	if (!ft_isalpha(current[0]) && current[0] != '_')
 	{
-		ft_putstr_error("minishell: export: ", \
-		current, "not a valid identifier\n");
+		ft_putstr_error("minishell: export: `", \
+		current, "` not a valid identifier\n");
 		var->status = 1;
 		return (0);
 	}
@@ -48,7 +48,7 @@ int	check_args(t_var *var, char *current)
 		else
 		{
 			ft_putstr_error("minishell: export: ", \
-			current, "not a valid identifier\n");
+			current, " not a valid identifier\n");
 			var->status = 1;
 			return (0);
 		}

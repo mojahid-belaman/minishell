@@ -76,7 +76,6 @@ void	execution(t_var *var, char **env)
 {
 	/* signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler); */
-	// printf("%s\n", var->prs->args[0]);
 	if (ft_listsize_prs(var->prs) == 1)
 	{
 

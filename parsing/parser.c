@@ -68,9 +68,13 @@ void	ft_free_args(char **args)
 
 	i = -1;
 	while (args[++i])
+	{
 		free(args[i]);
+		args[i] = NULL;
+	}
 	if (args)
 		free(args);
+	args = NULL;
 }
 
 void	free_list(t_var *var)

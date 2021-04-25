@@ -42,8 +42,10 @@ void	error_red_app(t_var *var, t_files *files)
 int	open_files(t_var *var, t_files *files)
 {
 	if (files->type == '>' && *files->file_name != token_dollar)
+	{
 		var->fd[1] = open(files->file_name, O_WRONLY \
 		| O_CREAT | O_TRUNC, 0666);
+	}
 	else if (files->type == 'a' && *files->file_name != token_dollar)
 		var->fd[1] = open(files->file_name, O_WRONLY \
 		| O_CREAT | O_APPEND, 0666);
@@ -52,6 +54,13 @@ int	open_files(t_var *var, t_files *files)
 		*files->file_name = 36;
 		ft_putstr_error("minishell: ", files->file_name, \
 		": ambiguous redirect\n");
+		var->error = 1;
+		return (0);
+	}
+	if (var->fd[1] < 0)
+	{
+		ft_putstr_error("minishell: ", files->file_name, \
+		": No such file or directory\n");
 		var->error = 1;
 		return (0);
 	}
