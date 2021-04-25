@@ -13,8 +13,6 @@ void	sys_execution(t_var *var, char **env)
 	char		*tmp;
 
 	tmp = join_command(var);
-	if (!tmp)
-		return ;
 	g_pid = fork();
 	if (g_pid == 0)
 		ft_execve(tmp, var, env);
@@ -78,8 +76,10 @@ void	execution(t_var *var, char **env)
 {
 	/* signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler); */
+	// printf("%s\n", var->prs->args[0]);
 	if (ft_listsize_prs(var->prs) == 1)
 	{
+
 		if (ft_listsize_file(var->prs->file_head) > 0)
 			open_file(var);
 		if (!var->error)

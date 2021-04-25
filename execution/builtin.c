@@ -3,7 +3,7 @@
 char	*get_home(t_var *var)
 {
 	t_env	*current;
-	char *tmp;
+
 	current = var->head_env;
 	while (current)
 	{

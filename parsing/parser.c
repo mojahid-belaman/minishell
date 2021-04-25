@@ -142,7 +142,7 @@ void	fill_command(t_var *var, char **env)
 	while (var->split_sc[++i])
 	{
 		clear_line(var, &(var->split_sc[i]));
-		printf("{%s}\n", var->split_sc[i]);
+		// printf("{%s}\n", var->split_sc[i]);
 		free_list_cmd(var->prs, var);
 		j = -1;
 		var->split_pip = ft_split(var->split_sc[i], '|');
