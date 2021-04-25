@@ -106,8 +106,7 @@ void	builtin_export(t_var *var)
 		{
 			key_value = (char **)malloc(3 * sizeof(char *));
 			key_value[2] = NULL;
-			if (!addvar_export(var, key_value, i))
-				break ;
+			addvar_export(var, key_value, i);
 			ft_free_args(key_value);
 		}
 	}

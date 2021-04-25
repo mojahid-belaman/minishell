@@ -18,6 +18,7 @@ void	sys_execution(t_var *var, char **env)
 		ft_execve(tmp, var, env);
 	else
 	{
+		free(tmp);
 		waitpid(g_pid, &err, 0);
 		var->status = WEXITSTATUS(err);
 	}
@@ -76,7 +77,6 @@ void	execution(t_var *var, char **env)
 {
 	/* signal(SIGINT, signal_handler);
 	signal(SIGQUIT, signal_handler); */
-	// printf("%s\n", var->prs->args[0]);
 	if (ft_listsize_prs(var->prs) == 1)
 	{
 

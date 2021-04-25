@@ -7,6 +7,7 @@ char	*join_path(t_var *var)
 
 	tmp = find_value("PATH", var);
 	path = ft_split(tmp, ':');
+	free(tmp);
 	tmp = find_path(var, path);
 	ft_free_args(path);
 	return (tmp);
