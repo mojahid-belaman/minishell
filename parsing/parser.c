@@ -146,6 +146,20 @@ void fill_command(t_var *var, char **env)
 	}
 }
 
+void	signal_handler(int signo)
+{
+	// if (g_pid == 0)
+	// 	exit(0);
+	// if (g_pid > 0)
+	// {
+		(void )signo;
+		puts("amine");
+		// if (signo == SIGINT)
+		// 	ft_putstr_fd("bash\n", 2);
+		// else if (signo == 3)
+		// 	ft_putstr_fd("Quit: 3\n", 2);
+	// }
+}
 
 int main(int ac, char **av, char **env)
 {
@@ -159,6 +173,8 @@ int main(int ac, char **av, char **env)
 	// get_struc_var(&var);
 	get_env(env, &var);
 	var.home = find_value("HOME", &var);
+	// signal(SIGINT, signal_handler);
+	// signal(SIGQUIT, signal_handler);
 	while (r)
 	{
 		i = -1;
