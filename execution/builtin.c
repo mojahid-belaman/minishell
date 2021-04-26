@@ -1,66 +1,5 @@
 #include "../headers/minishell.h"
 
-char	*get_home(t_var *var)
-{
-	t_env	*current;
-
-	current = var->head_env;
-	while (current)
-	{
-		if (!(ft_strncmp("HOME", current->key, 4)))
-			break ;
-		current = current->next;
-	}
-	if (current && current->print == 1)
-		return (ft_strdup(current->value));
-	return (ft_strdup(var->home));
-}
-
-char	*check_home(t_var *var)
-{
-	t_env	*current;
-
-	current = var->head_env;
-	while (current && ft_strncmp("HOME", current->key, 4))
-		current = current->next;
-	if (!current || !current->print)
-	{
-		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-		var->status = 1;
-		return (NULL);
-	}
-	else
-		return (ft_strdup(current->value));
-}
-
-void	builtin_cd(t_var *var)
-{
-	int		cd;
-	char	*tmp;
-	char	*home;
-
-	if (!(*(var->prs->args + 1)))
-	{
-		home = check_home(var);
-		if (!home)
-			return ;
-	}
-	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
-	{
-		tmp = get_home(var);
-		home = ft_strjoin(tmp, *(var->prs->args + 1) + 1);
-		free(tmp);
-	}
-	else
-		home = ft_strdup(*(var->prs->args + 1));
-	cd = chdir(home);
-	if (cd < 0)
-		no_file(var, var->prs->cmd, home, ": No such file or directory\n");
-	else
-		chpwd_env(var);
-	free(home);
-}
-
 void	builtin_unset(t_var *var)
 {
 	t_env	*current;
@@ -111,4 +50,57 @@ void	builtin_exit(t_var *var)
 	}
 	else
 		exit(var->status);
+}
+
+void	builtin_pwd(t_var *var)
+{
+	char	pwd[PATH_MAX];
+	t_env	*current;
+
+	current = var->head_env;
+	while (current && ft_strncmp("PWD", current->key, 3))
+		current = current->next;
+	if (current && current->print != 2)
+		printf("%s\n", current->value);
+	else
+		printf("%s\n", getcwd(pwd, sizeof(pwd)));
+}
+
+void	builtin_env(t_var *var)
+{
+	t_env	*current;
+
+	current = var->head_env;
+	while (current)
+	{
+		if (current->print == 1)
+		{
+			ft_putstr_fd(current->key, 1);
+			ft_putstr_fd("=", 1);
+			ft_putstr_fd(current->value, 1);
+			ft_putchar_fd('\n', 1);
+		}
+		current = current->next;
+	}
+}
+
+int	builtin(t_var *var)
+{
+	if (!(ft_strncmp("cd", *(var->prs->args), 3)) && !var->error)
+		builtin_cd(var);
+	else if (!(ft_strncmp("pwd", *(var->prs->args), 4)) && !var->error)
+		builtin_pwd(var);
+	else if (!(ft_strncmp("env", *(var->prs->args), 4)) && !var->error)
+		builtin_env(var);
+	else if (!(ft_strncmp("unset", *(var->prs->args), 6)) && !var->error)
+		builtin_unset(var);
+	else if (!(ft_strncmp("exit", *(var->prs->args), 5)) && !var->error)
+		builtin_exit(var);
+	else if (!(ft_strncmp("export", *(var->prs->args), 7)) && !var->error)
+		builtin_export(var);
+	else if (!(ft_strncmp("echo", *(var->prs->args), 5)) && !var->error)
+		builtin_echo(var);
+	else
+		return (-1);
+	return (0);
 }

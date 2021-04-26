@@ -9,3 +9,4 @@ void    no_file(t_var *var, char *cmd, char *arg, char *msg)
     ft_putstr_fd(msg, 2);
     var->status = 1;
 }
+

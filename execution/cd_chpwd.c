@@ -51,6 +51,14 @@ void	chpwd_bis(t_env *pwd, t_env *oldpwd, char *path)
 	free(path);
 }
 
+void	replace_pwd(t_env *pwd, t_env *oldpwd, char *path)
+{
+	free(oldpwd->value);
+	oldpwd->value = ft_strdup(pwd->value);
+	free(pwd->value);
+	pwd->value = ft_strdup(path);
+}
+
 void	chpwd_env(t_var *var)
 {
 	t_env	*pwd;
@@ -71,36 +79,4 @@ void	chpwd_env(t_var *var)
 	tmp = path;
 	path = new_pwd(var, pwd, path);
 	chpwd_bis(pwd, oldpwd, path);
-}
-
-void	builtin_pwd(t_var *var)
-{
-	char	pwd[PATH_MAX];
-	t_env	*current;
-
-	current = var->head_env;
-	while (current && ft_strncmp("PWD", current->key, 3))
-		current = current->next;
-	if (current && current->print != 2)
-		printf("%s\n", current->value);
-	else
-		printf("%s\n", getcwd(pwd, sizeof(pwd)));
-}
-
-void	builtin_env(t_var *var)
-{
-	t_env	*current;
-
-	current = var->head_env;
-	while (current)
-	{
-		if (current->print == 1)
-		{
-			ft_putstr_fd(current->key, 1);
-			ft_putstr_fd("=", 1);
-			ft_putstr_fd(current->value, 1);
-			ft_putchar_fd('\n', 1);
-		}
-		current = current->next;
-	}
 }
