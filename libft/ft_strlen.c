@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbelaman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 12:05:00 by mbelaman          #+#    #+#             */
-/*   Updated: 2019/11/09 08:58:22 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:12:06 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlen(const char *str)
 {
-	size_t index;
+	size_t	index;
 
 	index = 0;
 	while (str[index] != '\0')

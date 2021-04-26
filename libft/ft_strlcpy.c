@@ -6,7 +6,7 @@
 /*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 09:30:59 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/02/23 11:21:15 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:11:51 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 {
-	size_t index;
+	size_t	index;
 
 	index = 0;
 	if (size == 0)

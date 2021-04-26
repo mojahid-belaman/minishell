@@ -19,7 +19,6 @@ void	get_env(char **envp, t_var *var)
 {
 	t_env	*current;
 	char	**key_value;
-
 	while (*envp)
 	{
 		key_value = ft_split(*envp, '=');

@@ -61,7 +61,7 @@ void	check_line(t_var *var, char **line, int *i)
 	{
 		if ((*line)[*i + 1] == '\0')
 		{
-			hundel_error(new_line, var);
+			hundel_error(NEW_LINE, var);
 			return ;
 		}
 		new_str(line, *i);
@@ -83,7 +83,7 @@ void	clear_line(t_var *var, char **line)
 		replace_dollar(var, line, &i);
 		del_sq_dq(line, &i, var);
 		check_line(var, line, &i);
-		if ((*line)[i - 1] == '$' && (*line)[i] == token_dollar)
+		if ((*line)[i - 1] == '$' && (*line)[i] == TOKEN_DOLLAR)
 			continue ;
 		if ((*line)[i - 1] == '$' && (*line)[i] != '/' && (*line)[i] != '$')
 		{

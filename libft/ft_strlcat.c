@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbelaman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/19 16:17:50 by mbelaman          #+#    #+#             */
-/*   Updated: 2019/11/01 19:52:34 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:11:35 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	size_t lendst;
-	size_t lensrc;
-	size_t index;
+	size_t	lendst;
+	size_t	lensrc;
+	size_t	index;
 
 	lendst = ft_strlen(dst);
 	lensrc = ft_strlen(src);

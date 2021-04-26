@@ -19,6 +19,7 @@ SRC = 	./parsing/parser.c\
 		./parsing/press_key.c\
 		./parsing/hundel_error.c\
 		./parsing/get_about_dollar.c\
+		./parsing/ft_frees.c\
 	  	./execution/builtin.c\
 	  	./execution/execution.c\
 	  	./execution/execution_pipe.c\

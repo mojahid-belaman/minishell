@@ -70,13 +70,13 @@ int	check_empty_dollar(t_var *var, char **line, int *i)
 		var->str_val = NULL;
 		if (var->i_d != 0 && (*line)[*i - 1] != '$')
 		{
-			(*line)[*i] = token_dollar;
-			{
-				free(var->str_key);
-				return (1);
-			}
+			(*line)[*i] = TOKEN_DOLLAR;
+			free(var->str_key);
+			var->type = '1';
+			return (1);
 		}
 	}
+	var->type = '1';
 	free(var->str_key);
 	return (0);
 }

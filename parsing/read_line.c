@@ -6,7 +6,7 @@
 /*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 14:52:17 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/04/21 14:45:32 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/26 14:30:02 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	read_line(t_var *var)
 	{
 		rp = 0;
 		read(0, &rp, 4);
-		if (rp == key_en)
+		if (rp == KEY_EN)
 		{
 			func_enter(list, var);
 			if (var->line == NULL)
