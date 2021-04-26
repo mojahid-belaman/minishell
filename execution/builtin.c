@@ -26,6 +26,7 @@ char	*check_home(t_var *var)
 	if (!current || !current->print)
 	{
 		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+		var->status = 1;
 		return (NULL);
 	}
 	else
@@ -35,6 +36,7 @@ char	*check_home(t_var *var)
 void	builtin_cd(t_var *var)
 {
 	int		cd;
+	char	*tmp;
 	char	*home;
 
 	if (!(*(var->prs->args + 1)))
@@ -42,19 +44,21 @@ void	builtin_cd(t_var *var)
 		home = check_home(var);
 		if (!home)
 			return ;
-		cd = chdir(home);
-		free(home);
 	}
 	else if (!(ft_strncmp("~", *(var->prs->args + 1), 1)))
-		*(var->prs->args + 1) = ft_strjoin(get_home(var), \
-		*(var->prs->args + 1) + 1);
-	if (*(var->prs->args + 1))
-		cd = chdir(*(var->prs->args + 1));
+	{
+		tmp = get_home(var);
+		home = ft_strjoin(tmp, *(var->prs->args + 1) + 1);
+		free(tmp);
+	}
+	else
+		home = ft_strdup(*(var->prs->args + 1));
+	cd = chdir(home);
 	if (cd < 0)
-		ft_putstr_error("minishell: cd: ", *(var->prs->args + 1), \
-		": No such file or directory\n");
+		no_file(var, var->prs->cmd, home, ": No such file or directory\n");
 	else
 		chpwd_env(var);
+	free(home);
 }
 
 void	builtin_unset(t_var *var)
@@ -89,14 +93,14 @@ void	builtin_exit(t_var *var)
 		if (ft_isdig(*(var->prs->args + 1)) && *(var->prs->args + 2))
 		{
 			ft_putstr_fd("exit\nminishell: exit: too many arguments\n", 2);
+			var->status = 1;
 			var->exit = 1;
 			return ;
 		}
 		else if (!(ft_isdig(*(var->prs->args + 1))))
 		{
-			ft_putstr_fd("exit\nminishell: exit: ", 2);
-			ft_putstr_fd(*(var->prs->args + 1), 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
+			ft_putstr_error("exit\nminishell: exit: ", *(var->prs->args + 1), \
+			": numeric argument required\n");
 			exit (-1);
 		}
 		else

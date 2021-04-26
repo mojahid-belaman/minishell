@@ -6,7 +6,7 @@
 /*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/25 11:12:37 by knabouss          #+#    #+#             */
-/*   Updated: 2021/04/24 14:27:16 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:20:13 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,26 @@ void	builtin_echo(t_var *var)
 	else
 		ft_putstr_fd(*(var->prs->args + i), 1);
 	var->status = 0;
+}
+
+void	error_open_file(t_var *var, t_files *files)
+{
+	struct stat	buff;
+
+	if (!(stat(files->file_name, &buff)))
+	{
+		if (buff.st_mode & S_IFMT & S_IFDIR)
+			no_file(var, files->file_name, "", ": Is a directory\n");
+	}
+	else
+		no_file(var, files->file_name, "", ": No such file or directory\n");
+	var->error = 1;
+}
+
+void	replace_pwd(t_env *pwd, t_env *oldpwd, char *path)
+{
+	free(oldpwd->value);
+	oldpwd->value = ft_strdup(pwd->value);
+	free(pwd->value);
+	pwd->value = ft_strdup(path);
 }

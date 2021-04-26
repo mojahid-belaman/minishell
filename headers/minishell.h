@@ -95,14 +95,16 @@ typedef struct s_var
 	char **key_value;
 	int status;
 	int plus;
+	char *tmp;
 	pid_t	*tab_pipe;
+	pid_t	pid;
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
 	t_his *head_his;
 } t_var;
 
-pid_t g_pid;
+t_var *g_var;
 
 //parsing
 int isprint_car(int p);
@@ -205,9 +207,13 @@ char	*find_path(t_var *var, char **path);
 char	*join_path(t_var *var);
 void	ft_execve(char *tmp, t_var *var, char **env);
 void	error_command(char *str, t_var *var);
+void	error_open_file(t_var *var, t_files *files);
+void	replace_pwd(t_env *pwd, t_env *oldpwd, char *path);
 void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env);
+void    no_file(t_var *var, char *cmd, char *arg, char *msg);
 // need to be removed
-void print_list_env(t_env *head);
-void ft_key_value(char **str);
-void sigint_handler(int signo);
+void	print_list_env(t_env *head);
+void	ft_key_value(char **str);
+void	signal_handler_c(int signo);
+void	signal_handler_quit(int signo);
 #endif

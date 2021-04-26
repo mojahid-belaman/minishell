@@ -169,6 +169,9 @@ int	main(int ac, char **av, char **env)
 	av = NULL;
 	get_env(env, &var);
 	var.home = find_value("HOME", &var);
+	g_var = &var;
+	signal(SIGINT, signal_handler_c);
+	signal(SIGQUIT, signal_handler_quit);
 	while (1)
 	{
 		i = -1;

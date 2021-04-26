@@ -23,8 +23,7 @@ char	*join_command(t_var *var)
 	{
 		if (buffer.st_mode & S_IFMT & S_IFDIR)
 		{
-			ft_putstr_error("minishell: ", var->prs->cmd, \
-			": is a directory\n");
+			no_file(var, var->prs->cmd, "", ": is a directory\n");
 			return (NULL);
 		}
 		else if (buffer.st_mode & X_OK)
@@ -32,8 +31,7 @@ char	*join_command(t_var *var)
 	}
 	else if (var->prs->cmd[0] == '.' || var->prs->cmd[0] == '/')
 	{
-		ft_putstr_error("minishell: ", var->prs->cmd, \
-		": No such file or directory\n");
+		no_file(var, var->prs->cmd, "", ": No such file or directory\n");
 		return (NULL);
 	}
 	else
@@ -47,11 +45,10 @@ void	ft_execve(char *tmp, t_var *var, char **env)
 	{
 		if (!(ft_strcmp(tmp, "")))
 		{
-			ft_putstr_error("minishell: ", tmp, \
-			": No such file or directory\n");
+			no_file(var, var->prs->cmd, "", ": No such file or directory\n");
 			free(tmp);
 		}
-		else
+		else if (tmp != NULL)
 			error_command(*var->prs->args, var);
 		exit(127);
 	}
@@ -67,15 +64,15 @@ void	pipe_exec_bis(t_parser *prs, int *pipefds, int j)
 
 void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 
 	j = 0;
 	while (var->prs)
 	{
 		i = -1;
-		g_pid = fork();
-		if (g_pid == 0)
+		var->pid = fork();
+		if (var->pid == 0)
 		{
 			pipe_exec_bis(var->prs, pipefds, j);
 			if (ft_listsize_file(var->prs->file_head) > 0)
@@ -87,7 +84,7 @@ void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env)
 			exit(0);
 		}
 		var->prs = var->prs->next_prs;
-		var->tab_pipe[j / 2] = g_pid;
+		var->tab_pipe[j / 2] = var->pid;
 		j += 2;
 	}
 }

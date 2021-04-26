@@ -29,27 +29,25 @@ char	*new_pwd(t_var *var, t_env *pwd, char *path)
 void	chpwd_bis(t_env *pwd, t_env *oldpwd, char *path)
 {
 	if (oldpwd->print == 1 && pwd->print == 1)
-	{
-		oldpwd->value = ft_strdup(pwd->value);
-		pwd->value = ft_strdup(path);
-	}
+		replace_pwd(pwd, oldpwd, path);
 	else if (oldpwd->print == 2 && pwd->print == 1)
 	{
+		free(oldpwd->value);
 		oldpwd->value = ft_strdup(pwd->value);
+		free(pwd->value);
 		pwd->value = ft_strdup(path);
 		oldpwd->print = 3;
 	}
 	else if (oldpwd->print == 1 && pwd->print == 2)
 	{
+		free(oldpwd->value);
 		oldpwd->value = ft_strdup("");
+		free(pwd->value);
 		pwd->value = ft_strdup(path);
 		oldpwd->print = 2;
 	}
 	else if (oldpwd->print == 2 && pwd->print == 2)
-	{
-		oldpwd->value = ft_strdup(pwd->value);
-		pwd->value = ft_strdup(path);
-	}
+		replace_pwd(pwd, oldpwd, path);
 	free(path);
 }
 
@@ -57,6 +55,7 @@ void	chpwd_env(t_var *var)
 {
 	t_env	*pwd;
 	char	*path;
+	char	*tmp;
 	t_env	*oldpwd;
 
 	oldpwd = var->head_env;
@@ -69,6 +68,7 @@ void	chpwd_env(t_var *var)
 		path = ft_strdup(*(var->prs->args + 1));
 	else
 		path = NULL;
+	tmp = path;
 	path = new_pwd(var, pwd, path);
 	chpwd_bis(pwd, oldpwd, path);
 }

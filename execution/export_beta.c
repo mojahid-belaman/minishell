@@ -35,9 +35,7 @@ int	check_args(t_var *var, char *current)
 	j = 0;
 	if (!ft_isalpha(current[0]) && current[0] != '_')
 	{
-		ft_putstr_error("minishell: export: `", \
-		current, "` not a valid identifier\n");
-		var->status = 1;
+		no_file(var, "export", current, "` not a valid identifier\n");
 		return (0);
 	}
 	while (current[++j])
@@ -47,9 +45,7 @@ int	check_args(t_var *var, char *current)
 			continue ;
 		else
 		{
-			ft_putstr_error("minishell: export: ", \
-			current, " not a valid identifier\n");
-			var->status = 1;
+			no_file(var, "export", current, "` not a valid identifier\n");
 			return (0);
 		}
 	}
@@ -71,8 +67,9 @@ void	export_env(t_var *var)
 		j = -1;
 		while (key_value[i][++j])
 		{
-			if (key_value[i][j] == '"' && \
-			key_value[i][j + 1] && key_value[i][j - 1] != '=')
+			if ((key_value[i][j] == '"' && \
+			key_value[i][j + 1] && key_value[i][j - 1] != '=') \
+			|| key_value[i][j] == '\\')
 				ft_putchar_fd('\\', 1);
 			ft_putchar_fd(key_value[i][j], 1);
 		}

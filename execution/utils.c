@@ -24,8 +24,16 @@ int	ft_sign(char c)
 
 void	ft_putstr_error(char *str1, char *str2, char *str3)
 {
+	int	i;
+
+	i = 0;
 	ft_putstr_fd(str1, 2);
-	ft_putstr_fd(str2, 2);
+	while (str2[i])
+	{
+		if (str2[i] != '"' && str2[i] != '\'')
+			ft_putchar_fd(str2[i], 2);
+		i++;
+	}
 	ft_putstr_fd(str3, 2);
 }
 

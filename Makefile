@@ -28,6 +28,7 @@ SRC = 	./parsing/parser.c\
 		./execution/echo.c\
 		./execution/utils.c\
 		./execution/builtin_beta.c\
+		./execution/message_errors.c\
 		./execution/export_beta.c
 
 OBJ = $(SRC:.c=.o)

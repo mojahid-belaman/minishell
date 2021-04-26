@@ -29,12 +29,9 @@ void	error_red_app(t_var *var, t_files *files)
 	if (var->fd[1] < 0 && !(stat(files->file_name, &buffer)))
 	{
 		if (buffer.st_mode & S_IFMT & S_IFDIR)
-			ft_putstr_error("minishell:", files->file_name, \
-			": Is a directory\n");
+			no_file(var, files->file_name, "", ": Is a directory\n");
 		else if (!(buffer.st_mode & W_OK))
-			ft_putstr_error("minishell: ", files->file_name, \
-			": Permission denied\n");
-		var->status = 1;
+			no_file(var, files->file_name, "", ": Permission denied\n");
 		var->error = 1;
 	}
 }
@@ -52,16 +49,13 @@ int	open_files(t_var *var, t_files *files)
 	else if (*files->file_name == token_dollar)
 	{
 		*files->file_name = 36;
-		ft_putstr_error("minishell: ", files->file_name, \
-		": ambiguous redirect\n");
+		no_file(var, files->file_name, "", ": ambiguous redirect\n");
 		var->error = 1;
 		return (0);
 	}
 	if (var->fd[1] < 0)
 	{
-		ft_putstr_error("minishell: ", files->file_name, \
-		": No such file or directory\n");
-		var->error = 1;
+		error_open_file(var, files);
 		return (0);
 	}
 	return (1);

@@ -21,7 +21,6 @@ char	**envp(t_var *var)
 {
 	char	**key_value;
 	t_env	*current;
-	char	*tmp;
 	int		i;
 
 	current = var->head_env;
@@ -32,10 +31,7 @@ char	**envp(t_var *var)
 	{
 		if (current->print == 0)
 		{
-			tmp = key_value[i];
 			key_value[i] = ft_strdup(current->key);
-			free(tmp);
-			tmp = NULL;
 			i++;
 		}
 		else if (current->print == 1)
