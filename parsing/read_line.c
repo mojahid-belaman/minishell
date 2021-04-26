@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
+/*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/19 14:52:17 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/04/21 14:45:32 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/26 14:56:07 by knabouss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,6 @@ void	read_line(t_var *var)
 		else
 			func_cont_rdl(rp, var, his, &list);
 	}
+	old_attr.c_lflag |= (ISIG);
 	tcsetattr(STDIN_FILENO, TCSANOW, &old_attr);
 }

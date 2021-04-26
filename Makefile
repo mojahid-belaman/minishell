@@ -19,16 +19,20 @@ SRC = 	./parsing/parser.c\
 		./parsing/press_key.c\
 		./parsing/hundel_error.c\
 		./parsing/get_about_dollar.c\
+	  	./execution/beta_export.c\
 	  	./execution/builtin.c\
-	  	./execution/execution.c\
-	  	./execution/execution_pipe.c\
-	  	./execution/execution_beta.c\
-	  	./execution/export.c\
-	  	./execution/linked_list.c\
-		./execution/echo.c\
+	  	./execution/cd_builtin.c\
+	  	./execution/cd_chpwd.c\
+	  	./execution/echo_builtin.c \
+	  	./execution/error_file.c\
+		./execution/execution.c\
+		./execution/export_builtin.c\
+		./execution/linked_list.c\
+		./execution/message_errors.c\
+		./execution/open_file.c\
+		./execution/pipe_execution.c\
 		./execution/utils.c\
-		./execution/builtin_beta.c\
-		./execution/export_beta.c
+		./execution/signal_handler.c
 
 OBJ = $(SRC:.c=.o)
 

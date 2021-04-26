@@ -95,14 +95,16 @@ typedef struct s_var
 	char **key_value;
 	int status;
 	int plus;
+	char *tmp;
 	pid_t	*tab_pipe;
+	pid_t	pid;
 	t_parser *prs;
 	t_parser *prsTail;
 	t_env *head_env;
 	t_his *head_his;
 } t_var;
 
-pid_t g_pid;
+t_var *g_var;
 
 //parsing
 int isprint_car(int p);
@@ -179,7 +181,6 @@ void    builtin_echo(t_var *var);
 void    builtin_export(t_var *var);
 void    execution(t_var *var, char **env);
 void	sys_execution(t_var *var, char **env);
-void	error_file(char *str, t_var *var);
 int		builtin(t_var *var);
 int		ft_sign(char c);
 int		ft_isdig(char *s);
@@ -198,16 +199,23 @@ int    addvar_export(t_var *var, char	**key_value, int i);
 int		existing_value(t_var *var, char *key, char *value, int equal);
 int     fopen_read(t_var *var, t_files *files);
 void	error_red_app(t_var *var, t_files *files);
-int		open_files(t_var *var, t_files *files);
+int		redir_append(t_var *var, t_files *files);
 char    *join_command(t_var *var);
 void	open_file(t_var *var);
 char	*find_path(t_var *var, char **path);
 char	*join_path(t_var *var);
 void	ft_execve(char *tmp, t_var *var, char **env);
 void	error_command(char *str, t_var *var);
+void	error_open_file(t_var *var, t_files *files);
+void	replace_pwd(t_env *pwd, t_env *oldpwd, char *path);
 void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env);
+void    no_file(t_var *var, char *cmd, char *arg, char *msg);
+char	**envp_continue(t_env *current, char **key_value, int *i);
+void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env);
+void	pipe_exec_bis(t_parser *prs, int *pipefds, int j);
 // need to be removed
-void print_list_env(t_env *head);
-void ft_key_value(char **str);
-void sigint_handler(int signo);
+void	print_list_env(t_env *head);
+void	ft_key_value(char **str);
+void	signal_handler_c(int signo);
+void	signal_handler_quit(int signo);
 #endif
