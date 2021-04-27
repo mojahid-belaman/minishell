@@ -29,3 +29,12 @@ void	get_env(char **envp, t_var *var)
 		envp++;
 	}
 }
+
+void	init_env(t_var *var, char **env)
+{
+	get_env(env, var);
+	var->home = find_value("HOME", var);
+	g_var = var;
+	signal(SIGINT, signal_handler_c);
+	signal(SIGQUIT, signal_handler_quit);
+}

@@ -105,7 +105,6 @@ typedef struct s_var
 
 t_var	*g_var;
 
-//parsing
 int		isprint_car(int p);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
@@ -161,7 +160,6 @@ char	define_type_red(char **line, int *i, t_var *var);
 int		check_empty_dollar(t_var *var, char **line, int *i);
 void	check_dollar_first(t_var *var, char **line, int *i);
 void	ft_free(t_var *var);
-//execution
 char	*get_home(t_var *var);
 int		get_oldpwd(t_var *var);
 void	chpwd_env(t_var *var);
@@ -200,7 +198,7 @@ int		existing_value(t_var *var, char *key, char *value, int equal);
 int		fopen_read(t_var *var, t_files *files);
 void	error_red_app(t_var *var, t_files *files);
 int		redir_append(t_var *var, t_files *files);
-char    *join_command(t_var *var);
+char	*join_command(t_var *var);
 void	open_file(t_var *var);
 char	*find_path(t_var *var, char **path);
 char	*join_path(t_var *var);
@@ -209,13 +207,11 @@ void	error_command(char *str, t_var *var);
 void	error_open_file(t_var *var, t_files *files);
 void	replace_pwd(t_env *pwd, t_env *oldpwd, char *path);
 void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env);
-void    no_file(t_var *var, char *cmd, char *arg, char *msg);
+void	no_file(t_var *var, char *cmd, char *arg, char *msg);
 char	**envp_continue(t_env *current, char **key_value, int *i);
 void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env);
 void	pipe_exec_bis(t_parser *prs, int *pipefds, int j);
-// need to be removed
-void	print_list_env(t_env *head);
-void	ft_key_value(char **str);
 void	signal_handler_c(int signo);
 void	signal_handler_quit(int signo);
+void	init_env(t_var *var, char **env);
 #endif

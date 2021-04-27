@@ -27,7 +27,7 @@ char	*join_command(t_var *var)
 			return (NULL);
 		}
 		else if (buffer.st_mode & X_OK)
-			tmp = var->prs->cmd;
+			tmp = ft_strdup(var->prs->cmd);
 	}
 	else if (var->prs->cmd[0] == '.' || var->prs->cmd[0] == '/')
 	{

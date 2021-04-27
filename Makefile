@@ -32,6 +32,7 @@ SRC = 	./parsing/parser.c\
 		./execution/open_file.c\
 		./execution/pipe_execution.c\
 		./execution/utils.c\
+		./execution/beta_export.c\
 		./execution/signal_handler.c
 
 OBJ = $(SRC:.c=.o)

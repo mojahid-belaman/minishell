@@ -19,7 +19,7 @@ int	check_args(t_var *var, char *current)
 	j = 0;
 	if (!ft_isalpha(current[0]) && current[0] != '_')
 	{
-		no_file(var, "export", current, "` not a valid identifier\n");
+		no_file(var, "export: `", current, "` not a valid identifier\n");
 		return (0);
 	}
 	while (current[++j])
@@ -29,7 +29,7 @@ int	check_args(t_var *var, char *current)
 			continue ;
 		else
 		{
-			no_file(var, "export", current, "` not a valid identifier\n");
+			no_file(var, "export: `", current, "` not a valid identifier\n");
 			return (0);
 		}
 	}

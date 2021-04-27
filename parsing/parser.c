@@ -20,30 +20,6 @@ void	init_symbol(t_var *var)
 	var->exit = 0;
 }
 
-void	print_list(t_var *var)
-{
-	t_parser	*curr_prs;
-	t_files		*curr_fils;
-	int			i;
-
-	curr_prs = var->prs;
-	while (curr_prs)
-	{
-		i = 0;
-		curr_fils = curr_prs->file_head;
-		printf("\ncommand = |%s|\n", curr_prs->cmd);
-		while (curr_prs->args[++i])
-			printf("\narg[%d] =  |%s|\n", i, curr_prs->args[i]);
-		while (curr_fils)
-		{
-			printf("\ntype_redirection = |%c|\n", curr_fils->type);
-			printf("\nfile_name = |%s|\n", curr_fils->file_name);
-			curr_fils = curr_fils->next;
-		}
-		curr_prs = curr_prs->next_prs;
-	}
-}
-
 void	ft_subcmd(t_parser *prs, t_var *var, int *j)
 {
 	prs = (t_parser *)malloc(sizeof(t_parser));
@@ -73,8 +49,6 @@ void	fill_command(t_var *var, char **env)
 		var->split_pip = ft_split(var->split_sc[i], '|');
 		while (var->split_pip[++j])
 			ft_subcmd(prs, var, &j);
-		(void)env;
-		print_list(var);
 		execution(var, env);
 		if (var->exit)
 			break ;
@@ -98,11 +72,7 @@ int	main(int ac, char **av, char **env)
 	ac = 1;
 	av = NULL;
 	tmp = NULL;
-	get_env(env, &var);
-	var.home = find_value("HOME", &var);
-	g_var = &var;
-	signal(SIGINT, signal_handler_c);
-	signal(SIGQUIT, signal_handler_quit);
+	init_env(&var, env);
 	while (1)
 	{
 		i = -1;
