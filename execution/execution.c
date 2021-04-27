@@ -1,6 +1,5 @@
 #include "../headers/minishell.h"
 
-
 char	*join_path(t_var *var)
 {
 	char	**path;

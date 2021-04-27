@@ -97,6 +97,7 @@ typedef struct s_var
 	pid_t		*tab_pipe;
 	pid_t		pid;
 	t_parser	*prs;
+	t_parser	*parser;
 	t_parser	*prsTail;
 	t_env		*head_env;
 	t_his		*head_his;

@@ -17,7 +17,7 @@ char	*check_home(t_var *var)
 		return (ft_strdup(current->value));
 }
 
-char    *get_home(t_var *var)
+char	*get_home(t_var *var)
 {
 	t_env	*current;
 

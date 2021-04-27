@@ -2,12 +2,11 @@
 
 void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env)
 {
-	int		i;
-	int		j;
-	t_parser	*prs;
+	int			i;
+	int			j;
 
 	j = 0;
-	prs = var->prs;
+	var->parser = var->prs;
 	while (var->prs)
 	{
 		i = -1;
@@ -27,7 +26,7 @@ void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env)
 		var->tab_pipe[j / 2] = var->pid;
 		j += 2;
 	}
-	var->prs = prs;
+	var->prs = var->parser;
 }
 
 void	pipe_exec_bis(t_parser *prs, int *pipefds, int j)

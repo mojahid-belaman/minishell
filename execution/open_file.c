@@ -3,7 +3,7 @@
 int	fopen_read(t_var *var, t_files *files)
 {
 	var->fd[0] = open(files->file_name, O_RDONLY);
-	if (*files->file_name == token_dollar)
+	if (*files->file_name == TOKEN_DOLLAR)
 	{
 		*files->file_name = 36;
 		ft_putstr_error("minishell: ", files->file_name, \
@@ -25,15 +25,15 @@ int	fopen_read(t_var *var, t_files *files)
 
 int	redir_append(t_var *var, t_files *files)
 {
-	if (files->type == '>' && *files->file_name != token_dollar)
+	if (files->type == '>' && *files->file_name != TOKEN_DOLLAR)
 	{
 		var->fd[1] = open(files->file_name, O_WRONLY \
 		| O_CREAT | O_TRUNC, 0666);
 	}
-	else if (files->type == 'a' && *files->file_name != token_dollar)
+	else if (files->type == 'a' && *files->file_name != TOKEN_DOLLAR)
 		var->fd[1] = open(files->file_name, O_WRONLY \
 		| O_CREAT | O_APPEND, 0666);
-	else if (*files->file_name == token_dollar)
+	else if (*files->file_name == TOKEN_DOLLAR)
 	{
 		*files->file_name = 36;
 		no_file(var, files->file_name, "", ": ambiguous redirect\n");
