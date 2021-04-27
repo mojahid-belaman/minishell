@@ -93,7 +93,9 @@ typedef struct s_var
 	char		**key_value;
 	int			status;
 	int			plus;
+	char		*tmp;
 	pid_t		*tab_pipe;
+	pid_t		pid;
 	t_parser	*prs;
 	t_parser	*prsTail;
 	t_env		*head_env;
