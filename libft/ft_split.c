@@ -6,7 +6,7 @@
 /*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/21 13:25:51 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/04/26 16:09:07 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/27 08:15:57 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ char	**ft_split(char const *s, char c)
 	if (!str)
 		return (NULL);
 	new_str = (char **)malloc((ft_nbr_words(str, c) + 1) * sizeof(char *));
-	if (!new_str)
-		return (NULL);
 	while (str[k])
 	{
 		while (str[k] == c && str[k])
