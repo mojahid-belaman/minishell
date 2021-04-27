@@ -4,8 +4,10 @@ void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env)
 {
 	int		i;
 	int		j;
+	t_parser	*prs;
 
 	j = 0;
+	prs = var->prs;
 	while (var->prs)
 	{
 		i = -1;
@@ -25,6 +27,7 @@ void	pipe_exec(t_var *var, int *pipefds, int pipenumber, char **env)
 		var->tab_pipe[j / 2] = var->pid;
 		j += 2;
 	}
+	var->prs = prs;
 }
 
 void	pipe_exec_bis(t_parser *prs, int *pipefds, int j)
@@ -67,6 +70,4 @@ void	execute_pipe(t_var *var, char **env)
 	var->status = WEXITSTATUS(var->status);
 	free(var->tab_pipe);
 	free(pipefds);
-	// if (var->tmp)
-	// 	free(var->tmp);
 }
