@@ -3,10 +3,10 @@
 void	check_allflgs(t_var *var)
 {
 	if (var->semi_colomn)
-		hundel_error(token_dsc, var);
+		hundel_error(TOKEN_DSC, var);
 	else if (var->semi_colomn || var->redir_left || var->redir_right
 		|| var->redir_double || var->pipe || var->double_q || var->single_q)
-		hundel_error(new_line, var);
+		hundel_error(NEW_LINE, var);
 }
 
 int	hundel_backsl_two(t_var *var, int *i)
@@ -42,12 +42,12 @@ int	hundel_backsl_one(t_var *var, int *i)
 	}
 	else if (!var->single_q && var->line[*i] == '`')
 	{
-		hundel_error(new_line, var);
+		hundel_error(NEW_LINE, var);
 		return (1);
 	}
 	else if (var->line[*i] == '\\' && !var->line[*i + 1])
 	{
-		hundel_error(new_line, var);
+		hundel_error(NEW_LINE, var);
 		return (1);
 	}
 	else if (hundel_backsl_two(var, i))

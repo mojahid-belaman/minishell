@@ -43,11 +43,11 @@ void	func_cont_rdl(int rp, t_var *var, t_his *his, t_his **list)
 {
 	if (rp > 31 && rp < 127)
 		print_caract(list, rp);
-	else if (rp == key_del)
+	else if (rp == KEY_DEL)
 		func_press_del(list);
-	else if (rp == key_u)
+	else if (rp == KEY_U)
 		func_press_up(list);
-	else if (rp == key_dw)
+	else if (rp == KEY_DW)
 		func_press_down(list);
 	else if (rp == CTRL_C)
 		func_cntrl_c(his, var, list);

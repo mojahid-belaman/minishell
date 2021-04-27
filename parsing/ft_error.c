@@ -6,24 +6,24 @@ void	hundel_error(int err, t_var *var)
 	var->status = 258;
 	free(var->line);
 	var->line = NULL;
-	if (err == token_rl)
+	if (err == TOKEN_RL)
 		ft_putstr_fd("minishell:syntax error near unexpected token `<'\n", 2);
-	else if (err == token_rr)
+	else if (err == TOKEN_RR)
 		ft_putstr_fd("minishell:syntax error near unexpected token `>'\n", 2);
-	else if (err == token_dr)
+	else if (err == TOKEN_DR)
 		ft_putstr_fd("minishell:syntax error near unexpected token `>>'\n", 2);
-	else if (err == token_sc)
+	else if (err == TOKEN_SC)
 		ft_putstr_fd("minishell:syntax error near unexpected token `;'\n", 2);
-	else if (err == token_pip)
+	else if (err == TOKEN_PIP)
 		ft_putstr_fd("minishell:syntax error near unexpected token `|'\n", 2);
-	else if (err == token_dpip)
+	else if (err == TOKEN_DPIP)
 		ft_putstr_fd("minishell:syntax error near unexpected token `||'\n", 2);
-	else if (err == new_line)
+	else if (err == NEW_LINE)
 	{
 		ft_putstr_fd("minishell:syntax error near unexpected ", 2);
 		ft_putstr_fd("token `newline'\n", 2);
 	}
-	else if (err == token_dsc)
+	else if (err == TOKEN_DSC)
 		ft_putstr_fd("minishell:syntax error near unexpected token `;;'\n", 2);
 }
 

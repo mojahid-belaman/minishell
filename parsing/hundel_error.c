@@ -30,11 +30,11 @@ void	check_carac(char c, t_var *var)
 void	hundel_semicolomne(t_var *var, int i)
 {
 	if (var->line[0] == ';' && var->line[i + 1] != ';')
-		hundel_error(token_sc, var);
+		hundel_error(TOKEN_SC, var);
 	else if (var->line[i + 1] == ';' && var->single_q && var->double_q)
-		hundel_error(token_dsc, var);
+		hundel_error(TOKEN_DSC, var);
 	else if (var->line[i + 1] == ';' && !var->single_q && !var->double_q)
-		hundel_error(token_dsc, var);
+		hundel_error(TOKEN_DSC, var);
 	else if (hund_last_sc(i, var))
 		check_semicolomn(i, var);
 }

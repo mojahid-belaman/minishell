@@ -58,13 +58,13 @@ void	split_typeredir(t_var *var, t_files **fil, int *i, int *j)
 {
 	if (var->split_pip[*j][*i] == '>')
 	{
-		(*fil)->type = right_r;
+		(*fil)->type = RIGHT_R;
 		var->step = 1;
 		(*fil)->file_name = get_filename(i, j, var);
 	}
 	else if (var->split_pip[*j][*i] == '<')
 	{
-		(*fil)->type = left_r;
+		(*fil)->type = LEFT_R;
 		var->step = 1;
 		(*fil)->file_name = get_filename(i, j, var);
 	}
@@ -83,7 +83,7 @@ void	search_file(t_var *var, int *j)
 		fil->type = '1';
 		if (var->split_pip[*j][i] == '>' && var->split_pip[*j][i + 1] == '>')
 		{
-			fil->type = append;
+			fil->type = APPEND;
 			var->step = 2;
 			fil->file_name = get_filename(&i, j, var);
 		}

@@ -20,24 +20,6 @@ void	init_symbol(t_var *var)
 	var->exit = 0;
 }
 
-void	free_files(t_parser *prs)
-{
-	t_files	*curr;
-	t_files	*next_node;
-
-	curr = prs->file_head;
-	next_node = NULL;
-	while (curr)
-	{
-		next_node = curr->next;
-		if (curr->file_name)
-			free(curr->file_name);
-		free(curr);
-		curr = next_node;
-	}
-	prs->file_head = NULL;
-}
-
 void	print_list(t_var *var)
 {
 	t_parser	*curr_prs;
@@ -60,66 +42,6 @@ void	print_list(t_var *var)
 		}
 		curr_prs = curr_prs->next_prs;
 	}
-}
-
-void	ft_free_args(char **args)
-{
-	int	i;
-
-	i = -1;
-	while (args[++i])
-	{
-		free(args[i]);
-		args[i] = NULL;
-	}
-	if (args)
-		free(args);
-	args = NULL;
-}
-
-void	free_list(t_var *var)
-{
-	t_parser	*curr;
-
-	curr = var->prs;
-	while (curr)
-	{
-		var->prsTail = curr->next_prs;
-		if (curr->args)
-			ft_free_args(curr->args);
-		curr->args = NULL;
-		if (curr->file_head)
-			free_files(curr);
-		free(curr);
-		curr = var->prsTail;
-	}
-	var->prs = NULL;
-}
-
-void	ft_free(t_var *var)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	j = -1;
-	if (var->split_pip)
-	{
-		while (var->split_pip[++i])
-			free(var->split_pip[i]);
-		if (var->split_pip)
-			free(var->split_pip);
-	}
-	if (var->split_sc)
-	{
-		while (var->split_sc[++j])
-			free(var->split_sc[j]);
-		if (var->split_sc)
-			free(var->split_sc);
-	}
-	if (var->line)
-		free(var->line);
-	free_list(var);
 }
 
 void	ft_subcmd(t_parser *prs, t_var *var, int *j)
@@ -159,6 +81,14 @@ void	fill_command(t_var *var, char **env)
 	}
 }
 
+void	ft_newline(t_var *var, char *tmp)
+{
+	read_line(var);
+	tmp = var->line;
+	var->line = ft_strtrim(var->line, " ");
+	free(tmp);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_var	var;
@@ -167,6 +97,7 @@ int	main(int ac, char **av, char **env)
 
 	ac = 1;
 	av = NULL;
+	tmp = NULL;
 	get_env(env, &var);
 	var.home = find_value("HOME", &var);
 	g_var = &var;
@@ -177,13 +108,13 @@ int	main(int ac, char **av, char **env)
 		i = -1;
 		init_symbol(&var);
 		ft_putstr_fd("\033[1;32mminishell~>\033[0m", 1);
-		read_line(&var);
-		tmp = var.line;
-		var.line = ft_strtrim(var.line, " ");
-		free(tmp);
+		ft_newline(&var, tmp);
 		syntax_error(&var, i);
-		if (var.error != 0 && !(var.error = 0))
+		if (var.error != 0)
+		{
+			var.error = 0;
 			continue ;
+		}
 		fill_command(&var, env);
 		ft_free(&var);
 	}

@@ -35,7 +35,7 @@ void	check_double_q(t_var *var)
 void	check_redir_r(int i, t_var *var)
 {
 	if (var->redir_right || var->redir_left || var->redir_double)
-		hundel_error(token_rr, var);
+		hundel_error(TOKEN_RR, var);
 	else if (var->double_q || var->single_q)
 		var->line[i] = -var->line[i];
 	else if (!var->double_q && !var->single_q)
@@ -45,9 +45,9 @@ void	check_redir_r(int i, t_var *var)
 void	check_redir_l(int i, t_var *var)
 {
 	if (var->redir_left)
-		hundel_error(new_line, var);
+		hundel_error(NEW_LINE, var);
 	else if (var->redir_right || var->redir_left || var->redir_double)
-		hundel_error(token_rl, var);
+		hundel_error(TOKEN_RL, var);
 	else if (var->double_q || var->single_q)
 		var->line[i] = -var->line[i];
 	else if (!var->double_q && !var->single_q)

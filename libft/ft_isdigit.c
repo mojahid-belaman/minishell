@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: knabouss <knabouss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/17 08:29:26 by mbelaman          #+#    #+#             */
-/*   Updated: 2021/04/03 09:03:25 by knabouss         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:03:07 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,3 @@ int	ft_isdigit(int d)
 	else
 		return (0);
 }
-

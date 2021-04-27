@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbelaman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mbelaman <mbelaman@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/26 17:22:32 by mbelaman          #+#    #+#             */
-/*   Updated: 2019/11/08 15:50:57 by mbelaman         ###   ########.fr       */
+/*   Updated: 2021/04/26 15:05:54 by mbelaman         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	lennb(long nb)
 	return (digit);
 }
 
-char		*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char	*str;
 	int		index;
@@ -40,7 +40,8 @@ char		*ft_itoa(int n)
 
 	nb = n;
 	index = lennb(n);
-	if (!(str = (char *)malloc(sizeof(char) * (index + 1))))
+	str = (char *)malloc(sizeof(char) * (index + 1));
+	if (str == NULL)
 		return (NULL);
 	str[index] = '\0';
 	index--;

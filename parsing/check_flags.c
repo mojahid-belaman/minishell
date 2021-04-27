@@ -3,7 +3,7 @@
 void	check_redir_d(int i, t_var *var)
 {
 	if (var->redir_right || var->redir_left || var->redir_double)
-		hundel_error(token_dr, var);
+		hundel_error(TOKEN_DR, var);
 	else if (var->double_q || var->single_q)
 	{
 		while (var->line[i] == '>')
@@ -20,7 +20,7 @@ void	check_semicolomn(int i, t_var *var)
 {
 	if (var->redir_right || var->redir_left || var->redir_double
 		|| var->semi_colomn || var->pipe)
-		hundel_error(token_sc, var);
+		hundel_error(TOKEN_SC, var);
 	else if (var->double_q || var->single_q)
 		var->line[i] = -var->line[i];
 	else if (!var->double_q && !var->single_q)
@@ -44,18 +44,18 @@ void	check_pipe(int i, t_var *var)
 {
 	if ((var->line[0] == '|' && var->line[i + 1] != '|')
 		|| count_pip(i, var) == 3)
-		hundel_error(token_pip, var);
+		hundel_error(TOKEN_PIP, var);
 	else if ((var->line[0] == '|' && var->line[i + 1] == '|')
 		|| count_pip(i, var) > 3)
-		hundel_error(token_dpip, var);
+		hundel_error(TOKEN_DPIP, var);
 	else if (var->pipe && count_pip(i, var) >= 2)
-		hundel_error(token_dpip, var);
+		hundel_error(TOKEN_DPIP, var);
 	else if ((var->redir_right || var->redir_left || var->redir_double
 			|| var->semi_colomn) && count_pip(i, var) > 1)
-		hundel_error(token_dpip, var);
+		hundel_error(TOKEN_DPIP, var);
 	else if ((var->redir_right || var->redir_left || var->redir_double
 			|| var->semi_colomn) && count_pip(i, var) == 1)
-		hundel_error(token_pip, var);
+		hundel_error(TOKEN_PIP, var);
 	else if (var->double_q || var->single_q)
 		var->line[i] = -var->line[i];
 	else if (!var->double_q && !var->single_q)
