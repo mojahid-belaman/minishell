@@ -100,7 +100,7 @@ typedef struct s_var
 	t_his		*head_his;
 }				t_var;
 
-pid_t	g_pid;
+t_var	*g_var;
 
 //parsing
 int		isprint_car(int p);
